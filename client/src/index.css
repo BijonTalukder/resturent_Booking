@@ -1,0 +1,287 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    font-family: "Poppins", sans-serif;
+  }
+
+
+  .loader {
+    width: 96px;
+    box-sizing: content-box;
+    height: 48px;
+    background: #FFF;
+    border-color: #de3500;
+    border-style: solid;
+    border-width: 2px 2px 50px 2px;
+    border-radius: 100%;
+    position: relative;
+    animation: 3s yinYang linear infinite;
+  }
+  .loader:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    background: #FFF;
+    border: 18px solid #de3500;
+    border-radius: 100%;
+    width: 12px;
+    height: 12px;
+    box-sizing: content-box;
+  }
+  .loader:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #f06136;
+    border: 18px solid #FFF;
+    border-radius: 100%;
+    width: 12px;
+    height: 12px;
+    box-sizing: content-box;
+  }
+  @keyframes yinYang {
+    100%{transform: rotate(360deg)}
+  }
+
+  .wrapper::-webkit-scrollbar {
+    width: 4px;
+    height: 5px;
+    background-color: #aaa;
+    /* or add it to the track */
+  
+  }
+  
+  /* Add a thumb */
+  .wrapper::-webkit-scrollbar-thumb {
+    background: #03A9F4;
+  }
+
+  /* Scrollber */
+
+  /* width */
+  .scrollbar-0::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  .scrollbar-0::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  .scrollbar-0::-webkit-scrollbar-thumb {
+    background: #a7abe8;
+  }
+
+  /* Handle on hover */
+  .scrollbar-0::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+
+
+
+/* styles.css */
+.thin-scrollbar::-webkit-scrollbar {
+  width: 0; /* Adjust this value to make the scrollbar thinner or thicker */
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: white; /* Optional: Track color */
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #ffffff; /* Optional: Thumb color */
+  border-radius: 0px; /* Optional: Round corners */
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ffffff; /* Optional: Thumb color on hover */
+}
+
+.transition-max-height {
+  transition: max-height 0.6s ease-in-out, opacity 0.6s ease-in-out;
+}
+
+.opening {
+  max-height: 24rem; /* Adjust as needed */
+  opacity: 1;
+  transition-duration: 1s; /* Opening duration */
+}
+
+.closing {
+  max-height: 0;
+  opacity: 0;
+  transition-duration: 0.6s; /* Closing duration */
+}
+
+.max-h-0 {
+  max-height: 0;
+  opacity: 0;
+}
+
+.max-h-96 {
+  max-height: 24rem; /* TailwindCSS equivalent */
+  opacity: 1;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+
+/* ant table style */
+.ant-table-thead > tr > th {
+  background-color: #3b6fdf !important;
+  color: white !important;
+  /* border: none !important; */
+}
+
+  .ant-table-cell {
+    text-align: center;
+  }
+  
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    text-align: center !important;
+  }
+/* ant table style */
+
+
+/* BannerSlider.css */
+.banner-slider-container {
+  width: 100%;
+  height: 600px; 
+  overflow: hidden;
+  position: relative;
+}
+
+/* Adjust the height of the image gallery */
+.image-gallery {
+  height: 100% !important;
+}
+    
+.image-gallery-slides img {
+  width: 100% ;
+  height: 100% ;
+  object-fit: cover;
+}
+
+.image-gallery-content .image-gallery-slide .image-gallery-image{
+  max-height: 0% !important;
+}
+
+/* Optional: Adjust the height for smaller screens */
+@media (max-width: 768px) {
+  .banner-slider-container {
+    height: 300px; /* Adjust height for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-slider-container {
+    height: 200px; /* Adjust height for mobile screens */
+  }
+}
+
+
+
+/* product banner key framing */
+
+@keyframes zoomInOut {
+  0% {
+      transform: scale(0.5);
+  }
+  50% {
+      transform: scale(1);
+  }
+  100% {
+      transform: scale(0.5);
+  }
+}
+
+.animate-zoom.animate-zoom-2s {
+  animation: zoomInOut 4s ease-in-out infinite;
+}
+
+.animate-zoom.animate-zoom-3s {
+  animation: zoomInOut 5s ease-in-out infinite;
+}
+
+.animate-zoom.animate-zoom-4s {
+  animation: zoomInOut 4s ease-in-out infinite;
+}
+
+.animate-zoom.animate-zoom-5s {
+  animation: zoomInOut 5s ease-in-out infinite;
+}
+
+/* banner left sidebar */
+.arrow-icon {
+  display: none; 
+}
+
+.flex:hover .arrow-icon {
+  display: inline-block;
+}
+
+/* swiper */
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swiper {
+  width: 100%;
+  height: 390px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.mySwiper2 {
+  /* height: 80%; */
+  width: 100%;
+}
+
+.mySwiper {
+  /* height: 20%; */
+  box-sizing: border-box;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.mySwiper .swiper-slide {
+  width: 25%;
+  height: 50%;
+  opacity: 0.4;
+  border: #265eda 1px solid;
+}
+
+.mySwiper .swiper-slide-thumb-active {
+  opacity: 1;
+}
+
