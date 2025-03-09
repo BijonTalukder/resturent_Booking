@@ -11,19 +11,22 @@ import { useAppDispatch, useAppSelector } from "../../../redux/Hook/Hook";
 import ViewProduct from "../../../components/ViewProduct";
 import { setIsProductViewModalOpen } from "../../../redux/Modal/ModalSlice";
 import { Modal } from "antd";
+import { IoSearch } from "react-icons/io5";
 
 const AllHotel = () => {
   const dispatch = useAppDispatch();
   const { data, error, isLoading } = useGetProductsQuery();
   const [showSkeleton, setShowSkeleton] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState(null); // Initialize as null
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const { isProductViewModalOpen } = useAppSelector((state) => state.modal);
+    const [searchQuery, setSearchQuery] = useState("");
+  
 
   useEffect(() => {
     if (!isLoading) {
       const timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 3000); // 2 seconds delay
+      }, 1000); // 2 seconds delay
 
       return () => clearTimeout(timer);
     }
@@ -39,6 +42,11 @@ const AllHotel = () => {
     dispatch(setIsProductViewModalOpen()); // Close the modal
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
   if (isLoading || showSkeleton) {
     return <ProductsSkeleton />;
   }
@@ -49,6 +57,29 @@ const AllHotel = () => {
         title="Recommended For you"
         subTitle="Empowering everyone to express themselves through clothes."
       />
+            {/* Search Bar */}
+            <div className="relative w-[100%] md:w-[50%] mx-auto mb-10 flex py-[6px]">
+              <div className="w-full">
+                <label htmlFor="Search" className="sr-only">
+                  Search
+                </label>
+                <form onSubmit={(e) => e.preventDefault()}>
+                  <input
+                    type="text"
+                    id="Search"
+                    name="search"
+                    placeholder="Search Products..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="w-full px-2 md:px-4 outline-none py-[2px] md:py-2 border-gray-300 rounded-sm border-[0.5px] pe-10 shadow-sm sm:text-sm"
+                  />
+                </form>
+      
+                <div className="absolute -end-2 bg-secondary px-2 md:px-4 top-[6px] bottom-0 flex justify-center items-center rounded-sm h-[29px] md:h-[37px]">
+                  <IoSearch className="cursor-pointer text-lg text-white" />
+                </div>
+              </div>
+            </div>
 
       <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {data?.data?.slice(0, 8).map((item, index) => (
@@ -107,13 +138,13 @@ const AllHotel = () => {
         ))}
       </div>
 
-      <Link to={`/shop`}>
+      {/* <Link to={`/shop`}>
         <div className="flex justify-center mx-auto w-[200px] mt-10 mb-5">
           <Button className="bg-[#3498DB] w-full font-Poppins font-medium py-2 px-1">
             See More
           </Button>
         </div>
-      </Link>
+      </Link> */}
 
       {/* View Modal */}
       <Modal
