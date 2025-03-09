@@ -6,11 +6,11 @@ const MainLayout = () => {
    const location= useLocation()
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <div className={`w-[95%] lg:max-w-[1400px] mx-auto ${location.pathname === "/cancel" || location.pathname === "/success" || location.pathname === "/checkout"  ? "w-full" : ""}`}>
       <Outlet/>
       </div>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 };

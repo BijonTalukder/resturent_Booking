@@ -12,7 +12,7 @@ import ViewProduct from "../../../components/ViewProduct";
 import { setIsProductViewModalOpen } from "../../../redux/Modal/ModalSlice";
 import { Modal } from "antd";
 
-const AllProduct = () => {
+const AllHotel = () => {
   const dispatch = useAppDispatch();
   const { data, error, isLoading } = useGetProductsQuery();
   const [showSkeleton, setShowSkeleton] = useState(true);
@@ -130,4 +130,4 @@ const AllProduct = () => {
   );
 };
 
-export default AllProduct;
+export default AllHotel;
