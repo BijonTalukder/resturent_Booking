@@ -20,33 +20,32 @@ const AllHotel = () => {
     const [searchQuery, setSearchQuery] = useState("");
   
 
-  useEffect(() => {
-    if (!isLoading) {
-      const timer = setTimeout(() => {
-        setShowSkeleton(false);
-      }, 500); 
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     const timer = setTimeout(() => {
+  //       setShowSkeleton(false);
+  //     }, 500); 
 
-      return () => clearTimeout(timer);
-    }
-  }, [isLoading]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [isLoading]);
 
 
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1);
   };
 
-  if (isLoading || showSkeleton) {
-    return <ProductsSkeleton />;
-  }
+  // if (isLoading || showSkeleton) {
+  //   return <ProductsSkeleton />;
+  // }
 
   return (
     <div className="mt-16 mb-16">
-      <SectionTitle
+      {/* <SectionTitle
         title="Recommended For you"
         subTitle="Empowering everyone to express themselves through clothes."
-      />
+      /> */}
             {/* Search Bar */}
             <div className="relative w-[100%] md:w-[50%] mx-auto mb-10 flex py-[6px]">
               <div className="w-full">
@@ -58,15 +57,15 @@ const AllHotel = () => {
                     type="text"
                     id="Search"
                     name="search"
-                    placeholder="Search Hotels..."
+                    placeholder="Search By Hotels..."
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="w-full px-2 md:px-4 outline-none py-[2px] md:py-2 border-gray-300 rounded-sm border-[0.5px] pe-10 shadow-sm sm:text-sm"
+                    className="w-full ps-10 md:ps-12 outline-none py-[10px] md:py-2 border-gray-300 rounded-full border-[0.5px] pe-10 shadow-sm sm:text-sm"
                   />
                 </form>
       
-                <div className="absolute -end-2 bg-secondary px-2 md:px-4 top-[6px] bottom-0 flex justify-center items-center rounded-sm h-[29px] md:h-[37px]">
-                  <IoSearch className="cursor-pointer text-lg text-white" />
+                <div className="absolute  px-2 md:px-4 top-[7px] bottom-0 flex justify-center items-center  h-[40px] md:h-[37px]">
+                  <IoSearch className="cursor-pointer text-[25px] text-gray-200" />
                 </div>
               </div>
             </div>
