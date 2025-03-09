@@ -14,11 +14,9 @@ import { Modal } from "antd";
 import { IoSearch } from "react-icons/io5";
 
 const AllHotel = () => {
-  const dispatch = useAppDispatch();
+
   const { data, error, isLoading } = useGetProductsQuery();
   const [showSkeleton, setShowSkeleton] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const { isProductViewModalOpen } = useAppSelector((state) => state.modal);
     const [searchQuery, setSearchQuery] = useState("");
   
 
@@ -26,21 +24,13 @@ const AllHotel = () => {
     if (!isLoading) {
       const timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 1000); // 2 seconds delay
+      }, 500); 
 
       return () => clearTimeout(timer);
     }
   }, [isLoading]);
 
-  const handleViewProduct = (productData) => {
-    setSelectedProduct(productData); // Set the selected product
-    dispatch(setIsProductViewModalOpen()); // Open the modal
-  };
 
-  const handleCloseModal = () => {
-    setSelectedProduct(null); // Clear the selected product
-    dispatch(setIsProductViewModalOpen()); // Close the modal
-  };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -68,7 +58,7 @@ const AllHotel = () => {
                     type="text"
                     id="Search"
                     name="search"
-                    placeholder="Search Products..."
+                    placeholder="Search Hotels..."
                     value={searchQuery}
                     onChange={handleSearchChange}
                     className="w-full px-2 md:px-4 outline-none py-[2px] md:py-2 border-gray-300 rounded-sm border-[0.5px] pe-10 shadow-sm sm:text-sm"
@@ -105,7 +95,7 @@ const AllHotel = () => {
                       </p>
                     )}
                   </div>
-                  <button   onClick={()=> handleViewProduct(item)}>
+                  <button  >
            
                         <div
                          className="bg-green-300 text-white rounded-full p-1 cursor-pointer">
@@ -146,17 +136,7 @@ const AllHotel = () => {
         </div>
       </Link> */}
 
-      {/* View Modal */}
-      <Modal
-        className="my-5"
-        width={1200}
-        centered
-        open={isProductViewModalOpen && !!selectedProduct} // Ensure modal opens only if selectedProduct is set
-        onCancel={handleCloseModal} // Close modal and clear selectedProduct
-        footer={null} // Remove default footer buttons
-      >
-        {selectedProduct && <ViewProduct selectedProduct={selectedProduct} />}
-      </Modal>
+    
     </div>
   );
 };
