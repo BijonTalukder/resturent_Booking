@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
 import DashboardTitle from "../../components/DashboardTitle/DashboardTitle";
-import AllProduct from "./AllHotel/AllHotel";
-import BannerSlider from "./BannerSlider/BannerSlider";
-import InfoCardDetails from "./InfoCardDetails/InfoCardDetails";
-import NewsSletter from "./NewsSletter/NewsSletter";
-import ProductBanner from "./ProductBanner/ProductBanner";
-import NewProduct from "./NewProduct/NewProduct";
-import TopSaleProduct from "./TopSaleProduct/TopSaleProduct";
 import AllHotel from "./AllHotel/AllHotel";
 
 
@@ -31,9 +24,7 @@ const Home = () => {
           </div>
         </div> */}
    
-      {/* <div className="mt-6">
-        <InfoCardDetails/>
-      </div> */}
+
 
    
        {/* <TopSaleProduct/>
