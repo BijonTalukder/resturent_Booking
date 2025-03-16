@@ -1,3 +1,6 @@
+const ApiError = require("../error/handleApiError");
+const ResponseHandler = require("../shared/response.handaler");
+
 class UserController {
     constructor(userService) {
       this.userService = userService; 
@@ -7,11 +10,13 @@ class UserController {
     async createUser(req, res, next) {
       try {
         const result = await this.userService.createUser(req.body);
-        res.status(201).json({
-          success: true,
-          message: 'User registered  successfully',
-          data: result,
-        });
+
+        if(!result)
+        {
+          throw new ApiError(400,"user can not create!");
+        }
+        ResponseHandler.success(res,"User registered  successfully",result,201)
+       
       } catch (error) {
         next(error);
       }
