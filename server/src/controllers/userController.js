@@ -1,5 +1,7 @@
+const { PrismaClient } = require("@prisma/client");
 const ApiError = require("../error/handleApiError");
 const ResponseHandler = require("../shared/response.handaler");
+const prisma = new PrismaClient();
 
 class UserController {
     constructor(userService) {
@@ -21,7 +23,6 @@ class UserController {
         next(error);
       }
     }
-  
     // Get all users
     async getAllUsers(req, res, next) {
       try {
