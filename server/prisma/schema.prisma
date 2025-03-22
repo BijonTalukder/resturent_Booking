@@ -50,6 +50,37 @@ model Hotel {
   updatedAt   DateTime @updatedAt
 }
 
+model Room {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  hotelId     String    @db.ObjectId
+  roomNumber  String    
+  type        String    
+  price       Float    
+  capacity    Int       
+  images      String[]  
+  amenities   String[]  
+  isAvailable Boolean   @default(true) 
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // bookings    Booking[] // Relationship: One room has multiple bookings
+}
+
+model Booking {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    String  @db.ObjectId
+  userId    String  @db.ObjectId
+  checkIn   DateTime
+  checkOut  DateTime
+  totalPrice Float
+  status    String  @default("pending") // pending, confirmed, cancelled
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // room      Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+}
+
+
 enum OrderStatus {
   pending
   processing
