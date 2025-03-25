@@ -88,7 +88,7 @@ const Cart = ({ visibleRight, setVisibleRight }) => {
   };
 
   return (
-    <div>
+    <div>   
       <Sidebar
         visible={visibleRight}
         position="right"
