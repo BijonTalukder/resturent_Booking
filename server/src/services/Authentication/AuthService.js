@@ -5,20 +5,20 @@ class AuthService {
         this.hasher = hasher;
     }
 
-    async varifyUser(email, password) {
+    async varifyUser(phone, password) {
         try {
-            console.log(this.prisma);
-            
+            // console.log(this.prisma);
+
             const user = await this.prisma.user.findUnique(
                 {
                     where: {
-                        email
+                        phone
                     }
                 }
             )
 
-            console.log(user);
-            
+            // console.log(user);
+
             if (!user) {
                 return null;
             }
