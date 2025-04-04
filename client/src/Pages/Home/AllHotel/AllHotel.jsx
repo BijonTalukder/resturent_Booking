@@ -92,8 +92,8 @@ const AllHotel = () => {
   // }
 
   return (
-    <div className="mt-16 mb-16">
-      <div className="relative w-[100%] md:w-[75%] lg:w-[50%] mx-auto mb-10 items-center flex py-[8px] gap-2">
+    <div className="">
+      <div className="relative w-[100%] md:w-[75%] lg:w-[50%] mx-auto mb-5 items-center flex py-[8px] gap-2">
         <div className="w-full">
           <label htmlFor="Search" className="sr-only">
             Search
