@@ -9,6 +9,7 @@ import { useLoginMutation } from '../../../redux/Feature/auth/authApi';
 import ZInputTwo from '../../../components/Form/ZInputTwo';
 import { useAppDispatch, useAppSelector } from '../../../redux/Hook/Hook';
 import { setUser, useCurrentToken, useCurrentUser } from '../../../redux/Feature/auth/authSlice';
+import ZPhone from '../../../components/Form/ZPhone';
 
      
 const Login = () => {
@@ -44,6 +45,7 @@ const Login = () => {
   
   const handleSubmit = async (data) => {
     const { data: loginData } = await login(data);
+    console.log(loginData)
     if (loginData.success) {
       dispatch(setUser({ token: loginData.token, user: loginData.user }));
       if (loginData?.user?.role === "user") {
@@ -57,37 +59,7 @@ const Login = () => {
   };
   return (
     <>
-       <div className="relative mb-5">
-            <div
-              className="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center bg-fixed"
-              style={{
-                backgroundImage: `url(${img})`,
-                height: "300px",
-                backgroundSize: "cover",
-              }}
-            >
-              <div className="absolute inset-0 bg-black opacity-40"></div>
-            </div>
-            <div className="relative z-10 text-center text-white py-16">
-            <p className='uppercase font-bold text-xl'>Login Here</p>
-              <nav className="flex justify-center space-x-3 py-8">
-              
-                <Link
-                  to="/"
-                  className="text-lg font-medium hover:text-gray-300 transition-all duration-200"
-                >
-                  <FaHome className='text-blue-300' size={20}/>
-                </Link>
-                <span className="text-lg text-gray-300 mt-1"><FaGreaterThan size={15}/></span>
-                <Link
-                  to="/login"
-                  className="text-base font-medium hover:text-gray-300 transition-all duration-200"
-                >
-                 Login
-                </Link>
-              </nav>
-            </div>
-          </div>
+
     <section className="relative flex flex-wrap flex-row-reverse lg:items-center">
     <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-lg text-center">
@@ -111,11 +83,8 @@ const Login = () => {
  
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                 <div className="relative mb-8">
-                  <ZEmail label={"Email"}
-                  //  value={"admin@gmail.com"}
-                   name={"email"}
-                   placeholder={"enterEmail"}
-                    required={1}/>
+                <ZPhone label={"Phone"} name={"phone"} />
+
                 </div>
                 <div className="relative">
                   <ZInputTwo

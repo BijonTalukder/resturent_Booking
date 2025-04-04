@@ -6,10 +6,10 @@ import {
   useCurrentUser,
 } from "../../redux/Feature/auth/authSlice";
 import { Navigate } from "react-router-dom";
-import { useGetUsersQuery } from "../../redux/Feature/auth/authApi";
 import { useAppDispatch, useAppSelector } from "../../redux/Hook/Hook";
 import LoadingPage from "../../components/LoadingPage";
-// import { PermissionContextProvider } from "../../contex/PermissionProvider";
+import { useGetUserQuery } from "../../redux/Feature/auth/authApi";
+
 
 const AdminProtectedRoute = ({ children }) => {
   const dispatch = useAppDispatch();
@@ -17,9 +17,8 @@ const AdminProtectedRoute = ({ children }) => {
   const user = useAppSelector(useCurrentUser);
   const token = useAppSelector(useCurrentToken);
   const { data, isLoading, isFetching, refetch } =
-  useGetUsersQuery();
-  // const { setLoggedInUserPermissions } = useContext(PermissionContextProvider);
-  
+  useGetUserQuery();
+  console.log(data)
   useEffect(() => {
     if (user && token) {
       refetch();
@@ -27,17 +26,7 @@ const AdminProtectedRoute = ({ children }) => {
     }
   }, [user, token, refetch]);
 
-  // useEffect(() => {
-  //   if (Array.isArray(data?.data?.role) && data?.data?.role?.length > 0) {
-  //     const arr = data?.data?.role;
-  //     const array = [];
-  //     for (let index = 0; index < arr.length; index++) {
-  //       const element = arr[index];
-  //       element.permissions.forEach((item) => array.push(item?.name));
-  //     }
-  //     setLoggedInUserPermissions([...array]);
-  //   }
-  // }, [data?.data?.role, data?.data]);
+
 
   if (!token || token == null || user == null) {
     return <Navigate to={"/login"}></Navigate>;
@@ -46,7 +35,7 @@ const AdminProtectedRoute = ({ children }) => {
     return <LoadingPage></LoadingPage>;
   }
   const loggedInUser = data?.data?.find((u) => u.email === user.email);
-//  console.log(loggedInUser)
+  console.log(loggedInUser)
   // Check if the logged-in user is an admin
   if (!loggedInUser || loggedInUser.role !== "admin") {
     dispatch(logout());

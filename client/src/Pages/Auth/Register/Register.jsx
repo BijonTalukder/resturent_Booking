@@ -6,10 +6,10 @@ import ZEmail from "../../../components/Form/ZEmail";
 import ZPhone from "../../../components/Form/ZPhone";
 import { FaGreaterThan, FaHome } from "react-icons/fa";
 import img from "../../../assets/banner/contact-banner.jpg";
-import { useRegisterMutation } from "../../../redux/Feature/auth/authApi";
 import { useAppSelector } from "../../../redux/Hook/Hook";
 import { useCurrentToken, useCurrentUser } from "../../../redux/Feature/auth/authSlice";
 import { Modal } from "antd"; // Import Ant Design Modal
+import { useRegisterMutation } from "../../../redux/Feature/auth/authApi";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -53,38 +53,7 @@ const Register = () => {
 
   return (
     <>
-      <div className="relative mb-5">
-        <div
-          className="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center bg-fixed"
-          style={{
-            backgroundImage: `url(${img})`,
-            height: "300px",
-            backgroundSize: "cover",
-          }}
-        >
-          <div className="absolute inset-0 bg-black opacity-40"></div>
-        </div>
-        <div className="relative z-10 text-center text-white py-16">
-          <p className="uppercase font-bold text-xl">Register Here</p>
-          <nav className="flex justify-center space-x-3 py-8">
-            <Link
-              to="/"
-              className="text-lg font-medium hover:text-gray-300 transition-all duration-200"
-            >
-              <FaHome className="text-blue-300" size={20} />
-            </Link>
-            <span className="text-lg text-gray-300 mt-1">
-              <FaGreaterThan size={15} />
-            </span>
-            <Link
-              to="/register"
-              className="text-base font-medium hover:text-gray-300 transition-all duration-200"
-            >
-              Register
-            </Link>
-          </nav>
-        </div>
-      </div>
+   
       <div className="min-h-screen  py-6 flex flex-col justify-center sm:py-12">
         <div className="relative py-3 sm:w-[40%] sm:mx-auto">
           <div className="relative px-4 py-10 bg-gray-100 md:m-0 md:rounded-none m-2 rounded-md shadow-lg sm:rounded-3xl">
