@@ -19,7 +19,7 @@ const Header = () => {
     navigate("/login");
   };
 
-  const getActiveClass = (path) => (location.pathname === path ? "!text-blue-500 !font-bold" : "text-white");
+  const getActiveClass = (path) => (location.pathname === path ? "!text-blue-500 !font-bold" : "text-black");
 
   const userMenu = (
     <Menu>
@@ -52,30 +52,40 @@ const Header = () => {
 
   return (
     <>
-      <div className="bg-secondary py-2 px-4 lg:px-10 mb-3">
-        <div className="text-white max-w-[1400px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-3">
-          <div className="flex items-center gap-1">
-            <span className="text-[12px] md:text-base text-center">
-              All Wearing & Promotional Products, Fast & Free Shipping, and All-Inclusive Pricing
-            </span>
+      <div className="py-2 px-4 lg:px-10 mb-3 shadow-sm border-b border-gray-200">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
+        <div className="flex justify-between  items-center gap-x-3">
+            <div>
+             <Link to={"/"}>
+             <img
+              className="w-8 h-8 rounded-full"
+              src={`https://ui-avatars.com/api/?name=${user?.name?.charAt(0) || "A"}`}
+              alt="user photo"
+            />
+             </Link>
+            </div>
+            <div>
+              <p className="text-[12px] font-bold">{user?.name || "Hello Guest"}</p>
+              <p className="text-[10px]">Where are you going?</p>
+            </div>
           </div>
 
-          {token ? (
+           {token ? (
             <Dropdown overlay={userMenu} trigger={["click"]}>
-              <Button className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-white">
-                {user?.name}
+              <Button onClick={handleLogout} className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-white">
+                Log out
                 <IoChevronDownCircleOutline className="h-4 w-4 transition-transform" />
               </Button>
             </Dropdown>
           ) : (
-            <div className="text-white flex justify-start items-center gap-2">
-              <div className="flex gap-1 text-[12px] md:text-base">
+            <div className="text-black flex items-center gap-2">
+              <div className="flex   gap-1 text-[12px] md:text-base">
                 <Link to="/login" className={getActiveClass("/login")}>
-                  Login
+                  <span className="">Login</span>
                 </Link>{" "}
                 /
                 <Link to="/register" className={getActiveClass("/register")}>
-                  Register
+                <span className="">Register</span>
                 </Link>
               </div>
             </div>
@@ -83,10 +93,6 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="w-[95%] lg:px-7 lg:max-w-[1400px] mx-auto">
-        <BottomHeader />
-      </div>
-      <hr className="border-[1px] mt-3" />
     </>
   );
 };
