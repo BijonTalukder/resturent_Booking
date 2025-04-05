@@ -5,9 +5,9 @@ import {
   useCurrentToken,
   useCurrentUser,
 } from "../../redux/Feature/auth/authSlice";
-import { useGetUsersQuery } from "../../redux/Feature/auth/authApi";
 import { useAppDispatch, useAppSelector } from "../../redux/Hook/Hook";
 import LoadingPage from "../../components/LoadingPage";
+import { useGetUserQuery } from "../../redux/Feature/auth/authApi";
 
 const ProtectedRoutes = ({ children, role }) => {
   const dispatch = useAppDispatch();
@@ -15,7 +15,7 @@ const ProtectedRoutes = ({ children, role }) => {
   const [loading, setLoading] = useState(true);
   const user = useAppSelector(useCurrentUser);
   const token = useAppSelector(useCurrentToken);
-  const { data, isLoading, isFetching, refetch } = useGetUsersQuery();
+  const { data, isLoading, isFetching, refetch } = useGetUserQuery();
 
   useEffect(() => {
     if (user && token) {
