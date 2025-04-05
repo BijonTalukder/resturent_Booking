@@ -5,7 +5,7 @@ const usersApi = baseApi.injectEndpoints({
     // Add User
     addUser: builder.mutation({
       query: (data) => ({
-        url: "/users/create",
+        url: "/user/register",
         headers: {
           'Content-Type': 'application/json',
         },
@@ -18,7 +18,7 @@ const usersApi = baseApi.injectEndpoints({
     // Get Users
     getUsers: builder.query({
       query: () => ({
-        url: "/users",
+        url: "/user",
       }),
       providesTags: ['users'], // Provides users cache
     }),
@@ -26,7 +26,7 @@ const usersApi = baseApi.injectEndpoints({
     // Get User by ID
     getUserById: builder.query({
       query: (id) => ({
-        url: `/users/${id}`,
+        url: `/user/${id}`,
       }),
       providesTags: ['users'], // Provides users cache
     }),
@@ -34,7 +34,7 @@ const usersApi = baseApi.injectEndpoints({
     // Update User
     updateUser: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/users/${id}`,
+        url: `/user/${id}`,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -47,7 +47,7 @@ const usersApi = baseApi.injectEndpoints({
     // Delete User
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `/users/${id}`,
+        url: `/user/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ['users'],
