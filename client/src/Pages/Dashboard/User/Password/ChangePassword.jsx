@@ -48,7 +48,7 @@ const ChangePassword = () => {
 
   return (
     <>
-      <div>
+      <div className="py-10">
         <ZFormTwo
           isLoading={updateLoading}
           isSuccess={updateSuccess}
