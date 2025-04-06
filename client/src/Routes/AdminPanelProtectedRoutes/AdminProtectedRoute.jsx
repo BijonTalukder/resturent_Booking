@@ -18,7 +18,7 @@ const AdminProtectedRoute = ({ children }) => {
   const token = useAppSelector(useCurrentToken);
   const { data, isLoading, isFetching, refetch } =
   useGetUserQuery();
-  console.log(data)
+  // console.log(data)
   useEffect(() => {
     if (user && token) {
       refetch();
@@ -35,8 +35,7 @@ const AdminProtectedRoute = ({ children }) => {
     return <LoadingPage></LoadingPage>;
   }
   const loggedInUser = data?.data?.find((u) => u.email === user.email);
-  console.log(loggedInUser)
-  // Check if the logged-in user is an admin
+  // console.log(loggedInUser)
   if (!loggedInUser || loggedInUser.role !== "admin") {
     dispatch(logout());
     return <Navigate to={"/login"}></Navigate>;

@@ -25,7 +25,7 @@ const BreadCrumb = () => {
 
       return (
         <div key={linkPath}>
-          <Link to={linkPath} legacyBehavior>
+          <Link to={linkPath}>
             <a
               className={`text-base flex items-center gap-x-2 ${
                 isLast ? "text-cyan-700 font-semibold" : ""

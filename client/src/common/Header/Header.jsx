@@ -71,12 +71,12 @@ const Header = () => {
           </div>
 
            {token ? (
-            <Dropdown overlay={userMenu} trigger={["click"]}>
-              <Button onClick={handleLogout} className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-white">
+        
+              <Button onClick={handleLogout} className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-black">
                 Log out
-                <IoChevronDownCircleOutline className="h-4 w-4 transition-transform" />
+                {/* <IoChevronDownCircleOutline className="h-4 w-4 transition-transform" /> */}
               </Button>
-            </Dropdown>
+ 
           ) : (
             <div className="text-black flex items-center gap-2">
               <div className="flex   gap-1 text-[12px] md:text-base">
