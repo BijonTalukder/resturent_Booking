@@ -5,7 +5,7 @@ import { CiEdit } from "react-icons/ci";
 import { AiFillDelete, AiFillEdit, AiFillEye, AiOutlineDelete } from "react-icons/ai";
 import { FaEye } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../../../../redux/Hook/Hook";
-import { useDeleteProductMutation, useGetProductsQuery } from "../../../../redux/Feature/Admin/product/productApi";
+import { useDeleteProductMutation, useGetProductsQuery } from "../../../../redux/Feature/Admin/hotel/productApi";
 import { setIsDeleteModalOpen } from "../../../../redux/Modal/ModalSlice";
 import EditModal from "../../../../components/Modal/EditModal";
 // import EditProduct from "./EditProduct/EditProduct";

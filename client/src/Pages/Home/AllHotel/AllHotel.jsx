@@ -11,7 +11,6 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import SectionTitle from "../SectionTitle/SectionTitle";
-import { useGetProductsQuery } from "../../../redux/Feature/Admin/product/productApi";
 import ProductsSkeleton from "../../../components/Skeleton/ProductsSkeleton";
 import { useAppDispatch, useAppSelector } from "../../../redux/Hook/Hook";
 import ViewProduct from "../../../components/ViewProduct";
@@ -22,74 +21,34 @@ import Image1 from "../../../../public/image.png";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import Cart from "../../../common/Cart/Cart";
 import Adjustment from "../../../common/Adjustment/Adjustment";
+import { useGetHotelQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
 
-const hotels = [
-  {
-    id: 1,
-    name: "Hotel Golden Palace, Puri",
-    location: "VIP Rd, City, Puri, Odisha 752001",
-    rating: 4.5,
-    reviews: 23,
-    distanceFromCenter: 34.32,
-    price: {
-      original: 34440.87,
-      discounted: 31440.87,
-    },
-    amenities: ["Free Wifi", "Swimming Pool", "City View"],
-    imageUrl: Image1,
-    nights: 3,
-    capacity: {
-      adults: 2,
-      children: 2,
-    },
-    tags: ["Best", "Cheapest"],
-  },
-  {
-    id: 2,
-    name: "Hotel Golden Palace, Puri",
-    location: "VIP Rd, City, Puri, Odisha 752001",
-    rating: 4.5,
-    reviews: 23,
-    distanceFromCenter: 34.32,
-    price: {
-      original: 34440.87,
-      discounted: 31440.87,
-    },
-    amenities: ["Free Wifi", "Swimming Pool", "City View"],
-    imageUrl: Image1,
-    nights: 3,
-    capacity: {
-      adults: 2,
-      children: 2,
-    },
-    tags: ["Best", "Cheapest"],
-  },
-];
+
 
 const AllHotel = () => {
-  const { data, error, isLoading } = useGetProductsQuery();
+  const { data, error, isLoading } = useGetHotelQuery();
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
     const [visibleRight, setVisibleRight] = useState(false);
   
 
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     const timer = setTimeout(() => {
-  //       setShowSkeleton(false);
-  //     }, 500);
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 500);
 
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [isLoading]);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  // if (isLoading || showSkeleton) {
-  //   return <ProductsSkeleton />;
-  // }
+  if (isLoading || showSkeleton) {
+    return <ProductsSkeleton />;
+  }
 
   return (
     <div className="">
@@ -122,16 +81,16 @@ const AllHotel = () => {
       </div>
 
       <div className="lg:max-w-[98%] grid grid-cols-2 gap-4 md:flex md:flex-col mx-auto">
-        {hotels.map((hotel, index) => (
+        {data?.data?.map((hotel, index) => (
           <div
             key={index}
             className="flex flex-col md:flex-row rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white mb-4"
           >
             <div className="relative h-[110px] md:w-[400px] md:h-[300px]">
               <img
-                src={hotel.imageUrl}
-                alt={hotel.name}
-                className="w-full h-full object-cover"
+                src={hotel.image || Image1}
+                alt={"Hotel Image"}
+                className="w-full h-full object-cover text-[10px]"
               />
               <button className="absolute top-2 right-2 text-white bg-[#9E9E9E59] rounded-full p-2">
                 <CiHeart className="h-6 w-6" />
@@ -225,7 +184,7 @@ const AllHotel = () => {
 
                 <div className="md:min-w-[300px] md:space-y-5 text-start lg:text-right">
                   <div className="md:flex hidden gap-2 justify-end">
-                    {hotel.tags.map((tag, i) => (
+                    {hotel.amenities.map((tag, i) => (
                       <span
                         key={i}
                         className={`px-3 py-1 rounded-full text-sm hidden lg:block ${
@@ -239,7 +198,7 @@ const AllHotel = () => {
                     ))}
                   </div>
 
-                  <div className="hidden md:flex items-center gap-2 justify-end">
+                  {/* <div className="hidden md:flex items-center gap-2 justify-end">
                     <div className="text-[#666666] line-through ">
                       Rs{hotel.price.original.toLocaleString()}
                     </div>
@@ -256,18 +215,18 @@ const AllHotel = () => {
                   <div className="text-[#666666] text-sm hidden lg:block">
                     {hotel.capacity.adults} Adults, {hotel.capacity.children}{" "}
                     Children
-                  </div>
+                  </div> */}
                   <button className="lg:w-full hidden lg:block text-[#5054D9] py-3 rounded-lg border border-[#5054D9] transition font-medium px-4">
                     Choose Room
                   </button>
 
                   <div className="lg:hidden">
-                    <div className="text-[#5054D9] font-bold text-[9px] md:hidden mb-2">
+                    {/* <div className="text-[#5054D9] font-bold text-[9px] md:hidden mb-2">
                       <span className="">
                         {" "}
                         {hotel.price.discounted.toLocaleString()} BDT
                       </span>
-                    </div>
+                    </div> */}
                     <button className="text-[#5054D9] text-xs py-1 w-full rounded-lg border border-[#5054D9] transition font-medium px-1 mb-4">
                       Choose Room
                     </button>

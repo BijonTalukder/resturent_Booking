@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { useGetAttributesQuery } from "../../../../../redux/Feature/Admin/attribute/attributesApi";
 import { useGetBrandQuery } from "../../../../../redux/Feature/Admin/brand/brandApi";
-import { useAddProductMutation } from "../../../../../redux/Feature/Admin/product/productApi";
+import { useAddProductMutation } from "../../../../../redux/Feature/Admin/hotel/productApi";
 import { useGetCategoryQuery } from "../../../../../redux/Feature/Admin/category/categoryApi";
 import { useNavigate } from "react-router-dom";
 import { VariantProductTable } from "../../../../../components/VariantProductTable";

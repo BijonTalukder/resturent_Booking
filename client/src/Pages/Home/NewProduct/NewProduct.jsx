@@ -5,7 +5,6 @@ import "keen-slider/keen-slider.min.css";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import SectionTitle from "../SectionTitle/SectionTitle";
-import { useGetProductsQuery } from "../../../redux/Feature/Admin/product/productApi";
 import SliderSkeleton from "../../../components/Skeleton/SliderSkeleton";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/Hook/Hook";
@@ -15,7 +14,7 @@ import ViewProduct from "../../../components/ViewProduct";
 
 const NewProduct = () => {
   const dispatch = useAppDispatch();
-  const { data, error, isLoading } = useGetProductsQuery();
+  // const { data, error, isLoading } = useGetProductsQuery();
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null); // Initialize as null
   const sliderRef = useRef(null);

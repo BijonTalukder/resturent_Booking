@@ -9,7 +9,6 @@ import { addToCart } from "../../../redux/Cart/cartSlice";
 import { toast } from "sonner";
 import { Alert, Tooltip } from "antd";
 import NewProduct from "../NewProduct/NewProduct";
-import RelatedProduct from "../RelatedProduct/RelatedProduct";
 import ProductDetailsSkeleton from "../../../components/Skeleton/ProductDetailsSkeleton";
 
 const ProductDetails = () => {
@@ -419,8 +418,6 @@ const ProductDetails = () => {
           </table>
         </div>
       </div>
-
-      <RelatedProduct id={singleProduct?.id} />
     </section>
   );
 };

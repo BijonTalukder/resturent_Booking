@@ -57,7 +57,7 @@ const DashboardStatistics = () => {
 
   // Error state
   if (error) {
-    return <div>Error loading orders: {error.message}</div>;
+    return <div>{"Error loading hotels" || error.message}</div>;
   }
 
   return (
