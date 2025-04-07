@@ -26,32 +26,39 @@ import { useGetHotelQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
 
 
 const AllHotel = () => {
-  const { data, error, isLoading } = useGetHotelQuery();
+  const { data, error, isFetching, isLoading } = useGetHotelQuery();
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
     const [visibleRight, setVisibleRight] = useState(false);
   
 
   useEffect(() => {
-    if (!isLoading) {
+    if (isFetching) {
+      setShowSkeleton(true);
+    } else {
       const timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 500);
-
+      }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [isLoading]);
+  }, [isFetching]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  if (isLoading || showSkeleton) {
-    return <ProductsSkeleton />;
-  }
+  const noProductsFound =
+  !isLoading &&
+  !showSkeleton &&
+  data?.data?.length === 0 &&
+  (searchQuery.trim() !== "" 
+  // || priceMin !== 1 || priceMax !== 100000000000000
+);
+
+
 
   return (
-    <div className="">
+    <div className="pb-[80px]">
       <div className="relative w-[100%] md:w-[75%] lg:w-[50%] mx-auto mb-5 items-center flex py-[8px] gap-2">
         <div className="w-full">
           <label htmlFor="Search" className="sr-only">
@@ -80,40 +87,50 @@ const AllHotel = () => {
        
       </div>
 
-      <div className="lg:max-w-[98%] grid grid-cols-2 gap-4 md:flex md:flex-col mx-auto">
+        {/* Show Skeleton While Loading */}
+                {(isLoading || showSkeleton) && <ProductsSkeleton />}
+      
+                {/* Show "No products found" message if no products match the search or price range */}
+                {noProductsFound && (
+                  <div className="text-center text-xl font-bold text-red-500 mt-10">
+                    No products found for the selected criteria.
+                  </div>
+                )}
+
+      <div className="lg:max-w-[98%] grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto">
         {data?.data?.map((hotel, index) => (
           <div
             key={index}
-            className="flex flex-col md:flex-row rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white mb-4"
+            className="flex flex-col  rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white"
           >
-            <div className="relative h-[110px] md:w-[400px] md:h-[300px]">
+            <div className="relative h-[110px]  md:h-[100%]">
               <img
-                src={hotel.image || Image1}
+                src={hotel?.image || Image1}
                 alt={"Hotel Image"}
                 className="w-full h-full object-cover text-[10px]"
               />
               <button className="absolute top-2 right-2 text-white bg-[#9E9E9E59] rounded-full p-2">
-                <CiHeart className="h-6 w-6" />
+                <CiHeart className="h-5 w-5" />
               </button>
             </div>
 
             <div className="flex-1 px-2 py-1 md:px-4 md:py-4">
-              <div className="flex flex-col lg:flex-row lg:gap-8">
-                <div className="flex-1 md:space-y-4 md:border-b-2 lg:border-b-0 lg:border-r-2 border-gray-400 border-dashed lg:px-3 py-2 md:py-5 lg:py-0">
+              <div className="flex flex-col  lg:gap-8">
+                <div className="flex-1 md:space-y-4 lg:px-3 py-2 md:py-5 lg:py-0">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-2">
                     <h2 className="text-[10px] md:text-2xl font-semibold text-[#1A1A1A]">
                       {hotel.name}
                     </h2>
-                    <div className="hidden md:flex gap-1  text-[#F99F1D] text-xl">
+                    {/* <div className="hidden md:flex gap-1  text-[#F99F1D] text-xl">
                       {"★".repeat(Math.floor(hotel.rating))}
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="flex items-center gap-1 text-[#666666] md:mb-4">
-                    <IoLocationOutline className="text-lg text-blue-500 block lg:hidden" />
-                    <span className="text-[8px]">{hotel.location}</span>
+                    <IoLocationOutline className="text-lg text-blue-500 block" />
+                    <span className="text-[8px] md:text-[14px]">{hotel.location}</span>
                   </div>
-
+{/* 
                   <div className="hidden md:flex flex-col items-start lg:flex-row lg:items-center gap-5 ">
                     <div className="flex items-center gap-1 text-[#5054D9] cursor-pointer ">
                       <span className="text-sm">View property in map</span>
@@ -137,9 +154,9 @@ const AllHotel = () => {
                         📍 34.32 KM from center
                       </span>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="hidden md:flex items-center gap-3 lg:gap-4 mb-4">
+                  {/* <div className="hidden md:flex items-center gap-3 lg:gap-4 mb-4">
                     <div className="flex items-center gap-2">
                       <FaWifi className="text-[#666666] text-xl" />
                       <span className="text-[#666666]">Free WiFi</span>
@@ -152,9 +169,9 @@ const AllHotel = () => {
                       <FaCity className="text-[#666666] text-xl" />
                       <span className="text-[#666666]">City View</span>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="hidden md:flex gap-2">
+                  {/* <div className="hidden md:flex gap-2">
                     <div className="flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -179,11 +196,11 @@ const AllHotel = () => {
                         ({hotel.reviews} Reviews)
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
-                <div className="md:min-w-[300px] md:space-y-5 text-start lg:text-right">
-                  <div className="md:flex hidden gap-2 justify-end">
+                <div className="md:min-w-[300px] md:space-y-5">
+                  <div className="md:flex hidden gap-2">
                     {hotel.amenities.map((tag, i) => (
                       <span
                         key={i}
