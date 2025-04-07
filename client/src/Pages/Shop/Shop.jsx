@@ -7,7 +7,7 @@ import { CiFilter, CiGrid42 } from "react-icons/ci";
 import { FaListAlt } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import ProductsSkeleton from "../../components/Skeleton/ProductsSkeleton";
-import { useGetProductsBySearchQuery } from "../../redux/Feature/Admin/product/productApi";
+// import { useGetProductsBySearchQuery } from "../../redux/Feature/Admin/product/productApi";
 import { Link } from "react-router-dom";
 import { Modal, Pagination } from 'antd';
 import { useGetCategoryQuery } from "../../redux/Feature/Admin/category/categoryApi";
@@ -33,16 +33,16 @@ const Shop = () => {
   const { data: brands, isLoading: isBrandsLoading } = useGetBrandQuery();
 
   // Fetch products with filters and sorting
-  const { data, error, isLoading, isFetching } = useGetProductsBySearchQuery({
-    search: searchQuery,
-    page: currentPage,
-    limit: limit,
-    priceMin: priceMin,
-    priceMax: priceMax,
-    category: selectedCategory,
-    brand: selectedBrand,
-    sortBy: sortBy, // Pass the sorting option to the API
-  });
+  // const { data, error, isLoading, isFetching } = useGetProductsBySearchQuery({
+  //   search: searchQuery,
+  //   page: currentPage,
+  //   limit: limit,
+  //   priceMin: priceMin,
+  //   priceMax: priceMax,
+  //   category: selectedCategory,
+  //   brand: selectedBrand,
+  //   sortBy: sortBy,
+  // });
 
   useEffect(() => {
     if (isFetching) {

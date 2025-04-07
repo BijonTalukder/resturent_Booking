@@ -1,0 +1,103 @@
+import baseApi from '../../../Api/baseApi';
+
+const hotelApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    // Create Hotel
+    createHotel: builder.mutation({
+      query: (data) => ({
+        url: "/hotel/create",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ['hotels']
+    }),
+
+    // Get All Hotels
+    getHotel: builder.query({
+      query: () => ({
+        url: "/hotel",
+      }),
+      providesTags: ['hotels']
+    }),
+
+    // Get Hotels with search, pagination, and filtering
+    // getHotelsBySearch: builder.query({
+    //   query: ({ 
+    //     search = '', 
+    //     page, 
+    //     limit, 
+    //     priceMin, 
+    //     priceMax, 
+    //     location, 
+    //     amenities,
+    //     sortBy 
+    //   }) => ({
+    //     url: "/hotel",
+    //     params: {
+    //       search,
+    //       page,
+    //       limit,
+    //       priceMin,
+    //       priceMax,
+    //       location,
+    //       amenities,
+    //       sortBy
+    //     },
+    //   }),
+    //   providesTags: ['hotels']
+    // }),
+
+    // Get Hotel by Id
+    getHotelById: builder.query({
+      query: (id) => ({
+        url: `/hotel/${id}`,
+      }),
+      providesTags: ['hotels']
+    }),
+
+    // Get Nearby Hotels
+    // getNearbyHotels: builder.query({
+    //   query: (id) => ({
+    //     url: `/nearbyHotels/${id}`,
+    //   }),
+    //   providesTags: ['hotels']
+    // }),
+
+    // Update Hotel
+    updateHotel: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/hotel/${id}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ['hotels']
+    }),
+
+    // Delete Hotel
+    deleteHotel: builder.mutation({
+      query: (id) => ({
+        url: `/hotel/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ['hotels']
+    }),
+  }),
+});
+
+export const {
+  useCreateHotelMutation,
+  useGetHotelQuery,
+  // useGetHotelsBySearchQuery,
+  useGetHotelByIdQuery,
+  // useGetNearbyHotelsQuery,
+  useUpdateHotelMutation,
+  useDeleteHotelMutation,
+} = hotelApi;
+
+export default hotelApi;

@@ -3,12 +3,7 @@ import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { TfiLayoutSlider } from "react-icons/tfi";
 import DashboardStatistics from "../Pages/Dashboard/Admin/DashboardStatistics/DashboardStatistics";
 import Orders from "../Pages/Dashboard/Admin/Orders/Orders";
-import Category from "../Pages/Dashboard/Admin/Category/Category";
 import { AiFillBoxPlot } from "react-icons/ai";
-import Brand from "../Pages/Dashboard/Admin/Brand/Brand";
-import Attribute from "../Pages/Dashboard/Admin/Attributes/Attribute";
-import Product from "../Pages/Dashboard/Admin/Product/Product";
-import AddProduct from "../Pages/Dashboard/Admin/Product/AddProduct/AddProduct";
 import { BiSolidPurchaseTag } from "react-icons/bi";
 import Sliders from "../Pages/Dashboard/Admin/Slider/Sliders";
 import { CiShop } from "react-icons/ci";
@@ -17,9 +12,10 @@ import Subscription from "../Pages/Dashboard/Admin/Subscription/Subscription";
 import Contact from "../Pages/Dashboard/Admin/Contact/Contact";
 import Users from "../Pages/Dashboard/Admin/Customers/Users";
 import AddUser from "../Pages/Dashboard/Admin/Customers/AddUser/AddUser";
-import ViewProduct from "../Pages/Dashboard/Admin/Product/ViewProduct/ViewProduct";
 import EditAdminProfile from "../Pages/Dashboard/Admin/Profile/EditAdminProfile";
-import EditProduct from "../Pages/Dashboard/Admin/Product/EditProduct/EditProduct";
+import Hotel from "../Pages/Dashboard/Admin/Hotel/Hotel";
+import AddHotel from "../Pages/Dashboard/Admin/Hotel/AddHotel";
+import EditHotel from "../Pages/Dashboard/Admin/Hotel/EditHotel";
 
 
 export const adminRoutes = [
@@ -59,8 +55,8 @@ export const adminRoutes = [
       {
         path: "hotels",
         label: "Hotels",
-        element: <Product></Product>,
-        permissionName: "view product",
+        element: <Hotel></Hotel>,
+        permissionName: "view hotel",
       },
     ],
   },
@@ -77,17 +73,17 @@ export const adminRoutes = [
     icon: <FaUsers size={20}/>,
   },
   {
-    path: "add-product",
-    element: <AddProduct></AddProduct>,
+    path: "add-hotel",
+    element: <AddHotel></AddHotel>,
   },
   {
-    path: "edit-product/:id",
-    element: <EditProduct></EditProduct>,
+    path: "edit-hotel/:id",
+    element: <EditHotel></EditHotel>,
   },
-  {
-    path: "view-product-details/:id",
-    element: <ViewProduct></ViewProduct>,
-  },
+  // {
+  //   path: "view-hotel-details/:id",
+  //   element: <ViewProduct></ViewProduct>,
+  // },
 
   {
     path: "sliders",

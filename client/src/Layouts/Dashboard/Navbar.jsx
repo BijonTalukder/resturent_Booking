@@ -20,7 +20,7 @@ const Navbar = ({
               </button>
             )}
 
-            <p className="text-[#E0E0E0] hidden lg:block">Dashboard</p>
+            <p className="text-[#E0E0E0] hidden lg:block">Hotel Universe</p>
           </div>
           {/* profile */}
           <div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, Table, Tag } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { useGetProductsByIdQuery } from "../../../../../redux/Feature/Admin/product/productApi";
+import { useGetProductsByIdQuery } from "../../../../../redux/Feature/Admin/hotel/productApi";
 import Skeleton from "../../../../../components/Skeleton/Skeleton";
 import ProductImageSlider from "../../../../Home/ProductDetails/ProductImageSlider";
 import moment from "moment";

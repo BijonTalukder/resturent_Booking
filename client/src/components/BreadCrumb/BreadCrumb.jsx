@@ -13,10 +13,10 @@ const BreadCrumb = () => {
     .map((item, index) => {
       currentLinks += `/${item}`;
       const linkPath = 
-      item === "Dashboard" 
-        ? "/Dashboard/AdminHome" 
-        : item === "UserDashboard" 
-        ? "/UserDashboard/UserHome" 
+      item === "admin" 
+        ? "/admin/home" 
+        // : item === "UserDashboard" 
+        // ? "/UserDashboard/UserHome" 
         : currentLinks;
     
 

@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   useGetProductsByIdQuery,
   useUpdateProductMutation,
-} from "../../../../../redux/Feature/Admin/product/productApi";
+} from "../../../../../redux/Feature/Admin/hotel/productApi";
 import { useGetAttributesQuery } from "../../../../../redux/Feature/Admin/attribute/attributesApi";
 import { useGetCategoryQuery } from "../../../../../redux/Feature/Admin/category/categoryApi";
 import { useGetBrandQuery } from "../../../../../redux/Feature/Admin/brand/brandApi";
