@@ -83,6 +83,10 @@ router.post("/room/checkAvailability",async(req,res,next)=>{
     roomController.checkAvailability(req,res,next)
 })
 
+router.get("/hotel/:hotelId/rooms",async(req,res,next)=>{
+    roomController.getRoomsByHotel(req,res,next)
+})
+
 //-------------------Booking Routes-----------------------
 router.post("/booking/create",async(req,res,next)=>{
     bookingController.createBooking(req,res,next)

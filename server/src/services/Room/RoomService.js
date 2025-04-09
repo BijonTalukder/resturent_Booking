@@ -47,6 +47,17 @@ class RoomService {
 
         return overlappingBookings.length === 0; // Returns true if available
     }
+
+
+   async getRoomsByHotel(hotelId){
+
+    return await this.prisma.room.findMany({
+        where: {
+          hotelId: hotelId,
+        },
+      });
+
+   }
 }
 
 module.exports = RoomService;
