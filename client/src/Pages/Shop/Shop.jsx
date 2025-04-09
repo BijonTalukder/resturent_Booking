@@ -25,8 +25,8 @@ const Shop = () => {
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
-  const [viewMode, setViewMode] = useState("grid"); // State for view mode (grid or list)
-  const [sortBy, setSortBy] = useState(""); // State for sorting option
+  const [viewMode, setViewMode] = useState("grid"); 
+  const [sortBy, setSortBy] = useState("");
  console.log(sortBy)
   // Fetch categories and brands
   const { data: categories, isLoading: isCategoriesLoading } = useGetCategoryQuery();

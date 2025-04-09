@@ -20,7 +20,7 @@ const EditSlider = ({ selectedSlider }) => {
     setIsLoading(true);
   
     try {
-      let imageUrl = selectedSlider?.imageUrl; // Keep old image if no new one is provided
+      let imageUrl = selectedSlider?.imageUrl;
   
       // Handle new image upload
       if (formData?.imageUrl && !isImageRemoved) {

@@ -12,7 +12,7 @@ const Adjustment = ({ visibleRight, setVisibleRight }) => {
             className="w-[500px] rounded-t-2xl"
           >
      <p>Adjust your hotel seraching here</p>
-      <Link to={`/checkout`}>
+      <Link to={``}>
                <div className="mt-6">
                  <button
              
