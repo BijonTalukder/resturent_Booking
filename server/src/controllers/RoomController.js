@@ -63,6 +63,22 @@ class RoomController {
             next(error);
         }
     }
+
+    async getRoomsByHotel(req,res,next){
+        try {
+            const { hotelId } = req.params;
+            const result = await this.roomService.getRoomsByHotel(hotelId)
+            if(!result || result.length === 0)
+            {
+                ResponseHandler.error(res,"No rooms found for this hotel.")
+            }
+            ResponseHandler.success(res,"Rooms Available",result,200)
+            
+        } catch (error) {
+            next(error)
+            
+        }
+    }
 }
 
 module.exports = RoomController;

@@ -48,11 +48,15 @@ model Hotel {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  rooms Room[] @relation("HotelRooms")
 }
 
 model Room {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   hotelId     String    @db.ObjectId
+
+  hotel Hotel @relation("HotelRooms",fields: [hotelId],references: [id])
   roomNumber  String    
   type        String    
   price       Float    
