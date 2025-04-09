@@ -1,17 +1,10 @@
 import { ReactNode, useEffect } from "react";
 import { Form } from "antd";
-import {
-  FormProvider,
-  useForm,
-} from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import ErrorHandling from "../ErrorHandling/ErrorHandling";
 import SaveAndCloseButton from "../Button/SaveAndCloseButton";
 import { useAppSelector } from "../../redux/Hook/Hook";
-
-
-
-
+import { use } from "react";
 
 const ZFormTwo = ({ 
   children,
@@ -27,106 +20,77 @@ const ZFormTwo = ({
   formType,
   buttonName,
 }) => {
-
-  const { isAddModalOpen, isEditModalOpen , isCustomerModalOpen,isProductModalOpen } = useAppSelector(
+  const { isAddModalOpen, isEditModalOpen, isCustomerModalOpen, isProductModalOpen } = useAppSelector(
     (state) => state.modal
   );
-  // const formConfig: defaultAndResolver = {};
 
-  // if (defaultValues) {
-  //   formConfig["defaultValues"] = defaultValues;
-  // }
-  // if (resolver) {
-  //   formConfig["resolver"] = resolver;
-  // }
-
-  const methods = useForm({mode:"all"});
+  const methods = useForm({
+    mode: "all",
+    defaultValues: defaultValues || {},
+    resolver,
+  });
 
   const onSubmit = (data) => {
-    // console.log(data)
     submit(data);
   };
 
-  // const errors = ErrorHandling(
-  //   error?.data?.errors,
-  //   // isAddModalOpen,
-  //   // isEditModalOpen
-  // );
-  
+  // Reset form when modal closes (for create forms)
   useEffect(() => {
-
     if (formType === "create") {
-         methods.reset();
-      if (!isAddModalOpen || !isEditModalOpen || !isCustomerModalOpen || !isProductModalOpen) {
+      if (!isAddModalOpen || !isEditModalOpen ) {
         methods.reset();
       }
     }
-    if (formType === "edit") {
-      if (!isEditModalOpen) { 
-        methods.clearErrors();
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAddModalOpen, isEditModalOpen,isCustomerModalOpen, isProductModalOpen, methods]);
+  }, [isAddModalOpen, isEditModalOpen, methods, formType]);
 
-  
+  // Set default values when they change (for edit forms)
+  useEffect(() => {
+    if (formType === "edit" && defaultValues) {
+      methods.reset(defaultValues);
+    }
+  }, [defaultValues, methods, formType]);
+
+  // Close modal on success and reset create forms
   useEffect(() => {
     if (isSuccess && closeModal) {
-      closeModal()
+      closeModal();
+      if (formType === "create") {
+        methods.reset();
+      }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess]);
+  }, [isSuccess, closeModal, methods, formType]);
 
+  // Show toast notifications
+  useEffect(() => {
+    if (isLoading) {
+      toast.loading("Loading...", { id: 1 });
+    } else if (isSuccess) {
+      toast.success(data?.message || "Operation successful", { id: 1 , duration: 3000 });
+    } else if (isError) {
+      toast.error(error?.data?.message || "An error occurred", { 
+        id: 1, 
+        duration: 3000 
+      });
+    }
+  }, [isSuccess, isLoading, isError, data, error]);
 
   useEffect(() => {
     toast.dismiss(1);
   }, []);
 
-  
-  useEffect(() => {
-    if (isLoading || isSuccess || isError) {
-      if (isLoading) {
-        toast.loading("loading...", { id: 1 });
-      }
-      if (isSuccess) {
-        toast.success(data?.message, { id: 1 });
-      }
-      if (isError) {
-        toast.error(error?.data?.message, { id: 1, duration: 3000 });
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, isLoading, isError]);
-
   return (
-    
     <FormProvider {...methods}>
       <Form layout="vertical" onFinish={methods.handleSubmit(onSubmit)}>
         <div>{children}</div>
-       
-           { buttonName &&
-             <SaveAndCloseButton
-             closeModal={closeModal}
-             isLoading={isLoading}
-             isSuccess={isSuccess}
-             title={buttonName}
-           />
-           }
         
-      
-        {/* <div className="mt-5">
-          {Array.isArray(errors) &&
-            errors.length > 0 &&
-            errors.map((item) => (
-              // eslint-disable-next-line react/jsx-key
-              <div
-                className="bg-red-100 my-2 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                role="alert"
-              >
-                <span className="block sm:inline">{item}</span>
-              </div>
-            ))}
-        </div> */}
+        {buttonName && (
+          <SaveAndCloseButton
+            closeModal={closeModal}
+            isLoading={isLoading}
+            isSuccess={isSuccess}
+            title={buttonName}
+          />
+        )}
       </Form>
     </FormProvider>
   );

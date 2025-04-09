@@ -13,9 +13,11 @@ import AddHotel from "./AddHotel";
 import EditHotel from "./EditHotel";
 import { useDeleteHotelMutation, useGetHotelQuery } from "../../../../redux/Feature/Admin/hotel/hotelApi";
 import { useAppDispatch, useAppSelector } from "../../../../redux/Hook/Hook";
+import { useNavigate } from "react-router-dom";
 
 const Hotels = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { data, error, isLoading: hotelIsLoading } = useGetHotelQuery();
   const { isAddModalOpen, isEditModalOpen, isDeleteModalOpen } = useAppSelector((state) => state.modal);
   const [selectedHotel, setSelectedHotel] = useState(null);
@@ -37,7 +39,9 @@ const Hotels = () => {
     isActive: hotel?.isActive,
   }));
 
-  
+  const handleViewHotel = (id) => {
+    navigate(`/admin/view-hotel-details/${id}`);
+  };
 
   const handleEditHotel = (hotelData) => {
     setSelectedHotel(hotelData);
@@ -123,7 +127,7 @@ const Hotels = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-         <a onClick={() => handleViewProduct(record.id)}>
+         <a onClick={() => handleViewHotel(record.id)}>
                   <Tooltip title="Click here to view hotel details" placement="top">
                   
                   <AiFillEye size={25}/>
