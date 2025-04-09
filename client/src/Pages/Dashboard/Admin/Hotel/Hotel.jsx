@@ -8,7 +8,7 @@ import { setIsDeleteModalOpen, setIsEditModalOpen } from "../../../../redux/Moda
 import AddModal from "../../../../components/Modal/AddModal";
 import EditModal from "../../../../components/Modal/EditModal";
 import DeleteModal from "../../../../components/Modal/DeleteModal";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import AddHotel from "./AddHotel";
 import EditHotel from "./EditHotel";
 import { useDeleteHotelMutation, useGetHotelQuery } from "../../../../redux/Feature/Admin/hotel/hotelApi";
@@ -36,6 +36,8 @@ const Hotels = () => {
     amenities: hotel?.amenities,
     isActive: hotel?.isActive,
   }));
+
+  
 
   const handleEditHotel = (hotelData) => {
     setSelectedHotel(hotelData);
@@ -121,6 +123,12 @@ const Hotels = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
+         <a onClick={() => handleViewProduct(record.id)}>
+                  <Tooltip title="Click here to view hotel details" placement="top">
+                  
+                  <AiFillEye size={25}/>
+                          </Tooltip>
+                  </a>
           <a onClick={() => handleEditHotel(record)}>
             <Tooltip title="Edit" placement="top">
               <AiFillEdit className="text-green-500 hover:text-green-700" size={20} />
