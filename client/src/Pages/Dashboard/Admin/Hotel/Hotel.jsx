@@ -39,14 +39,16 @@ const Hotels = () => {
     isActive: hotel?.isActive,
   }));
 
+  const handleEditHotel = (id) => {
+    navigate(`/admin/edit-hotel/${id}`);
+  };
+
+
   const handleViewHotel = (id) => {
     navigate(`/admin/view-hotel-details/${id}`);
   };
 
-  const handleEditHotel = (hotelData) => {
-    setSelectedHotel(hotelData);
-    dispatch(setIsEditModalOpen());
-  };
+
 
   const handleDeleteHotel = (hotelData) => {
     setSelectedHotel(hotelData);
@@ -133,7 +135,7 @@ const Hotels = () => {
                   <AiFillEye size={25}/>
                           </Tooltip>
                   </a>
-          <a onClick={() => handleEditHotel(record)}>
+          <a onClick={() => handleEditHotel(record.id)}>
             <Tooltip title="Edit" placement="top">
               <AiFillEdit className="text-green-500 hover:text-green-700" size={20} />
             </Tooltip>
