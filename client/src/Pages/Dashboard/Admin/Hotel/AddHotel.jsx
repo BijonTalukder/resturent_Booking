@@ -9,6 +9,7 @@ import ZSelect from "../../../../components/Form/ZSelect";
 import ZImageInput from "../../../../components/Form/ZImageInput";
 import { useCreateHotelMutation } from "../../../../redux/Feature/Admin/hotel/hotelApi";
 import { useCurrentUser } from "../../../../redux/Feature/auth/authSlice";
+import ZInputTextArea from "../../../../components/Form/ZInputTextArea";
 
 const AddHotel = () => {
   const dispatch = useAppDispatch();
@@ -127,7 +128,8 @@ const AddHotel = () => {
         data={data}
         buttonName="Create Hotel"
       >
-        <div className="grid grid-cols-1 gap-3 mt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-10">
+          <div className="lg:col-span-2">
           <ZInputTwo
             name="name"
             type="text"
@@ -136,8 +138,10 @@ const AddHotel = () => {
             required={1}
             reset
           />
+          </div>
+          <div className="lg:col-span-2">
 
-          <ZInputTwo
+          <ZInputTextArea
             name="description"
             type="text"
             label="Description"
@@ -145,6 +149,8 @@ const AddHotel = () => {
             required={1}
             reset
           />
+          </div>
+          <div className="lg:col-span-2">
 
           <ZInputTwo
             name="location"
@@ -154,8 +160,10 @@ const AddHotel = () => {
             required={1}
             reset
           />
+          </div>
 
-          <div className="grid grid-cols-2 gap-4">
+       <div className="lg:col-span-2">
+       <div className="grid grid-cols-2 gap-4">
             <ZInputTwo
               name="latitude"
               type="number"
@@ -174,6 +182,7 @@ const AddHotel = () => {
               reset
             />
           </div>
+       </div>
 
           <ZImageInput
             name="image"

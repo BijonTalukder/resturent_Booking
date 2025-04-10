@@ -9,10 +9,7 @@ const ZImageInput = ({
   label,
   defaultValue,
   onRemove,
-  onChange,
-  defaultKey,
-  setPriceQuantityImage,
-  refresh,
+  onChange
 }) => {
 
   const [imageList, setImageList] = useState([]);
@@ -21,13 +18,7 @@ const ZImageInput = ({
     (state) => state.modal
   );
 
-  // Reset imageList when modal is closed
-  useEffect(() => {
-    if (!isAddModalOpen || !isEditModalOpen || !isVariantModalOpen) {
-      // setImageList([]);
-      resetField(name);
-    }
-  }, [isAddModalOpen, isEditModalOpen, isVariantModalOpen]);
+
 
   // Update imageList when defaultValue changes
   useEffect(() => {
@@ -45,12 +36,15 @@ const ZImageInput = ({
     }
   }, [defaultValue]);
 
-  // Handle refresh (if needed)
-  useEffect(() => {
-    if (defaultKey === "product") {
+    // Reset imageList when modal is closed
+    useEffect(() => {
+    if (!isAddModalOpen || !isEditModalOpen || !isVariantModalOpen) {
       setImageList([]);
+      resetField(name);
     }
-  }, [refresh]);
+  }, [isAddModalOpen, isEditModalOpen, isVariantModalOpen]);
+
+
 
   // Handle file change
   const handleChange = (info) => {
@@ -66,34 +60,19 @@ const ZImageInput = ({
         },
       ];
       setImageList(newFileList);
-
-      // Call parent onChange handler if provided
       if (onChange) {
         onChange(file);
       }
-
-      // Update price quantity image if needed
-      if (setPriceQuantityImage && defaultKey === "product") {
-        setPriceQuantityImage((prev) => ({
-          ...prev,
-          imageUrl: file,
-        }));
-      }
-    } else {
+    } 
+    else 
+    {
       setImageList([]);
 
-      // Call parent onChange handler if provided
       if (onChange) {
         onChange(null);
       }
 
-      // Update price quantity image if needed
-      if (setPriceQuantityImage && defaultKey === "product") {
-        setPriceQuantityImage((prev) => ({
-          ...prev,
-          imageUrl: "",
-        }));
-      }
+
     }
   };
 
@@ -109,14 +88,6 @@ const ZImageInput = ({
     // Call parent onChange handler if provided
     if (onChange) {
       onChange(null);
-    }
-
-    // Update price quantity image if needed
-    if (setPriceQuantityImage && defaultKey === "product") {
-      setPriceQuantityImage((prev) => ({
-        ...prev,
-        imageUrl: "",
-      }));
     }
   };
 
@@ -150,12 +121,6 @@ const ZImageInput = ({
               setImageList(newFileList);
               onChange(file);
 
-              if (defaultKey === "product" && setPriceQuantityImage) {
-                setPriceQuantityImage((prev) => ({
-                  ...prev,
-                  imageUrl: file,
-                }));
-              }
 
               return false; // Prevent automatic upload
             }}

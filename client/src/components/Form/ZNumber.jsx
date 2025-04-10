@@ -10,9 +10,7 @@ const ZNumber = ({
   name,
   label,
   value,
-  setPriceQuantityImage,
   defaultKey,
-  refresh,
   placeholder,
   required
 }) => {
@@ -47,74 +45,8 @@ const ZNumber = ({
     }
   }, [value, setValue]);
 
- 
-useEffect(() => {
-  if (defaultKey === "product") {
-    const productFields = [
-      "stock",
-      "price"
-    ];
-
-    productFields.forEach((field) => resetField(field));
-  }
-}, [refresh]);
-
-const handleKeyPress = (event) => {
-  const regex = [
-    "price",
-  ].includes(name)
-    ? fractionRegex
-    : numberRegex;
-
-  // Prevent multiple decimal points
-  if (
-    (event.key === "." || event.key === ",") &&
-    event.currentTarget.value.includes(".")
-  ) {
-    event.preventDefault();
-    return;
-  }
-
-  if (!regex.test(event.key)) {
-    event.preventDefault();
-  }
-};
-
-
-  
-  useEffect(() => {
-    if (setPriceQuantityImage) {
-      const resetValues = (key, values) => {
-        if (defaultKey === key) {
-          setPriceQuantityImage((_prev) => ({ ...values }));
-        }
-      };
-  
-
-  
-      resetValues("product", {
-        // image: "",
-        stock: "",
-        price: "",
-
-      });
-    }
-  }, []);
-  
-
   const handleChange = (val) => {
-    if (defaultKey === "product" && setPriceQuantityImage) {
-      setPriceQuantityImage((prev) => ({
-        ...prev,
-        [name]: Number(val),
-      }));
-    }
-    if (defaultKey === "singleProduct" && setPriceQuantityImage) {
-      setPriceQuantityImage((prev) => ({
-        ...prev,
-        [name]: Number(val),
-      }));
-    }
+
   };
 
   return (

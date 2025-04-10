@@ -16,6 +16,8 @@ import EditAdminProfile from "../Pages/Dashboard/Admin/Profile/EditAdminProfile"
 import Hotel from "../Pages/Dashboard/Admin/Hotel/Hotel";
 import AddHotel from "../Pages/Dashboard/Admin/Hotel/AddHotel";
 import EditHotel from "../Pages/Dashboard/Admin/Hotel/EditHotel";
+import ViewHotel from "../Pages/Dashboard/Admin/Hotel/ViewHotel";
+import EditRoom from "../Pages/Dashboard/Admin/Room/EditRoom";
 
 
 export const adminRoutes = [
@@ -80,10 +82,14 @@ export const adminRoutes = [
     path: "edit-hotel/:id",
     element: <EditHotel></EditHotel>,
   },
-  // {
-  //   path: "view-hotel-details/:id",
-  //   element: <ViewProduct></ViewProduct>,
-  // },
+  {
+    path: "view-hotel-details/:id",
+    element: <ViewHotel></ViewHotel>,
+  },
+  {
+    path: "edit-room/:id",
+    element: <EditRoom></EditRoom>,
+  },
 
   {
     path: "sliders",

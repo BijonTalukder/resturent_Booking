@@ -23,7 +23,14 @@ const roomApi = baseApi.injectEndpoints({
       providesTags: ['rooms']
     }),
 
-
+    // Get Rooms by Hotel ID
+    getRoomsByHotelId: builder.query({
+      query: (hotelId) => ({
+        url: `/hotel/${hotelId}/rooms`,
+      }),
+      providesTags: ['rooms']
+      
+    }),
 
     // Get Room by Id
     getRoomById: builder.query({
@@ -32,7 +39,6 @@ const roomApi = baseApi.injectEndpoints({
       }),
       providesTags: ['rooms']
     }),
-
 
     // Update Room
     updateRoom: builder.mutation({
@@ -61,6 +67,7 @@ const roomApi = baseApi.injectEndpoints({
 export const {
   useCreateRoomMutation,
   useGetRoomQuery,
+  useGetRoomsByHotelIdQuery,
   useGetRoomByIdQuery,
   useUpdateRoomMutation,
   useDeleteRoomMutation,
