@@ -74,16 +74,33 @@ model Booking {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   roomId    String  @db.ObjectId
   userId    String  @db.ObjectId
+  email          String
+  phone          String
+  name           String
   checkIn   DateTime
   checkOut  DateTime
   totalPrice Float
   status    String  @default("pending") // pending, confirmed, cancelled
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // room      Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+   paymentStatus  PaymentStatus  @default(pending)
+  transactionId  String?        @unique
+ payment        Payment?       @relation("BookingToPayment")
 }
 
+model Payment {
+  id         String         @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId  String         @unique @db.ObjectId
+  tranId     String         @unique
+  method     String         // "bkash", "nagad", "sslcommerz", etc.
+  amount     Float
+  status     PaymentStatus  @default(pending)
+  gatewayRes Json?          // Save full response for debugging
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  booking    Booking        @relation("BookingToPayment", fields: [bookingId], references: [id])
+}
 
 enum OrderStatus {
   pending
@@ -93,21 +110,3 @@ enum OrderStatus {
   cancelled
 }
 
-model Order {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String        @db.ObjectId
-  email           String
-  phone           String?
-  name            String
-  orderTotal      Float
-  paymentStatus   PaymentStatus
-  shippingAddress String
-  billingAddress  String
-  orderStatus     OrderStatus   @default(pending)
-  orderItems      Json
-  deliveryFee     Float         @default(0)
-  taxAmount       Float         @default(0)
-  transactionId   String        @unique
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-}
