@@ -234,7 +234,7 @@ const EditHotel = () => {
             options={amenitiesOptions}
             placeholder="Select amenities"
             mode="multiple"
-            required={1}
+
           />
 
           <ZSelect
@@ -245,7 +245,7 @@ const EditHotel = () => {
               { label: "Inactive", value: false },
             ]}
             placeholder="Select status"
-            required={1}
+
           />
         </div>
       </ZFormTwo>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ProductImageSlider from "../Pages/Home/ProductDetails/ProductImageSlider";
+import ProductImageSlider from "../Pages/Home/HotelDetails/RoomGallery";
 import { FaGreaterThan, FaHome } from "react-icons/fa";
 import { CiShoppingCart } from "react-icons/ci";
 import { HiOutlineShoppingBag } from "react-icons/hi2";

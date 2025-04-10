@@ -7,7 +7,7 @@ import { adminRoutes } from "./Admin.Routes";
 import ErrorPage from "../common/ErrorPage/ErrorPage";
 import DashboardLayout from "../Layouts/Dashboard/DashboardLayout";
 import MainLayout from "../Layouts/Home/MainLayout";
-import ProductDetails from "../Pages/Home/ProductDetails/ProductDetails";
+import ProductDetails from "../Pages/Home/HotelDetails/HotelDetails";
 import Shop from "../Pages/Shop/Shop";
 import Login from "../Pages/Auth/Login/Login";
 import Register from "../Pages/Auth/Register/Register";
@@ -20,6 +20,7 @@ import OrderHistory from "../Pages/Dashboard/User/OrderHistory/OrderHistory";
 import EditProfile from "../Pages/Dashboard/User/EditProfile/EditProfile";
 import Verify from "../Pages/Verify/Verify";
 import OrderTrack from "../Pages/Track-Order/OrderTrack";
+import HotelDetails from "../Pages/Home/HotelDetails/HotelDetails";
 
 export const routes = createBrowserRouter([
   {
@@ -75,10 +76,10 @@ export const routes = createBrowserRouter([
       // </ProtectedRoutes>
       },
       {
-        path: "/product/:id",
-        element: <ProductDetails />,
-        loader: ({ params }) =>
-          fetch(`${import.meta.env.VITE_BACKEND_URL}/product/${params.id}`)
+        path: "/hotel/:id",
+        element: <HotelDetails/>,
+        // loader: ({ params }) =>
+        //   fetch(`${import.meta.env.VITE_BACKEND_URL}/hotel/${params.id}`)
       },
       {
         path: "/contact",
