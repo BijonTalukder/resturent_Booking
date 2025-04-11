@@ -6,7 +6,7 @@ import { setIsViewModalOpen } from "../../../../redux/Modal/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../redux/Hook/Hook";
 import { AiFillEye } from "react-icons/ai";
 import ViewModal from "../../../../components/Modal/ViewModal";
-import { useGetSingleOrderQuery } from "../../../../redux/Feature/Admin/order/orderApi";
+// import { useGetSingleOrderQuery } from "../../../../redux/Feature/Admin/order/orderApi";
 import ViewOrder from "./ViewOrder";
 import { useCurrentUser } from "../../../../redux/Feature/auth/authSlice";
 import moment from "moment";

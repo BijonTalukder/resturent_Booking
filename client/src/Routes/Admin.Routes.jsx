@@ -2,7 +2,6 @@ import { MdContacts, MdOutlineShoppingCartCheckout } from "react-icons/md";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { TfiLayoutSlider } from "react-icons/tfi";
 import DashboardStatistics from "../Pages/Dashboard/Admin/DashboardStatistics/DashboardStatistics";
-import Orders from "../Pages/Dashboard/Admin/Orders/Orders";
 import { AiFillBoxPlot } from "react-icons/ai";
 import { BiSolidPurchaseTag } from "react-icons/bi";
 import Sliders from "../Pages/Dashboard/Admin/Slider/Sliders";
@@ -18,6 +17,7 @@ import AddHotel from "../Pages/Dashboard/Admin/Hotel/AddHotel";
 import EditHotel from "../Pages/Dashboard/Admin/Hotel/EditHotel";
 import ViewHotel from "../Pages/Dashboard/Admin/Hotel/ViewHotel";
 import EditRoom from "../Pages/Dashboard/Admin/Room/EditRoom";
+import Bookings from "../Pages/Dashboard/Admin/Bookings/Bookings";
 
 
 export const adminRoutes = [
@@ -65,7 +65,7 @@ export const adminRoutes = [
   {
     path: "bookings",
     label: "Bookings",
-    element: <Orders />,
+    element: <Bookings/>,
     icon: <CiShop size={20}/>,
   },
   {

@@ -58,7 +58,7 @@ const ZFormTwo = ({
         methods.reset();
       }
     }
-  }, [isSuccess, closeModal, methods, formType]);
+  }, [isSuccess, methods, formType]);
 
   // Show toast notifications
   useEffect(() => {
