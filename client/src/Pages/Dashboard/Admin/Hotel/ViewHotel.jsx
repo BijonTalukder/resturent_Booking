@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom";
 import moment from "moment";
 import { useGetHotelByIdQuery } from "../../../../redux/Feature/Admin/hotel/hotelApi";
 import Skeleton from "../../../../components/Skeleton/Skeleton";
-import { useGetRoomsByHotelIdQuery } from "../../../../redux/Feature/Admin/room/roomApi";
 import Room from "../Room/Room";
 
 

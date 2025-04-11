@@ -1,36 +1,28 @@
 import React from "react";
-import { Card, Row, Col, Spin } from "antd"; // Using Ant Design for UI components
-import { useGetOrdersQuery } from "../../../../redux/Feature/Admin/order/orderApi";
+import { Card, Row, Col, Spin } from "antd";
+import { useGetBookingsQuery } from "../../../../redux/Feature/Admin/booking/bookingApi";
 
 const DashboardStatistics = () => {
-  // Fetch order data
-  const { data: orders, error, isLoading: ordersIsLoading } = useGetOrdersQuery();
-  console.log(orders);
+  // Fetch booking data
+  const { data: bookings, error, isLoading: bookingsIsLoading } = useGetBookingsQuery();
+  console.log(bookings);
 
-  // Calculate order status counts
-  const getOrderStatusCounts = (orders) => {
+  // Calculate booking status counts
+  const getBookingStatusCounts = (bookings) => {
     const statusCounts = {
       pending: 0,
-      processing: 0,
-      shipped: 0,
-      delivered: 0,
+      confirmed: 0,
       cancelled: 0,
     };
 
-    if (orders?.data && orders.data.length > 0) {
-      orders.data.forEach((order) => {
-        switch (order.orderStatus) {
+    if (bookings?.data && bookings.data.length > 0) {
+      bookings.data.forEach((booking) => {
+        switch (booking.status) {
           case "pending":
             statusCounts.pending += 1;
             break;
-          case "processing":
-            statusCounts.processing += 1;
-            break;
-          case "shipped":
-            statusCounts.shipped += 1;
-            break;
-          case "delivered":
-            statusCounts.delivered += 1;
+          case "confirmed":
+            statusCounts.confirmed += 1;
             break;
           case "cancelled":
             statusCounts.cancelled += 1;
@@ -44,10 +36,10 @@ const DashboardStatistics = () => {
     return statusCounts;
   };
 
-  const statusCounts = getOrderStatusCounts(orders);
+  const statusCounts = getBookingStatusCounts(bookings);
 
   // Loading state
-  if (ordersIsLoading) {
+  if (bookingsIsLoading) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
         <Spin size="large" />
@@ -57,50 +49,34 @@ const DashboardStatistics = () => {
 
   // Error state
   if (error) {
-    return <div>{"Error loading hotels" || error.message}</div>;
+    return <div>{"Error loading bookings" || error.message}</div>;
   }
 
   return (
     <div style={{ padding: "24px" }}>
-      <h1 className="text-center font-bold text-2xl mb-10">Order Statistics Overview</h1>
+      <h1 className="text-center font-bold text-2xl mb-10">Booking Statistics Overview</h1>
       <Row gutter={[16, 16]}>
-        {/* Pending Orders Card */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Card title="Pending Orders" bordered={false}>
+        {/* Pending Bookings Card */}
+        <Col xs={24} sm={12} md={8} lg={8}>
+          <Card title="Pending Bookings" bordered={false}>
             <h2 className="text-center font-bold text-xl" style={{ color: "#faad14" }}>{statusCounts.pending}</h2>
           </Card>
         </Col>
 
-        {/* Processing Orders Card */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Card title="Processing Orders" bordered={false}>
-            <h2 className="text-center font-bold text-xl" style={{ color: "#1890ff" }}>{statusCounts.processing}</h2>
+        {/* Confirmed Bookings Card */}
+        <Col xs={24} sm={12} md={8} lg={8}>
+          <Card title="Confirmed Bookings" bordered={false}>
+            <h2 className="text-center font-bold text-xl" style={{ color: "#52c41a" }}>{statusCounts.confirmed}</h2>
           </Card>
         </Col>
 
-        {/* Shipped Orders Card */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Card title="Shipped Orders" bordered={false}>
-            <h2  className="text-center font-bold text-xl" style={{ color: "#13c2c2" }}>{statusCounts.shipped}</h2>
-          </Card>
-        </Col>
-
-        {/* Delivered Orders Card */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Card title="Delivered Orders" bordered={false}>
-            <h2 className="text-center font-bold text-xl" style={{ color: "#52c41a" }}>{statusCounts.delivered}</h2>
-          </Card>
-        </Col>
-
-        {/* Cancelled Orders Card */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Card title="Cancelled Orders" bordered={false}>
+        {/* Cancelled Bookings Card */}
+        <Col xs={24} sm={12} md={8} lg={8}>
+          <Card title="Cancelled Bookings" bordered={false}>
             <h2 className="text-center font-bold text-xl" style={{ color: "#f5222d" }}>{statusCounts.cancelled}</h2>
           </Card>
         </Col>
       </Row>
-      {/* <h1 className="text-center font-bold text-2xl mb-10 mt-10">Product Statistics Overview</h1> */}
-
     </div>
   );
 };

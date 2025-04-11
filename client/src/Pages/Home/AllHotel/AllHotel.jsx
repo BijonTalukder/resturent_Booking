@@ -23,14 +23,11 @@ import Cart from "../../../common/Cart/Cart";
 import Adjustment from "../../../common/Adjustment/Adjustment";
 import { useGetHotelQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
 
-
-
 const AllHotel = () => {
   const { data, error, isFetching, isLoading } = useGetHotelQuery();
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-    const [visibleRight, setVisibleRight] = useState(false);
-  
+  const [visibleRight, setVisibleRight] = useState(false);
 
   useEffect(() => {
     if (isFetching) {
@@ -38,7 +35,7 @@ const AllHotel = () => {
     } else {
       const timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 2000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [isFetching]);
@@ -48,14 +45,11 @@ const AllHotel = () => {
   };
 
   const noProductsFound =
-  !isLoading &&
-  !showSkeleton &&
-  data?.data?.length === 0 &&
-  (searchQuery.trim() !== "" 
-  // || priceMin !== 1 || priceMax !== 100000000000000
-);
-
-
+    !isLoading &&
+    !showSkeleton &&
+    data?.data?.length === 0 &&
+    searchQuery.trim() !== "";
+    // || priceMin !== 1 || priceMax !== 100000000000000
 
   return (
     <div className="pb-[80px]">
@@ -79,58 +73,63 @@ const AllHotel = () => {
             <IoSearch className="cursor-pointer text-[20px] text-gray-200" />
           </div>
         </div>
-      <button onClick={() => setVisibleRight(true)} >
-      <HiOutlineAdjustmentsHorizontal className="text-gray-400 text-[28px] bg-gray-100 md:text-[35px] px-[4px] md:py-2 rounded-full" />
-      </button>
-      <Adjustment visibleRight={visibleRight} setVisibleRight={setVisibleRight}/>
-      
-       
+        <button onClick={() => setVisibleRight(true)}>
+          <HiOutlineAdjustmentsHorizontal className="text-gray-400 text-[28px] bg-gray-100 md:text-[35px] px-[4px] md:py-2 rounded-full" />
+        </button>
+        <Adjustment
+          visibleRight={visibleRight}
+          setVisibleRight={setVisibleRight}
+        />
       </div>
 
-        {/* Show Skeleton While Loading */}
-                {(isLoading || showSkeleton) && <ProductsSkeleton />}
-      
-                {/* Show "No products found" message if no products match the search or price range */}
-                {noProductsFound && (
-                  <div className="text-center text-xl font-bold text-red-500 mt-10">
-                    No products found for the selected criteria.
-                  </div>
-                )}
+      {/* Show Skeleton While Loading */}
+      {(isLoading || showSkeleton) && <ProductsSkeleton />}
+
+      {/* Show "No products found" message if no products match the search or price range */}
+      {noProductsFound && (
+        <div className="text-center text-xl font-bold text-red-500 mt-10">
+          No products found for the selected criteria.
+        </div>
+      )}
 
       <div className="lg:max-w-[98%] grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto">
-        {data?.data?.map((hotel, index) => (
-          <div
-            key={index}
-            className="flex flex-col  rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white"
-          >
-            <div className="relative h-[110px]  md:h-[100%]">
-              <img
-                src={hotel?.image || Image1}
-                alt={"Hotel Image"}
-                className="w-full h-full object-cover text-[10px]"
-              />
-              <button className="absolute top-2 right-2 text-white bg-[#9E9E9E59] rounded-full p-2">
-                <CiHeart className="h-5 w-5" />
-              </button>
-            </div>
+        {!isLoading &&
+          !showSkeleton &&
+          data?.data?.map((hotel, index) => (
+            <div
+              key={index}
+              className="flex flex-col  rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white"
+            >
+              <div className="relative h-[110px]  md:h-[100%]">
+                <img
+                  src={hotel?.image || Image1}
+                  alt={"Hotel Image"}
+                  className="w-full h-full object-cover text-[10px]"
+                />
+                <button className="absolute top-2 right-2 text-white bg-[#9E9E9E59] rounded-full p-2">
+                  <CiHeart className="h-5 w-5" />
+                </button>
+              </div>
 
-            <div className="flex-1 px-2 py-1 md:px-4 md:py-4">
-              <div className="flex flex-col  lg:gap-8">
-                <div className="flex-1 md:space-y-4 lg:px-3 py-2 md:py-5 lg:py-0">
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-2">
-                    <h2 className="text-[10px] md:text-2xl font-semibold text-[#1A1A1A]">
-                      {hotel.name}
-                    </h2>
-                    {/* <div className="hidden md:flex gap-1  text-[#F99F1D] text-xl">
+              <div className="flex-1 px-2 py-1 md:px-4 md:py-4">
+                <div className="flex flex-col  lg:gap-8">
+                  <div className="flex-1 md:space-y-4 lg:px-3 py-2 md:py-5 lg:py-0">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-2">
+                      <h2 className="text-[10px] md:text-2xl font-semibold text-[#1A1A1A]">
+                        {hotel.name}
+                      </h2>
+                      {/* <div className="hidden md:flex gap-1  text-[#F99F1D] text-xl">
                       {"★".repeat(Math.floor(hotel.rating))}
                     </div> */}
-                  </div>
+                    </div>
 
-                  <div className="flex items-center gap-1 text-[#666666] md:mb-4">
-                    <IoLocationOutline className="text-lg text-blue-500 block" />
-                    <span className="text-[8px] md:text-[14px]">{hotel.location}</span>
-                  </div>
-{/* 
+                    <div className="flex items-center gap-1 text-[#666666] md:mb-4">
+                      <IoLocationOutline className="text-lg text-blue-500 block" />
+                      <span className="text-[8px] md:text-[14px]">
+                        {hotel.location}
+                      </span>
+                    </div>
+                    {/* 
                   <div className="hidden md:flex flex-col items-start lg:flex-row lg:items-center gap-5 ">
                     <div className="flex items-center gap-1 text-[#5054D9] cursor-pointer ">
                       <span className="text-sm">View property in map</span>
@@ -156,7 +155,7 @@ const AllHotel = () => {
                     </div>
                   </div> */}
 
-                  {/* <div className="hidden md:flex items-center gap-3 lg:gap-4 mb-4">
+                    {/* <div className="hidden md:flex items-center gap-3 lg:gap-4 mb-4">
                     <div className="flex items-center gap-2">
                       <FaWifi className="text-[#666666] text-xl" />
                       <span className="text-[#666666]">Free WiFi</span>
@@ -171,7 +170,7 @@ const AllHotel = () => {
                     </div>
                   </div> */}
 
-                  {/* <div className="hidden md:flex gap-2">
+                    {/* <div className="hidden md:flex gap-2">
                     <div className="flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -197,62 +196,38 @@ const AllHotel = () => {
                       </span>
                     </div>
                   </div> */}
-                </div>
+                  </div>
 
-                <div className="md:min-w-[300px] md:space-y-5">
-                  <div className="md:flex hidden gap-2">
-                    {hotel.amenities.map((tag, i) => (
-                      <span
-                        key={i}
-                        className={`px-3 py-1 rounded-full text-sm hidden lg:block ${
-                          tag === "Best"
-                            ? "bg-[#B8BBFF40] text-[#5054D9]"
-                            : "bg-[#FFD18140] text-[#F99F1D]"
-                        }`}
-                      >
-                        {tag}
+                  <div className="md:min-w-[300px] md:space-y-5">
+                    <div className="md:flex hidden gap-2">
+                      {hotel.amenities.slice(0, 2).map((tag, i) => (
+                        <span
+                          key={i}
+                          className={`px-3 py-1 rounded-full text-sm hidden lg:block ${
+                            tag === "Best"
+                              ? "bg-[#B8BBFF40] text-[#5054D9]"
+                              : "bg-[#FFD18140] text-[#F99F1D]"
+                          }`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      <span className="px-3 py-1 rounded-full text-sm hidden lg:block bg-[#FFD18140] text-[#F99F1D]">
+                        + more..
                       </span>
-                    ))}
-                  </div>
-
-                  {/* <div className="hidden md:flex items-center gap-2 justify-end">
-                    <div className="text-[#666666] line-through ">
-                      Rs{hotel.price.original.toLocaleString()}
                     </div>
-                    <div className="text-2xl font-bold text-[#5054D9]">
-                      Rs{hotel.price.discounted.toLocaleString()}
+                    <div>
+                      <Link to={`/hotel/${hotel?.id}`}>
+                        <button className="text-[#5054D9] text-xs lg:text-base py-1 lg:py-3 w-full rounded-lg border border-[#5054D9] transition font-medium px-1 mb-4">
+                          Choose Room
+                        </button>
+                      </Link>
                     </div>
-                  </div>
-                  <div className="text-[#666666] hidden lg:block text-sm">
-                    Includes Taxes & Charges
-                  </div>
-                  <div className="text-[#666666] hidden lg:block text-sm">
-                    {hotel.nights} nights
-                  </div>
-                  <div className="text-[#666666] text-sm hidden lg:block">
-                    {hotel.capacity.adults} Adults, {hotel.capacity.children}{" "}
-                    Children
-                  </div> */}
-                  <button className="lg:w-full hidden lg:block text-[#5054D9] py-3 rounded-lg border border-[#5054D9] transition font-medium px-4">
-                    Choose Room
-                  </button>
-
-                  <div className="lg:hidden">
-                    {/* <div className="text-[#5054D9] font-bold text-[9px] md:hidden mb-2">
-                      <span className="">
-                        {" "}
-                        {hotel.price.discounted.toLocaleString()} BDT
-                      </span>
-                    </div> */}
-                    <button className="text-[#5054D9] text-xs py-1 w-full rounded-lg border border-[#5054D9] transition font-medium px-1 mb-4">
-                      Choose Room
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

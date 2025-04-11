@@ -1,9 +1,256 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../../redux/Hook/Hook";
+import { setIsEditModalOpen } from "../../../../redux/Modal/ModalSlice";
+import axios from "axios";
+import { message } from "antd";
+import ZFormTwo from "../../../../components/Form/ZFormTwo";
+import ZInputTwo from "../../../../components/Form/ZInputTwo";
+import ZSelect from "../../../../components/Form/ZSelect";
+import ZImageInput from "../../../../components/Form/ZImageInput";
+import { useUpdateHotelMutation, useGetHotelByIdQuery } from "../../../../redux/Feature/Admin/hotel/hotelApi";
+import { useCurrentUser } from "../../../../redux/Feature/auth/authSlice";
+import ZInputTextArea from "../../../../components/Form/ZInputTextArea";
+import { Link, useParams } from "react-router-dom";
 
 const EditHotel = () => {
+  const { id } = useParams();
+  const [updateHotel, { isLoading, isError, error, isSuccess, data }] = useUpdateHotelMutation();
+  const { data: hotelData, isLoading: isHotelLoading } = useGetHotelByIdQuery(id);
+  const [divisions, setDivisions] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedDivision, setSelectedDivision] = useState("");
+  const user = useAppSelector(useCurrentUser);
+  const [uploading, setUploading] = useState(false);
+
+  // Fetch divisions on component mount
+  useEffect(() => {
+    const fetchDivisions = async () => {
+      try {
+        const response = await axios.get("https://bdapi.vercel.app/api/v.1/division");
+        setDivisions(response.data.data.map(div => ({
+          label: div.name,
+          value: div.id
+        })));
+      } catch (error) {
+        console.error("Error fetching divisions:", error);
+        message.error("Failed to load divisions");
+      }
+    };
+    fetchDivisions();
+  }, []);
+
+  // Set initial division and fetch cities when hotel data loads
+  useEffect(() => {
+    if (hotelData?.data) {
+      setSelectedDivision(hotelData.data.divisionId);
+    }
+  }, [hotelData]);
+
+  // Fetch cities when division is selected
+  useEffect(() => {
+    if (selectedDivision) {
+      const fetchCities = async () => {
+        try {
+          const response = await axios.get(`https://bdapi.vercel.app/api/v.1/district/${selectedDivision}`);
+          setCities(response.data.data.map(city => ({
+            label: city.name,
+            value: city.id
+          })));
+        } catch (error) {
+          console.error("Error fetching cities:", error);
+          message.error("Failed to load cities");
+        }
+      };
+      fetchCities();
+    }
+  }, [selectedDivision]);
+
+  const handleSubmit = async (formData) => {
+    try {
+      setUploading(true);
+       let imageUrl = hotelData?.data?.image;
+
+      // Handle image upload if a new image is provided
+      if (formData?.image && typeof formData.image !== 'string') {
+        const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+        const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
+        const imageFile = new FormData();
+        imageFile.append('image', formData.image);
+
+        const res = await axios.post(image_hosting_api, imageFile, {
+          headers: {
+            'content-type': 'multipart/form-data'
+          }
+        });
+
+        if (res?.data?.success) {
+          imageUrl = res.data.data.display_url;
+        } else {
+          throw new Error('Image upload failed');
+        }
+      }
+
+      const updatedHotelData  = {
+        name: formData?.name,
+        description: formData?.description,
+        location: formData?.location,
+        latitude: parseFloat(formData?.latitude),
+        longitude: parseFloat(formData?.longitude),
+        image: imageUrl,
+        divisionId: formData?.divisionId,
+        cityId: formData?.cityId,
+        amenities: formData?.amenities || [],
+        ownerId: user?.id,
+        isActive: formData?.isActive
+      };
+
+      await updateHotel({
+        id: id ,
+        data: updatedHotelData 
+      }).unwrap();
+
+      message.success('Hotel updated successfully!');
+
+    } catch (error) {
+      console.error('Error updating hotel:', error);
+      message.error(error.message || 'Error updating hotel. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const amenitiesOptions = [
+    { label: "Free WiFi", value: "Free WiFi" },
+    { label: "Swimming Pool", value: "Swimming Pool" },
+    { label: "Spa", value: "Spa" },
+    { label: "Gym", value: "Gym" },
+    { label: "Restaurant", value: "Restaurant" },
+  ];
+
+  if (isHotelLoading) return <div>Loading hotel data...</div>;
+
   return (
-    <div>EditHotel</div>
-  )
-}
+    <div className="">
+          <Link to={`/admin/hotels`}>
+            <div className="flex flex-col lg:flex-row items-center gap-x-2 justify-end my-5">
+              <button className="bg-primary font-Poppins font-medium py-2 px-5 rounded-lg text-white">
+                Back
+              </button>
+            </div>
+          </Link>
+      <ZFormTwo
+        isLoading={isLoading || uploading}
+        isSuccess={isSuccess}
+        isError={isError}
+        error={error}
+        submit={handleSubmit}
+        formType="edit"
+        data={data}
+        buttonName="Update Hotel"
+        defaultValues={hotelData?.data}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-10">
+          <div className="lg:col-span-2">
+            <ZInputTwo
+              name="name"
+              type="text"
+              label="Hotel Name"
+              placeholder="Enter hotel name"
+              required={1}
+            />
+          </div>
+          <div className="lg:col-span-2">
+            <ZInputTextArea
+              name="description"
+              type="text"
+              label="Description"
+              placeholder="Enter hotel description"
+              required={1}
+            />
+          </div>
+          <div className="lg:col-span-2">
+            <ZInputTwo
+              name="location"
+              type="text"
+              label="Location"
+              placeholder="Enter hotel location"
+              required={1}
+            />
+          </div>
+
+          <div className="lg:col-span-2">
+            <div className="grid grid-cols-2 gap-4">
+              <ZInputTwo
+                name="latitude"
+                type="number"
+                label="Latitude"
+                placeholder="Enter latitude coordinates"
+                required={1}
+              />
+
+              <ZInputTwo
+                name="longitude"
+                type="number"
+                label="Longitude"
+                placeholder="Enter longitude coordinates"
+                required={1}
+              />
+            </div>
+          </div>
+
+          <ZImageInput
+            name="image"
+            label="Hotel Image"
+            defaultValue={hotelData?.data?.image ? [{
+              uid: '-1',
+              name: 'Current Image',
+              status: 'done',
+              url: hotelData.data.image
+            }] : []}
+          />
+
+          <ZSelect
+            name="divisionId"
+            label="Division"
+            options={divisions}
+            placeholder="Select division"
+            required={1}
+            onChange={(value) => setSelectedDivision(value)}
+          />
+
+          <ZSelect
+            name="cityId"
+            label="City"
+            options={cities}
+            placeholder="Select city"
+            required={1}
+            disabled={!selectedDivision}
+          />
+
+          <ZSelect
+            name="amenities"
+            label="Amenities"
+            options={amenitiesOptions}
+            placeholder="Select amenities"
+            mode="multiple"
+
+          />
+
+          <ZSelect
+            name="isActive"
+            label="Status"
+            options={[
+              { label: "Active", value: true },
+              { label: "Inactive", value: false },
+            ]}
+            placeholder="Select status"
+
+          />
+        </div>
+      </ZFormTwo>
+    </div>
+  );
+};
 
 export default EditHotel;

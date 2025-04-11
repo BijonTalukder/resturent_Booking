@@ -4,7 +4,7 @@ import { Card } from "primereact/card";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import { Button, Skeleton, Table, Tag, Typography } from "antd";
-import { useTraceOrderQuery } from "../../redux/Feature/Admin/order/orderApi";
+// import { useTraceOrderQuery } from "../../redux/Feature/Admin/order/orderApi";
 import { toast } from "sonner";
 import moment from "moment";
 import Image from "../../assets/complete.png";

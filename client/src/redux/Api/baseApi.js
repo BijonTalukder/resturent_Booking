@@ -32,7 +32,8 @@ const baseApi = createApi({
     "customers",
     "subscriptions",
     "orders",
-    "contact"
+    "contact",
+    "booking"
   ],
 });
 

@@ -19,7 +19,7 @@ const EditRoom = () => {
 
   useEffect(() => {
     if (roomData?.data) {
-      setExistingImages(roomData.data.images?.map((img, index) => ({
+      setExistingImages(roomData?.data?.images?.map((img, index) => ({
         uid: `existing-${index}`,
         name: `Image ${index + 1}`,
         status: 'done',
@@ -206,7 +206,6 @@ const EditRoom = () => {
               options={amenitiesOptions}
               placeholder="Select amenities"
               mode="multiple"
-              required={1}
             />
           </div>
 
@@ -218,7 +217,7 @@ const EditRoom = () => {
               { label: "Booked", value: false },
             ]}
             placeholder="Select availability status"
-            required={1}
+
           />
         </div>
       </ZFormTwo>
