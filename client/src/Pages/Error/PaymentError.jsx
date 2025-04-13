@@ -36,10 +36,10 @@ const PaymentError = () => {
           {/* Back to Shop Link */}
           <div className="mt-6 text-center lg:text-left">
             <Link
-              to="/shop" // Replace with your shop page route
+              to="/" // Replace with your shop page route
               className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
             >
-              &larr; Back to Shop
+              &larr; Back to Home
             </Link>
           </div>
         </div>
