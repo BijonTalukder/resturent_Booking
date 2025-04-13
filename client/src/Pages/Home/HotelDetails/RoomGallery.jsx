@@ -10,9 +10,9 @@ const RoomImageGallery = ({ rooms }) => {
   );
 
   // First 5 images (2 in first row, 3 in second row)
-  const displayImages = allImages.slice(0, 5);
-  const remainingCount = allImages.length - 5;
-  const sixthImage = allImages[5]?.src;
+  const displayImages = allImages.slice(0, 6);
+  const remainingCount = allImages.length - 6;
+  const sixthImage = allImages[6]?.src;
 
   if (allImages.length === 0) {
     return <div className='text-center font-bold text-red-500'>No images available right now</div>;
@@ -26,30 +26,32 @@ const RoomImageGallery = ({ rooms }) => {
 
       <Image.PreviewGroup items={allImages.map(img => img.src)}>
         {/* First row - 2 images */}
-        <div className="flex lg:grid lg:grid-cols-2 gap-1 mb-1">
-          {displayImages.slice(0, 2).map((image, index) => (
-            <Image
+        <div className="flex w-full lg:grid lg:grid-cols-3 gap-1 mb-1">
+          {displayImages.slice(0, 3).map((image, index) => (
+
+             <Image
               key={index}
               src={image.src}
               alt={image.alt}
               // width={150}
               // height={100}
-              className="!w-[150px] !h-[100px] lg:!w-full lg:!h-full object-cover cursor-pointer"
+              className="!w-[130px] !h-[80px] md:!w-full md:!h-full object-cover cursor-pointer"
               // preview={{ mask: null }}
             />
+
           ))}
         </div>
         
         {/* Second row - 3 images */}
-        <div className="flex lg:grid lg:grid-cols-3 gap-1 mb-1">
-          {displayImages.slice(2, 5).map((image, index) => (
+        <div className="flex w-full  lg:grid lg:grid-cols-3 gap-1 mb-1">
+          {displayImages.slice(3, 6).map((image, index) => (
             <Image
               key={index + 2}
               src={image.src}
               alt={image.alt}
               // width={100}
               // height={50}
-              className="!w-[100px] !h-[50px] lg:!w-full lg:!h-full object-cover cursor-pointer"
+              className="!w-[130px] !h-[80px] md:!w-full md:!h-full object-cover cursor-pointer"
               // preview={{ mask: null }}
             />
           ))}
@@ -57,12 +59,13 @@ const RoomImageGallery = ({ rooms }) => {
         
         {/* +More tile with 6th image as background */}
         {remainingCount > 0 && sixthImage && (
-          <div className="relative w-full h-[100px] mt-1 overflow-hidden shadow-md">
+<div className=''>
+<div className="relative md:w-full h-[70px] md:h-[100px] mt-1">
             <Image
               src={sixthImage}
               alt=""
               width="100%"
-              className="object-cover !h-[100px] cursor-pointer"
+              className="object-cover !h-[70px] md:!w-full md:!h-[100px] cursor-pointer"
               style={{ filter: 'blur(1px) brightness(0.7)' }}
               preview={{
                 src: sixthImage,
@@ -81,6 +84,7 @@ const RoomImageGallery = ({ rooms }) => {
               </span>
             </div>
           </div>
+</div>
         )}
       </Image.PreviewGroup>
     </div>
