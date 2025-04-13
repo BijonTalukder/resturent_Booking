@@ -46,21 +46,21 @@ const Success = () => {
       <h1
         className="bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl"
       >
-       Thank you for your order! Your order is being processed and will be assessed within 3-6 hours.
+       Thank you for your boooking! Your booking is being processed and will be assessed within 1-2 hours.
 
 
       </h1>
 
       <p className="mx-auto mt-4 max-w-xl sm:text-xl/relaxed">
-        Please check your order confirmation in your given email.
+        Please check your booking confirmation in your given email.
       </p>
 
       <div className="mt-8 flex flex-wrap justify-center gap-4">
-        <Link to={`/shop`}
+        <Link to={`/`}
           className="block w-full rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
          
         >
-         Continue Shopping
+         Continue Booking more..
         </Link>
       </div>
     </div>
