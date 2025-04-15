@@ -57,9 +57,9 @@ class BookingController {
 
      
 checkAvailability=catchAsync(async (req, res, next) => {
-    const { roomIds, checkIn, checkOut } = req.body;
+    const { roomId, checkIn, checkOut } = req.body;
 
-    const result = await this.bookingService.checkAvailability({ roomIds, checkIn, checkOut });
+    const result = await this.bookingService.checkAvailability({ roomId, checkIn, checkOut });
 
     ResponseHandler.success(res, "Availability checked successfully", result);
 

@@ -105,7 +105,7 @@ const HotelDetails = () => {
 
   const handleCheckout = async () => {
     try {
-      const unavailableRooms = [];
+ 
   
       for (const room of selectedRooms) {
         const res = await checkRoomAvailabilityBooking({
@@ -114,23 +114,11 @@ const HotelDetails = () => {
           checkOut: checkOutDate,
         }).unwrap();
   
-        if (!res.available) {
-          unavailableRooms.push(room.type);
-        }
+        if (res?.data?.available=== true) {
+          message.success("All rooms are available. Proceeding to checkout...");
       }
-  
-      if (unavailableRooms.length > 0) {
-        message.error(
-          `The following rooms are unavailable for the selected dates: ${unavailableRooms.join(", ")}`
-        );
-        return;
-      }
-  
-      // ✅ All rooms available – proceed to booking or next page
-      message.success("All rooms are available. Proceeding to checkout...");
-      // You could navigate to checkout page here (e.g., `/checkout`)
-      // navigate("/checkout", { state: { selectedRooms, checkInDate, checkOutDate, totalPrice } });
-  
+   
+    }
     } catch (error) {
       console.error("Availability check failed", error);
       message.error("Failed to check room availability. Please try again.");
