@@ -70,34 +70,31 @@ console.log(GatewayPageURL,"--------------------")
         });
     }
 
-    async checkAvailability({ roomIds, checkIn, checkOut }) {
+    async checkAvailability({ roomId, checkIn, checkOut }) {
         const start = new Date(checkIn);
         const end = new Date(checkOut);
-    
-        // Convert roomIds to ObjectIds if necessary
-        const objectRoomIds = roomIds.map(roomId => new ObjectId(roomId));
-    
-        // Query the bookings that overlap with the given time range and contain any of the roomIds
-        const overlappingBookings = await prisma.booking.findMany({
+        const objectRoomId = new ObjectId(roomId);
+        const overlappingBookings = await this.prisma.booking.findMany({
             where: {
-                roomIds: { hasSome: objectRoomIds }, // Check for any roomId overlap
-                OR: [
-                    { checkIn: { lt: end }, checkOut: { gt: start } }, // Overlapping time check
-                ],
-            },
+                roomId: objectRoomId,
+                AND: [
+                    { checkIn: { lt: end } },
+                    { checkOut: { gt: start } }
+                ]
+            }
         });
     
         if (overlappingBookings.length > 0) {
             return {
                 available: false,
-                message: "One or more rooms are already booked in this time slot.",
-                bookings: overlappingBookings, // Return the conflicting bookings
+                message: "Room is already booked in this time slot.",
+                bookings: overlappingBookings
             };
         }
     
         return {
             available: true,
-            message: "Rooms are available for booking.",
+            message: "Room is available for booking."
         };
     }
 
