@@ -54,9 +54,9 @@ const Register = () => {
   return (
     <>
    
-      <div className="min-h-screen  py-6 flex flex-col justify-center sm:py-12">
+      <div className="min-h-screen  pb-6 flex flex-col justify-center sm:py-12 mb-10">
         <div className="relative py-3 sm:w-[40%] sm:mx-auto">
-          <div className="relative px-4 py-10 bg-gray-100 md:m-0 md:rounded-none m-2 rounded-md shadow-lg sm:rounded-3xl">
+          <div className="relative px-4 py-10 bg-gray-50 md:m-0 md:rounded-none m-2 rounded-md shadow-lg sm:rounded-3xl">
             <div className="max-w-md mx-auto text-center">
               <ZFormTwo
                 isLoading={lIsloading}

@@ -60,6 +60,14 @@ const bookingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['booking'], // Invalidates booking cache
     }),
+
+    checkRoomAvailabilityBooking: builder.mutation({
+      query: ({ roomId, checkIn, checkOut }) => ({
+        url: `/booking/check-availability`,
+        method: "POST",
+        body: { roomId, checkIn, checkOut }
+      })
+    })
   }),
 });
 
@@ -70,4 +78,6 @@ export const {
   useGetBookingDetailsQuery,
   useUpdateBookingMutation,
   useDeleteBookingMutation,
+  useCheckRoomAvailabilityBookingMutation
+
 } = bookingApi;

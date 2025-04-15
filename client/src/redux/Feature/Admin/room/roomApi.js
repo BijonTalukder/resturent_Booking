@@ -61,6 +61,14 @@ const roomApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['rooms']
     }),
+
+    checkRoomAvailability: builder.mutation({
+      query: ({ roomId, checkIn, checkOut }) => ({
+        url: `/room/checkAvailability`,
+        method: "POST",
+        body: { roomId, checkIn, checkOut }
+      })
+    })
   }),
 });
 
@@ -71,6 +79,7 @@ export const {
   useGetRoomByIdQuery,
   useUpdateRoomMutation,
   useDeleteRoomMutation,
+  useCheckRoomAvailabilityMutation,
 } = roomApi;
 
 export default roomApi;

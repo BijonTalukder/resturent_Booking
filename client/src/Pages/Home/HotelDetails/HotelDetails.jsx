@@ -21,6 +21,7 @@ import Skeleton from "../../../components/Skeleton/Skeleton";
 import { useGetRoomsByHotelIdQuery } from "../../../redux/Feature/Admin/room/roomApi";
 import { useGetHotelByIdQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
 import RoomGallery from "./RoomGallery";
+import { useCheckRoomAvailabilityBookingMutation } from "../../../redux/Feature/Admin/booking/bookingApi";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -33,6 +34,8 @@ const HotelDetails = () => {
     isLoading: isRoomsLoading,
     error: roomsError,
   } = useGetRoomsByHotelIdQuery(id);
+  const [checkRoomAvailabilityBooking] = useCheckRoomAvailabilityBookingMutation();
+
 
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [checkInDate, setCheckInDate] = useState(startOfDay(new Date()));
@@ -99,6 +102,29 @@ const HotelDetails = () => {
     (sum, room) => sum + room.price * nights,
     0
   );
+
+  const handleCheckout = async () => {
+    try {
+ 
+  
+      for (const room of selectedRooms) {
+        const res = await checkRoomAvailabilityBooking({
+          roomId: room.id,
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
+        }).unwrap();
+  
+        if (res?.data?.available=== true) {
+          message.success("All rooms are available. Proceeding to checkout...");
+      }
+   
+    }
+    } catch (error) {
+      console.error("Availability check failed", error);
+      message.error("Failed to check room availability. Please try again.");
+    }
+  };
+  
   
 
   return (
@@ -261,6 +287,7 @@ const HotelDetails = () => {
           className="bg-green-500 text-white hover:bg-green-500 hover:text-white disabled:cursor-not-allowed"
           type="primary"
           size="large"
+          onClick={handleCheckout}
         >
            Proceed to Checkout ({totalPrice} Tk/-)
         </Button>

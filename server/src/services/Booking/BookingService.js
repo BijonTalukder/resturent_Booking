@@ -71,32 +71,34 @@ console.log(GatewayPageURL,"--------------------")
     }
 
     async checkAvailability({ roomId, checkIn, checkOut }) {
-        const start = new Date(checkIn);
-        const end = new Date(checkOut);
-        const objectRoomId = new ObjectId(roomId);
-        const overlappingBookings = await this.prisma.booking.findMany({
-            where: {
-                roomId: objectRoomId,
-                AND: [
-                    { checkIn: { lt: end } },
-                    { checkOut: { gt: start } }
-                ]
-            }
-        });
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
     
-        if (overlappingBookings.length > 0) {
-            return {
-                available: false,
-                message: "Room is already booked in this time slot.",
-                bookings: overlappingBookings
-            };
+    const overlappingBookings = await this.prisma.booking.findMany({
+        where: {
+            roomIds: {
+                has: roomId // Use has operator for array field
+            },
+            AND: [
+                { checkIn: { lt: end } },
+                { checkOut: { gt: start } }
+            ]
         }
-    
+    });
+
+    if (overlappingBookings.length > 0) {
         return {
-            available: true,
-            message: "Room is available for booking."
+            available: false,
+            message: "Room is already booked in this time slot.",
+            bookings: overlappingBookings
         };
     }
+
+    return {
+        available: true,
+        message: "Room is available for booking."
+    };
+}
 
     // async checkAvailability(roomId, checkIn, checkOut) {
     //     const overlappingBookings = await this.prisma.booking.findMany({
