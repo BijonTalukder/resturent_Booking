@@ -1,3 +1,4 @@
+const catchAsync = require("../shared/catchAsync");
 const ResponseHandler = require("../shared/response.handaler");
 
 class BookingController {
@@ -52,6 +53,18 @@ class BookingController {
             next(error);
         }
     }
+
+
+     
+checkAvailability=catchAsync(async (req, res, next) => {
+    const { roomId, checkIn, checkOut } = req.body;
+
+    const result = await this.bookingService.checkAvailability({ roomId, checkIn, checkOut });
+
+    ResponseHandler.success(res, "Availability checked successfully", result);
+
+})
+    
 }
 
 module.exports = BookingController;

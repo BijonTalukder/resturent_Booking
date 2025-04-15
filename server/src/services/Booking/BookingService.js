@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const PaymentGatewayService = require("../PaymentGateway/PaymentGatewayService");
-
+const catchAsync = require("../../shared/catchAsync");
+const { ObjectId } = require('mongodb');
 class BookingService  {
     constructor() {
         this.prisma = new PrismaClient();
@@ -69,18 +70,46 @@ console.log(GatewayPageURL,"--------------------")
         });
     }
 
-    async checkRoomAvailability(roomId, checkIn, checkOut) {
+    async checkAvailability({ roomId, checkIn, checkOut }) {
+        const start = new Date(checkIn);
+        const end = new Date(checkOut);
+        const objectRoomId = new ObjectId(roomId);
         const overlappingBookings = await this.prisma.booking.findMany({
             where: {
-                roomId,
-                OR: [
-                    { checkIn: { lte: checkOut }, checkOut: { gte: checkIn } },
-                ],
-            },
+                roomId: objectRoomId,
+                AND: [
+                    { checkIn: { lt: end } },
+                    { checkOut: { gt: start } }
+                ]
+            }
         });
-
-        return overlappingBookings.length === 0;
+    
+        if (overlappingBookings.length > 0) {
+            return {
+                available: false,
+                message: "Room is already booked in this time slot.",
+                bookings: overlappingBookings
+            };
+        }
+    
+        return {
+            available: true,
+            message: "Room is available for booking."
+        };
     }
+
+    // async checkAvailability(roomId, checkIn, checkOut) {
+    //     const overlappingBookings = await this.prisma.booking.findMany({
+    //         where: {
+    //             roomId,
+    //             OR: [
+    //                 { checkIn: { lte: checkOut }, checkOut: { gte: checkIn } },
+    //             ],
+    //         },
+    //     });
+
+    //     return overlappingBookings.length === 0;
+    // }
 }
 
 module.exports = BookingService;
