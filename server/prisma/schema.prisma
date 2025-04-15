@@ -67,10 +67,10 @@ model Room {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  // roomBookings RoomBooking[]  @relation("RoomOnBooking")
 }
 model Booking {
   id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  roomIds        String[]       @db.ObjectId
   userId         String         @db.ObjectId
   email          String
   phone          String
@@ -85,7 +85,6 @@ model Booking {
   transactionId  String?        @unique
   payment        Payment?       @relation("BookingToPayment")
 
-//  roomBookings  RoomBooking[]    @relation("RoomOnBooking")
  }
  model RoomBooking {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
