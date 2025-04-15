@@ -103,6 +103,9 @@ router.put("/booking/:id",async(req,res,next)=>{
 router.delete("/booking/:id",async(req,res,next)=>{
     bookingController.deleteBooking(req,res,next)
 })
+router.post("/booking/check-availability",async(req,res,next)=>{
+    bookingController.checkAvailability(req,res,next)
+})
 
 
 
