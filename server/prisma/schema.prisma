@@ -53,10 +53,10 @@ model Hotel {
 }
 
 model Room {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  hotelId     String    @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  hotelId     String     @db.ObjectId
+  hotel       Hotel      @relation("HotelRooms", fields: [hotelId], references: [id])
 
-  hotel Hotel @relation("HotelRooms",fields: [hotelId],references: [id])
   roomNumber  String    
   type        String    
   price       Float    
@@ -67,25 +67,32 @@ model Room {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  // bookings    Booking[] // Relationship: One room has multiple bookings
 }
-
 model Booking {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  roomId    String  @db.ObjectId
-  userId    String  @db.ObjectId
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  roomIds        String[]       @db.ObjectId
+  userId         String         @db.ObjectId
   email          String
   phone          String
   name           String
-  checkIn   DateTime
-  checkOut  DateTime
-  totalPrice Float
-  status    String  @default("pending") // pending, confirmed, cancelled
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-   paymentStatus  PaymentStatus  @default(pending)
+  checkIn        DateTime
+  checkOut       DateTime
+  totalPrice     Float
+  status         String         @default("pending") // pending, confirmed, cancelled
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  paymentStatus  PaymentStatus  @default(pending)
   transactionId  String?        @unique
- payment        Payment?       @relation("BookingToPayment")
+  payment        Payment?       @relation("BookingToPayment")
+
+ }
+ model RoomBooking {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId  String   @db.ObjectId
+  roomId     String   @db.ObjectId
+
+  // booking    Booking  @relation(fields: [bookingId], references: [id])
+  // room       Room     @relation(fields: [roomId], references: [id])
 }
 
 model Payment {
