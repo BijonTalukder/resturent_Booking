@@ -7,7 +7,6 @@ import { useCurrentUser } from "../../redux/Feature/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/Hook/Hook";
 import { toast } from "sonner";
 import ZPhone from "../../components/Form/ZPhone";
-import { clearCart } from "../../redux/Cart/cartSlice";
 import { calculatePrice } from "../../utils/priceUtils";
 
 const Checkout = () => {

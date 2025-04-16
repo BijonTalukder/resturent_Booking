@@ -13,7 +13,6 @@ import { Modal, Pagination } from 'antd';
 import { useGetCategoryQuery } from "../../redux/Feature/Admin/category/categoryApi";
 import { useGetBrandQuery } from "../../redux/Feature/Admin/brand/brandApi";
 import DashboardTitle from "../../components/DashboardTitle/DashboardTitle";
-import ViewProduct from "../../components/ViewProduct";
 
 const Shop = () => {
   const dispatch = useAppDispatch();
