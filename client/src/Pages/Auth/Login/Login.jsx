@@ -45,7 +45,7 @@ const Login = () => {
   
   const handleSubmit = async (data) => {
     const { data: loginData } = await login(data);
-    console.log(loginData)
+
     if (loginData.success) {
       dispatch(setUser({ token: loginData.token, user: loginData.user }));
       if (loginData?.user?.role === "user") {
