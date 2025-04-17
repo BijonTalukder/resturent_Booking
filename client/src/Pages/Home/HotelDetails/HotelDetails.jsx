@@ -15,18 +15,22 @@
   } from "antd";
   import DatePicker from "react-datepicker";
   import "react-datepicker/dist/react-datepicker.css";
-  import { Link, useParams } from "react-router-dom";
+  import { Link, useNavigate, useParams } from "react-router-dom";
   import { format, addDays, isBefore, isAfter, startOfDay } from "date-fns";
   import Skeleton from "../../../components/Skeleton/Skeleton";
   import { useGetRoomsByHotelIdQuery } from "../../../redux/Feature/Admin/room/roomApi";
   import { useGetHotelByIdQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
   import RoomGallery from "./RoomGallery";
   import { useCheckRoomAvailabilityBookingMutation } from "../../../redux/Feature/Admin/booking/bookingApi";
+import { useAppDispatch } from "../../../redux/Hook/Hook";
+import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
 
   const { Title, Text, Paragraph } = Typography;
 
   const HotelDetails = () => {
     const { id } = useParams();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const { data: hotelData, isLoading: isHotelLoading, error: hotelError } =
       useGetHotelByIdQuery(id);
     const {
@@ -40,8 +44,7 @@
     const [checkOutDate, setCheckOutDate] = useState(
       addDays(startOfDay(new Date()), 1)
     );
-//     const { selectedRooms, checkInDate, checkOutDate, totalPrice } = useSelector((state) => state.booking);
-// const dispatch = useDispatch();
+
 
 
         
@@ -127,7 +130,23 @@
       0
     );
 
+    const handleProceedToCheckout = () => {
+      const toUtcMidnightISOString = (date) => {
+          const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+          return utcDate.toISOString();
+        };
+    
+        const checkInDateFormatted = toUtcMidnightISOString(checkInDate);
+        const checkOutDateFormatted = toUtcMidnightISOString(checkOutDate);
+      dispatch(setBookingDetails({
+  selectedRooms,
+  checkInDate: checkInDateFormatted, 
+  checkOutDate: checkOutDateFormatted,
+  totalPrice,
+}));
 
+  navigate("/checkout"); 
+};
     
     
     
@@ -293,6 +312,7 @@
             className="bg-green-500 text-white hover:bg-green-500 hover:text-white disabled:cursor-not-allowed"
             type="primary"
             size="large"
+            onClick={handleProceedToCheckout}
             
           >
             Proceed to Checkout ({totalPrice} Tk/-)

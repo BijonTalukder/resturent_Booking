@@ -14,35 +14,15 @@ import ModalSlice from "../Modal/ModalSlice";
 import baseApi from "../Api/baseApi";
 import loadingSlice from "../loading/loadingSlice";
 import authSlice from "../Feature/auth/authSlice";
-import bookingSlice from "../Booking/bookingSlice"; 
-import { addDays, startOfDay } from "date-fns";
+import bookingReducer from "../Booking/bookingSlice"; 
 
 
-// Persist config for booking
 
-const bookingPersistConfig = {
-  key: "booking",
-  storage,
-  whitelist: ["selectedRooms", "checkInDate", "checkOutDate"],
-  transforms: [
-    {
-      in: (state) => ({
-        ...state,
-        checkInDate: state.checkInDate?.getTime() || startOfDay(new Date()).getTime(),
-        checkOutDate: state.checkOutDate?.getTime() || addDays(startOfDay(new Date()), 1).getTime()
-      }),
-      out: (state) => ({
-        ...state,
-        checkInDate: new Date(state.checkInDate),
-        checkOutDate: new Date(state.checkOutDate)
-      }),
-    },
-  ],
-};
 
 // Persist reducers
 const persistedAuthReducer = persistReducer({ key: "auth", storage }, authSlice);
-const persistedBookingReducer = persistReducer(bookingPersistConfig, bookingSlice);
+const persistedBookingReducer = persistReducer({ key: "booking", storage }, bookingReducer);
+
 
 export const store = configureStore({
   reducer: {
