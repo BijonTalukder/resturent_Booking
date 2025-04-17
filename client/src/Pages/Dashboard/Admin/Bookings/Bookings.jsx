@@ -28,7 +28,7 @@ const Bookings = () => {
     name: booking?.name,
     email: booking?.email,
     phone: booking?.phone,
-    roomId: booking?.roomId,
+    roomIds: booking?.roomIds?.map((roomId) => roomId),
     userId: booking?.userId,
     totalPrice: booking?.totalPrice,
     transactionId: booking?.transactionId,

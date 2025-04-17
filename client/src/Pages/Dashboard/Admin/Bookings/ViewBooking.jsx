@@ -23,7 +23,9 @@ const ViewBooking = ({ selectedBooking }) => {
           {selectedBooking?.phone}
         </Descriptions.Item>
         <Descriptions.Item label="Room ID">
-          {selectedBooking?.roomId}
+          <div>
+          {selectedBooking?.roomIds}  
+          </div>
         </Descriptions.Item>
         <Descriptions.Item label="User ID">
           {selectedBooking?.userId}
