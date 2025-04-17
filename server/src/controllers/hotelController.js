@@ -17,6 +17,11 @@ class HotelController{
     }
     async getAllHotels(req,res,next){
         try{
+
+
+
+            //need to add filter
+            
             const result=await this.hotelService.getAllHotels()
             ResponseHandler.success(res,"Hotels fetched successfully",result)
         }catch(error){
