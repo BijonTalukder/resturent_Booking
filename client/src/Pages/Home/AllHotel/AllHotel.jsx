@@ -13,13 +13,11 @@ import { Link } from "react-router-dom";
 import SectionTitle from "../SectionTitle/SectionTitle";
 import ProductsSkeleton from "../../../components/Skeleton/ProductsSkeleton";
 import { useAppDispatch, useAppSelector } from "../../../redux/Hook/Hook";
-import ViewProduct from "../../../components/ViewProduct";
 import { setIsProductViewModalOpen } from "../../../redux/Modal/ModalSlice";
 import { Modal } from "antd";
 import { IoLocationOutline, IoSearch } from "react-icons/io5";
 import Image1 from "../../../../public/image.png";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
-import Cart from "../../../common/Cart/Cart";
 import Adjustment from "../../../common/Adjustment/Adjustment";
 import { useGetHotelQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
 

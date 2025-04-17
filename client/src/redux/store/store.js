@@ -14,24 +14,21 @@ import ModalSlice from "../Modal/ModalSlice";
 import baseApi from "../Api/baseApi";
 import loadingSlice from "../loading/loadingSlice";
 import authSlice from "../Feature/auth/authSlice";
-import cartSlice from "../Cart/cartSlice";
+import bookingReducer from "../Booking/bookingSlice"; 
 
-// Persist config for cart (Ensure it always initializes as an array)
-const cartPersistConfig = {
-  key: "cart",
-  storage,
-  whitelist: ["items"], // Only persist 'items' field to prevent issues
-};
+
+
 
 // Persist reducers
 const persistedAuthReducer = persistReducer({ key: "auth", storage }, authSlice);
-const persistedCartReducer = persistReducer(cartPersistConfig, cartSlice);
+const persistedBookingReducer = persistReducer({ key: "booking", storage }, bookingReducer);
+
 
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
-    cart: persistedCartReducer,
+    booking: persistedBookingReducer,
     modal: ModalSlice,
     loading: loadingSlice,
   },
