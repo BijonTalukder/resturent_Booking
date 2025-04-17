@@ -98,23 +98,23 @@ export const adminRoutes = [
     icon: <TfiLayoutSlider size={20}></TfiLayoutSlider>,
     permissionName: "view slider",
   },
-  {
-    path: "subscriptions",
-    label: "Subscriptions",
-    element: <Subscription/>,
-    icon: <BiSolidPurchaseTag  size={20}/>,
-    permissionName: "view subscription",
-  },
+  // {
+  //   path: "subscriptions",
+  //   label: "Subscriptions",
+  //   element: <Subscription/>,
+  //   icon: <BiSolidPurchaseTag  size={20}/>,
+  //   permissionName: "view subscription",
+  // },
   {
     path: "users/add-user",
     element: <AddUser/>,
   
   },
-  {
-    path: "contacts",
-    label: "Contacts",
-    element: <Contact/>,
-    icon: <MdContacts  size={20}/>,
-    permissionName: "view contact",
-  },
+  // {
+  //   path: "contacts",
+  //   label: "Contacts",
+  //   element: <Contact/>,
+  //   icon: <MdContacts  size={20}/>,
+  //   permissionName: "view contact",
+  // },
 ];
