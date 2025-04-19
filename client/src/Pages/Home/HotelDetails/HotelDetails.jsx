@@ -59,7 +59,7 @@ import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
 
     const hotel = hotelData?.data;
     const rooms = roomsData?.data || [];
-    console.log(hotel)
+  
 
     const isSelected = (roomId) => selectedRooms.some((r) => r.id === roomId);
 
