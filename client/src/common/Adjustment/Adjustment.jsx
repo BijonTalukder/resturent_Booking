@@ -5,12 +5,21 @@ import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import axios from 'axios';
 import { InputNumber } from 'primereact/inputnumber';
+import { Button } from 'antd';
 
-const Adjustment = ({ visibleRight, setVisibleRight }) => {
+const Adjustment = ({ 
+  visibleRight, 
+  setVisibleRight,
+  selectedDivision,
+  setSelectedDivision,
+  selectedCity,
+  setSelectedCity,
+  onApplyFilters // Add this new prop
+}) => {
   const [divisions, setDivisions] = useState([]);
   const [cities, setCities] = useState([]);
-  const [selectedDivision, setSelectedDivision] = useState(null);
-  const [selectedCity, setSelectedCity] = useState(null);
+  const [localDivision, setLocalDivision] = useState(selectedDivision);
+  const [localCity, setLocalCity] = useState(selectedCity);
   const [checkInDate, setCheckInDate] = useState(new Date());
   const [checkOutDate, setCheckOutDate] = useState(new Date(Date.now() + 86400000)); // Next day
   const [guests, setGuests] = useState(1);
@@ -34,10 +43,10 @@ const Adjustment = ({ visibleRight, setVisibleRight }) => {
 
   // Fetch cities when division is selected
   useEffect(() => {
-    if (selectedDivision) {
+    if (localDivision) {
       const fetchCities = async () => {
         try {
-          const response = await axios.get(`https://bdapi.vercel.app/api/v.1/district/${selectedDivision}`);
+          const response = await axios.get(`https://bdapi.vercel.app/api/v.1/district/${localDivision}`);
           setCities(response.data.data.map(city => ({
             label: city.name,
             value: city.id
@@ -47,21 +56,25 @@ const Adjustment = ({ visibleRight, setVisibleRight }) => {
         }
       };
       fetchCities();
+    } else {
+      setCities([]);
+      setLocalCity('');
     }
-  }, [selectedDivision]);
+  }, [localDivision]);
 
-  const handleSearch = () => {
-    const searchParams = {
-      division: selectedDivision ? divisions.find(d => d.value === selectedDivision)?.label : 'Any',
-      city: selectedCity ? cities.find(c => c.value === selectedCity)?.label : 'Any',
-      checkIn: checkInDate.toISOString().split('T')[0],
-      checkOut: checkOutDate.toISOString().split('T')[0],
-      guests,
-      rooms
-    };
-    console.log('Search Parameters:', searchParams);
-    // You would typically pass these to your search function here
+  const handleApply = () => {
+    // Update the parent state with the local selections
+    setSelectedDivision(localDivision);
+    setSelectedCity(localCity);
+    // Trigger the API call via the parent component
+    onApplyFilters(localDivision, localCity);
     setVisibleRight(false);
+  };
+
+  const handleClearFilters = () => {
+    setLocalDivision('');
+    setLocalCity('');
+    setCities([]);
   };
 
   return (
@@ -69,7 +82,7 @@ const Adjustment = ({ visibleRight, setVisibleRight }) => {
       visible={visibleRight}
       position="bottom"
       onHide={() => setVisibleRight(false)}
-      className="w-full md:w-[500px] h-[300px]  lg:h-[500px]  mx-auto rounded-t-2xl"
+      className="w-full md:w-[500px] h-[300px] lg:h-[380px] mx-auto rounded-t-2xl"
     >
       <h2 className="text-xl font-bold mb-4 text-center">Modify Your Search</h2>
       
@@ -79,11 +92,11 @@ const Adjustment = ({ visibleRight, setVisibleRight }) => {
           <label htmlFor="division" className="block font-medium mb-2">Division</label>
           <Dropdown
             id="division"
-            value={selectedDivision}
+            value={localDivision}
             options={divisions}
             onChange={(e) => {
-              setSelectedDivision(e.value);
-              setSelectedCity(null); // Reset city when division changes
+              setLocalDivision(e.value);
+              setLocalCity('');
             }}
             optionLabel="label"
             placeholder="Select a Division"
@@ -96,18 +109,18 @@ const Adjustment = ({ visibleRight, setVisibleRight }) => {
           <label htmlFor="city" className="block font-medium mb-2">City/Area</label>
           <Dropdown
             id="city"
-            value={selectedCity}
+            value={localCity}
             options={cities}
-            onChange={(e) => setSelectedCity(e.value)}
+            onChange={(e) => setLocalCity(e.value)}
             optionLabel="label"
             placeholder="Select a City"
             className="w-full"
-            disabled={!selectedDivision}
+            disabled={!localDivision}
           />
         </div>
 
-        {/* Date Range */}
-        <div className="grid grid-cols-2 gap-4">
+                {/* Date Range */}
+        {/* <div className="grid grid-cols-2 gap-4">
           <div className="field">
             <label htmlFor="checkIn" className="block font-medium mb-2">Check In</label>
             <Calendar
@@ -130,10 +143,10 @@ const Adjustment = ({ visibleRight, setVisibleRight }) => {
               className="w-full"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Guests and Rooms */}
-        <div className="grid grid-cols-1  gap-4">
+        {/* <div className="grid grid-cols-1  gap-4">
           <div className="field">
             <label htmlFor="guests" className="block font-medium mb-2">Guests</label>
             <InputNumber
@@ -158,16 +171,22 @@ const Adjustment = ({ visibleRight, setVisibleRight }) => {
               className="w-full"
             />
           </div>
-        </div>
+        </div> */}
 
-        {/* Search Button */}
-        <div className="mt-6">
-          <button
-            onClick={handleSearch}
-            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition-all"
+        {/* Action Buttons */}
+        <div className="flex gap-4 mt-4">
+          <Button
+            onClick={handleClearFilters}
+            className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg transition-all"
+          >
+            Clear Filters
+          </Button>
+          <Button
+            onClick={handleApply}
+            className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition-all"
           >
             Apply Filters
-          </button>
+          </Button>
         </div>
       </div>
     </Sidebar>

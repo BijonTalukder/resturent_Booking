@@ -24,31 +24,29 @@ const hotelApi = baseApi.injectEndpoints({
     }),
 
     // Get Hotels with search, pagination, and filtering
-    // getHotelsBySearch: builder.query({
-    //   query: ({ 
-    //     search = '', 
-    //     page, 
-    //     limit, 
-    //     priceMin, 
-    //     priceMax, 
-    //     location, 
-    //     amenities,
-    //     sortBy 
-    //   }) => ({
-    //     url: "/hotel",
-    //     params: {
-    //       search,
-    //       page,
-    //       limit,
-    //       priceMin,
-    //       priceMax,
-    //       location,
-    //       amenities,
-    //       sortBy
-    //     },
-    //   }),
-    //   providesTags: ['hotels']
-    // }),
+    getHotelsBySearch: builder.query({
+      query: ({ 
+        name = '',
+        divisionId = '',
+        cityId = ''
+        // page, 
+        // limit, 
+        // priceMin, 
+        // priceMax, 
+      }) => ({
+        url: "/hotel",
+        params: {
+          name,
+          divisionId,
+          cityId,
+          // page,
+          // limit,
+          // priceMin,
+          // priceMax,
+        },
+      }),
+      providesTags: ['hotels']
+    }),
 
     // Get Hotel by Id
     getHotelById: builder.query({
@@ -93,7 +91,7 @@ const hotelApi = baseApi.injectEndpoints({
 export const {
   useCreateHotelMutation,
   useGetHotelQuery,
-  // useGetHotelsBySearchQuery,
+  useGetHotelsBySearchQuery,
   useGetHotelByIdQuery,
   // useGetNearbyHotelsQuery,
   useUpdateHotelMutation,

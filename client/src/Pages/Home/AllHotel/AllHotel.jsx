@@ -19,14 +19,21 @@ import { IoLocationOutline, IoSearch } from "react-icons/io5";
 import Image1 from "../../../../public/image.png";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import Adjustment from "../../../common/Adjustment/Adjustment";
-import { useGetHotelQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
+import { useGetHotelQuery, useGetHotelsBySearchQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
 
 const AllHotel = () => {
-  const { data, error, isFetching, isLoading } = useGetHotelQuery();
+  // const { data, error, isFetching, isLoading } = useGetHotelQuery();
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleRight, setVisibleRight] = useState(false);
+  const [divisionId, setDivisionId] = useState(''); // Changed from divisions
+  const [cityId, setCityId] = useState('');        // Changed from cities
 
+  const { data, error, isLoading, isFetching } = useGetHotelsBySearchQuery({
+    name: searchQuery,
+    divisionId,
+    cityId
+  });
   useEffect(() => {
     if (isFetching) {
       setShowSkeleton(true);
@@ -42,12 +49,21 @@ const AllHotel = () => {
     setSearchQuery(e.target.value);
   };
 
+  const handleApplyFilters = (division, city) => {
+    setDivisionId(division);
+    setCityId(city);
+    
+  };
+
+
   const noProductsFound =
-    !isLoading &&
-    !showSkeleton &&
-    data?.data?.length === 0 &&
-    searchQuery.trim() !== "";
-    // || priceMin !== 1 || priceMax !== 100000000000000
+  !isLoading &&
+  !showSkeleton &&
+  data?.data?.length === 0 &&
+  (searchQuery.trim() !== "" || cityId || divisionId);
+
+
+    
 
   return (
     <div className="pb-[80px]">
@@ -77,6 +93,11 @@ const AllHotel = () => {
         <Adjustment
           visibleRight={visibleRight}
           setVisibleRight={setVisibleRight}
+          selectedDivision={divisionId}
+        setSelectedDivision={setDivisionId}
+        selectedCity={cityId}
+        setSelectedCity={setCityId}
+        onApplyFilters={handleApplyFilters}
         />
       </div>
 
@@ -86,7 +107,7 @@ const AllHotel = () => {
       {/* Show "No products found" message if no products match the search or price range */}
       {noProductsFound && (
         <div className="text-center text-xl font-bold text-red-500 mt-10">
-          No products found for the selected criteria.
+          No hotel found for the given criteria.
         </div>
       )}
 
