@@ -18,11 +18,27 @@ class HotelController{
     async getAllHotels(req,res,next){
         try{
 
+            const {
+                name = '',
+                divisionId = '',
+                cityId = '',
+                minPrice=0,
+                maxPrice=0
+                // lastId = '',
+                
+            } = req.query;
 
 
-            //need to add filter
-            
-            const result=await this.hotelService.getAllHotels()
+
+            const result=await this.hotelService.getAllHotels({
+                name: name.trim() || null,
+                divisionId: divisionId || null,
+                cityId: cityId || null,
+                minPrice:parseInt(minPrice),
+                maxPrice:parseInt(maxPrice)
+                // lastId: lastId || null,
+                // take: parseInt(limit)
+            })
             ResponseHandler.success(res,"Hotels fetched successfully",result)
         }catch(error){
             next(error)
