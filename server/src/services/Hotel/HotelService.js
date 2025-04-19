@@ -1,30 +1,71 @@
-class HotelService{
-    constructor(prismaClient){
+class HotelService {
+    constructor(prismaClient) {
         this.prisma = prismaClient;
     }
-    async createHotel(data){
+    async createHotel(data) {
         const hotel = await this.prisma.hotel.create({
             data
         })
         return hotel;
     }
-    async getAllHotels(){
-        return await this.prisma.hotel.findMany();
+    async getAllHotels({ name, divisionId, cityId,minPrice,maxPrice }) {
+
+        console.log(minPrice);
+        
+
+        let whereCondition = {
+            isActive: true
+        }
+        if (name) {
+            whereCondition.name = {
+                contains: name,
+                mode: 'insensitive'
+            }
+        }
+
+        if(divisionId)
+        {
+            whereCondition.divisionId=divisionId
+        }
+        if(cityId)
+        {
+            whereCondition.cityId=cityId
+        }
+        return await this.prisma.hotel.findMany({
+            where: whereCondition,
+            orderBy: { id: 'asc' },
+            include:{
+            
+                    rooms: {
+                        where: {
+                            isAvailable: true,
+                            price: {
+                                gte: minPrice, 
+                                lte: maxPrice || Number.MAX_VALUE, 
+                            },
+                            // capacity: {
+                            //     gte: minCapacity || 0, 
+                            //     lte: maxCapacity || Number.MAX_VALUE, 
+                            // },
+                        }        
+            }
+        }
+        });
     }
-    async getSingleHotel(hotelId){
+    async getSingleHotel(hotelId) {
         const hotel = await this.prisma.hotel.findUnique({
             where: { id: hotelId },
         });
         return hotel;
     }
-    async updateHotel(hotelId, data){
+    async updateHotel(hotelId, data) {
         const updatedHotel = await this.prisma.hotel.update({
             where: { id: hotelId },
             data,
         });
         return updatedHotel;
     }
-    async deleteHotel(hotelId){
+    async deleteHotel(hotelId) {
         return await this.prisma.hotel.delete({
             where: { id: hotelId },
         });
