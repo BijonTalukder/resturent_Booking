@@ -59,6 +59,7 @@ import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
 
     const hotel = hotelData?.data;
     const rooms = roomsData?.data || [];
+    console.log(hotel)
 
     const isSelected = (roomId) => selectedRooms.some((r) => r.id === roomId);
 
@@ -149,8 +150,7 @@ import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
 };
     
     
-    
-    
+
 
     return (
       <div className="container mx-auto px-4 py-8">
@@ -190,6 +190,21 @@ import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
             </Space>
           </div>
         </Card>
+
+        {hotel?.latitude && hotel?.longitude && (
+  <div className="mb-8">
+    <Title level={4}>Location Map</Title>
+    <iframe
+      width="100%"
+      height="400"
+      style={{ border: 0 }}
+      loading="lazy"
+      allowFullScreen
+      src={`https://www.google.com/maps?q=${encodeURIComponent(hotel.name)}+${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
+
+    ></iframe>
+  </div>
+)}
 
         <Card className="mb-8 shadow-sm">
           <Title level={4} className="!mb-4">
