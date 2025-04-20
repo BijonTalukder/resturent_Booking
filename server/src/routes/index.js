@@ -11,6 +11,8 @@ const RoomController = require('../controllers/RoomController');
 const RoomService = require('../services/Room/RoomService');
 const BookingService = require('../services/Booking/BookingService');
 const BookingController = require('../controllers/BookingController');
+const SliderController = require('../controllers/sliderController');
+const SliderService = require('../services/Slider/SliderService');
 
 
 const router = express.Router();
@@ -27,6 +29,7 @@ const roomService = new RoomService();
 const roomController= new RoomController(roomService)
 const bookingService = new BookingService();
 const bookingController = new BookingController(bookingService);
+const sliderService = new SliderService(prisma);
 //-------------------User Routes-----------------------
 router.post("/user/register",async(req,res,next)=>{
     userController.createUser(req,res,next)
@@ -105,6 +108,34 @@ router.delete("/booking/:id",async(req,res,next)=>{
 })
 router.post("/booking/check-availability",async(req,res,next)=>{
     bookingController.checkAvailability(req,res,next)
+})
+
+
+//slider routes
+//[route("/sliders/create")]
+router.post("/sliders/create", (req, res, next) => {
+    const sliderController = new SliderController(sliderService);
+    sliderController.createSlider(req, res, next)
+})
+//[route("/sliders")]
+router.get("/sliders", (req, res, next) => {
+    const sliderController = new SliderController(sliderService);
+    sliderController.getSliders(req, res, next)
+})
+//[route("/sliders/{id}")]
+router.get("/sliders/:id", (req, res, next) => {
+    const sliderController = new SliderController(sliderService);
+    sliderController.getSliderById(req, res, next)
+})
+//[route("/sliders/{id}")]
+router.put("/sliders/:id", (req, res, next) => {
+    const sliderController = new SliderController(sliderService);
+    sliderController.updateSlider(req, res, next)
+})
+//[route("/sliders/{id}")]
+router.delete("/sliders/:id", (req, res, next) => {
+    const sliderController = new SliderController(sliderService);
+    sliderController.deleteSlider(req, res, next)
 })
 
 

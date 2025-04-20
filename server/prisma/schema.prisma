@@ -109,6 +109,18 @@ model Payment {
   booking    Booking        @relation("BookingToPayment", fields: [bookingId], references: [id])
 }
 
+model Slider {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String   @db.String           
+  description String?  @db.String          
+  imageUrl    String   @db.String           
+  linkUrl     String?  @db.String           
+  position    Int      @default(0)          
+  isActive    Boolean  @default(true)       
+  createdAt   DateTime @default(now())      
+  updatedAt   DateTime @updatedAt      
+}
+
 enum OrderStatus {
   pending
   processing

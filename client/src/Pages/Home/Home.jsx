@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import DashboardTitle from "../../components/DashboardTitle/DashboardTitle";
 import AllHotel from "./AllHotel/AllHotel";
+import BannerSlider from "./BannerSlider/BannerSlider";
 
 
 const Home = () => {
@@ -32,6 +33,8 @@ const Home = () => {
        */}
        <AllHotel/>
        {/* <NewsSletter/> */}
+       <BannerSlider />
+
 
     </div>
   );

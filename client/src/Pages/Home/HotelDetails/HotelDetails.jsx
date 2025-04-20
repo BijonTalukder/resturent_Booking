@@ -24,6 +24,32 @@
   import { useCheckRoomAvailabilityBookingMutation } from "../../../redux/Feature/Admin/booking/bookingApi";
 import { useAppDispatch } from "../../../redux/Hook/Hook";
 import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
+import {
+  WifiOutlined,
+  CarOutlined,
+  CoffeeOutlined,
+  ShoppingOutlined,
+  SafetyOutlined,
+  FireOutlined,
+  MedicineBoxOutlined,
+  SwitcherOutlined,
+  GiftOutlined,
+  TeamOutlined
+} from '@ant-design/icons';
+
+
+const amenityIcons = {
+  'Free WiFi': <WifiOutlined />,
+  'Parking': <CarOutlined />,
+  'Restaurant': <CoffeeOutlined />,
+  'Shop': <ShoppingOutlined />,
+  '24/7 Security': <SafetyOutlined />,
+  'Gym': <FireOutlined />,
+  'Spa': <MedicineBoxOutlined />,
+  'Swimming Pool': <SwitcherOutlined />,
+  'Gift Shop': <GiftOutlined />,
+  'Meeting Rooms': <TeamOutlined />
+};
 
   const { Title, Text, Paragraph } = Typography;
 
@@ -180,15 +206,18 @@ import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
           <Paragraph>{hotel?.description}</Paragraph>
           <Divider />
           <div>
-            <Text strong>Amenities: </Text>
-            <Space size={[0, 8]} wrap className="mt-2">
-              {hotel?.amenities?.map((amenity, index) => (
-                <Tag key={index} color="blue">
-                  {amenity}
-                </Tag>
-              ))}
-            </Space>
-          </div>
+  <Text  strong>Amenities: </Text>
+  <Space size={[0, 8]} wrap className="ms-2 mt-2">
+    {hotel?.amenities?.map((amenity, index) => {
+      const icon = amenityIcons[amenity] || null;
+      return (
+        <Tag key={index} color="blue" icon={icon} className="flex items-center text-sm gap-1">
+          {amenity}
+        </Tag>
+      );
+    })}
+  </Space>
+</div>
         </Card>
 
         {hotel?.latitude && hotel?.longitude && (
