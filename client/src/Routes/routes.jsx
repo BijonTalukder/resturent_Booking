@@ -19,6 +19,8 @@ import EditProfile from "../Pages/Dashboard/User/EditProfile/EditProfile";
 import Verify from "../Pages/Verify/Verify";
 import OrderTrack from "../Pages/Track-Order/OrderTrack";
 import HotelDetails from "../Pages/Home/HotelDetails/HotelDetails";
+import { CustomerRoutes } from "./Customer.Routes";
+import CustomerDashboardLayout from "../Layouts/Dashboard/CustomerDashboardLayout";
 
 export const routes = createBrowserRouter([
   {
@@ -31,20 +33,20 @@ export const routes = createBrowserRouter([
         element: <Home />,
       },
       
-      {
-        path: "/order-history",
-        element:  
-        <ProtectedRoutes role={"user"}>
-        <OrderHistory/>
-      </ProtectedRoutes>,
-      },
-      {
-        path: "/edit-profile",
-        element:  
-        <ProtectedRoutes role={"user"}>
-        <EditProfile/>
-      </ProtectedRoutes>,
-      },
+      // {
+      //   path: "/order-history",
+      //   element:  
+      //   <ProtectedRoutes role={"user"}>
+      //   <OrderHistory/>
+      // </ProtectedRoutes>,
+      // },
+      // {
+      //   path: "/edit-profile",
+      //   element:  
+      //   <ProtectedRoutes role={"user"}>
+      //   <EditProfile/>
+      // </ProtectedRoutes>,
+      // },
       {
         path: "/checkout",
         element: 
@@ -105,13 +107,13 @@ export const routes = createBrowserRouter([
     errorElement: <ErrorPageDashboard />,
     children: routesGenerator(adminRoutes),
   },
-  // {
-  //   path: "/user",
-  //   children: routesGenerator(CustomerRoutes),
-  //   element: (
-  //     <ProtectedRoutes role="customer">
-  //       <CustomerDashboardLayout />
-  //     </ProtectedRoutes>
-  //   ),
-  // },
+  {
+    path: "/user",
+    children: routesGenerator(CustomerRoutes),
+    element: (
+      <ProtectedRoutes role="user">
+        <CustomerDashboardLayout />
+      </ProtectedRoutes>
+    ),
+  },
 ]);
