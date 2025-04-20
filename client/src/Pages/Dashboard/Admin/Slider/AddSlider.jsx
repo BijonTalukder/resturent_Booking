@@ -73,7 +73,7 @@ const AddSlider = () => {
         buttonName="Create"
       >
         <div className="grid grid-cols-1 gap-3 mt-10">
-          <ZInputTwo
+          {/* <ZInputTwo
             name="title"
             type="text"
             label="Title"
@@ -89,24 +89,21 @@ const AddSlider = () => {
             label="Description"
             defaultKey={""}
             placeholder={"Enter the description"}
-            // required={1}
             reset
-          />
+          /> */}
 
           <ZImageInput
             name="imageUrl"
             label="Slider Image"
           />
 
-          <ZInputTwo
+          {/* <ZInputTwo
             name="linkUrl"
             type="text"
             label="Link URL"
             defaultKey={""}
             placeholder={"Enter the link URL"}
- 
-            reset
-          />
+          /> */}
 
           <ZSelect
             name="isActive"

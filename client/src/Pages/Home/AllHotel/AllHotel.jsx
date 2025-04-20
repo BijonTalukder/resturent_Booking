@@ -102,7 +102,7 @@ const AllHotel = () => {
       </div>
 
       {/* Show Skeleton While Loading */}
-      {(isLoading || showSkeleton) && <ProductsSkeleton />}
+      {(isLoading || showSkeleton) && <ProductsSkeleton hotelData={data?.data}/>}
 
       {/* Show "No products found" message if no products match the search or price range */}
       {noProductsFound && (
@@ -119,15 +119,15 @@ const AllHotel = () => {
               key={index}
               className="flex flex-col  rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white"
             >
-              <div className="relative h-[110px]  md:h-[100%]">
+              <div className="relative h-[110px] object-cover md:h-[300px]">
                 <img
                   src={hotel?.image || Image1}
                   alt={"Hotel Image"}
                   className="w-full h-full object-cover text-[10px]"
                 />
-                <button className="absolute top-2 right-2 text-white bg-[#9E9E9E59] rounded-full p-2">
+                {/* <button className="absolute top-2 right-2 text-white bg-[#9E9E9E59] rounded-full p-2">
                   <CiHeart className="h-5 w-5" />
-                </button>
+                </button> */}
               </div>
 
               <div className="flex-1 px-2 py-1 md:px-4 md:py-4">

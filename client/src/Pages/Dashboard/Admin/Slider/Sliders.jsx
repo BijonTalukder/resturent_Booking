@@ -50,28 +50,28 @@ const Sliders = () => {
   };
 
   const columns = [
-    {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-    },
+    // {
+    //   title: "Title",
+    //   dataIndex: "title",
+    //   key: "title",
+    // },
+    // {
+    //   title: "Description",
+    //   dataIndex: "description",
+    //   key: "description",
+    // },
     {
       title: "Image",
       dataIndex: "imageUrl",
       key: "imageUrl",
       render: (text, record) => <Image alt="" height={50} width={50} src={record.imageUrl} />,
     },
-    {
-      title: "Link URL",
-      dataIndex: "linkUrl",
-      key: "linkUrl",
-      render: (linkUrl) => <a href={linkUrl} target="_blank" rel="noopener noreferrer">{linkUrl}</a>,
-    },
+    // {
+    //   title: "Link URL",
+    //   dataIndex: "linkUrl",
+    //   key: "linkUrl",
+    //   render: (linkUrl) => <a href={linkUrl} target="_blank" rel="noopener noreferrer">{linkUrl}</a>,
+    // },
     {
       title: "Status",
       dataIndex: "isActive",

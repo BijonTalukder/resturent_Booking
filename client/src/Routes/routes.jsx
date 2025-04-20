@@ -7,8 +7,6 @@ import { adminRoutes } from "./Admin.Routes";
 import ErrorPage from "../common/ErrorPage/ErrorPage";
 import DashboardLayout from "../Layouts/Dashboard/DashboardLayout";
 import MainLayout from "../Layouts/Home/MainLayout";
-import ProductDetails from "../Pages/Home/HotelDetails/HotelDetails";
-import Shop from "../Pages/Shop/Shop";
 import Login from "../Pages/Auth/Login/Login";
 import Register from "../Pages/Auth/Register/Register";
 import AdminProtectedRoute from "./AdminPanelProtectedRoutes/AdminProtectedRoute";
@@ -32,14 +30,7 @@ export const routes = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-      {
-        path: "/shop",
-        element: <Shop/>,
-      },
-      {
-        path: "/shop",
-        element: <Shop/>,
-      },
+      
       {
         path: "/order-history",
         element:  

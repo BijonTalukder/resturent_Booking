@@ -40,7 +40,8 @@ const BannerSlider = () => {
   }));
 
   return (
-    <div className="">
+    <div className="mb-[80px]">
+    <h1 className="font-bold md:text-xl mb-5">More for You</h1>
           {
             sliderIsLoading || showSkeleton ? 
           <Skeleton />
