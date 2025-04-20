@@ -129,3 +129,27 @@ enum OrderStatus {
   cancelled
 }
 
+model Notification {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  type      NotificationType
+  title     String
+  orderId   String?         // optional order ID for order-related notifications
+  bookingId String?         // optional booking ID for booking-related notifications
+  
+  message   String
+  link      String?         // link to open on click
+  data      Json?           // optional payload
+  isRead    Boolean         @default(false)
+  createdAt DateTime        @default(now())
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMATION
+  BOOKING_CANCELLATION
+  ORDER_UPDATE
+  PROMOTION
+  REVIEW_REMINDER
+  GENERAL
+}
+

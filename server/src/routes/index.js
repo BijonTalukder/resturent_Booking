@@ -13,6 +13,8 @@ const BookingService = require('../services/Booking/BookingService');
 const BookingController = require('../controllers/BookingController');
 const SliderController = require('../controllers/sliderController');
 const SliderService = require('../services/Slider/SliderService');
+const NotificationService = require('../services/Notification/NotificationService');
+const NotificationController = require('../controllers/notificationController');
 
 
 const router = express.Router();
@@ -30,6 +32,9 @@ const roomController= new RoomController(roomService)
 const bookingService = new BookingService();
 const bookingController = new BookingController(bookingService);
 const sliderService = new SliderService(prisma);
+const notificationService = new NotificationService(prisma);
+
+const notificationController = new NotificationController(notificationService)
 //-------------------User Routes-----------------------
 router.post("/user/register",async(req,res,next)=>{
     userController.createUser(req,res,next)
@@ -137,6 +142,23 @@ router.delete("/sliders/:id", (req, res, next) => {
     const sliderController = new SliderController(sliderService);
     sliderController.deleteSlider(req, res, next)
 })
+
+//-------------------Notification Routes-----------------------
+//[route("/notification/create")]
+router.post("/notification/create", (req, res, next) => {
+    notificationController.createNotification(req, res, next)
+}
+)
+//[route("/notification")]
+router.get("/notification/:userId", (req, res, next) => {
+    notificationController.getNotifications(req, res, next)
+}
+)
+//[route("/notification/{id}")]
+router.put("/notification/:id/read", (req, res, next) => {
+    notificationController.markAsRead(req, res, next)
+}
+)
 
 
 
