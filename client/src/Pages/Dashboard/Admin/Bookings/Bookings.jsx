@@ -142,11 +142,11 @@ const Bookings = () => {
               <AiFillEdit className="text-green-500 hover:text-green-700" size={20} />
             </Tooltip>
           </a>
-          <a onClick={() => handleDeleteBooking(record)}>
+          {/* <a onClick={() => handleDeleteBooking(record)}>
             <Tooltip title="Delete" placement="top">
               <AiFillDelete className="text-red-500 hover:text-red-700" size={20} />
             </Tooltip>
-          </a>
+          </a> */}
         </Space>
       ),
     },
