@@ -21,6 +21,8 @@ import OrderTrack from "../Pages/Track-Order/OrderTrack";
 import HotelDetails from "../Pages/Home/HotelDetails/HotelDetails";
 import { CustomerRoutes } from "./Customer.Routes";
 import CustomerDashboardLayout from "../Layouts/Dashboard/CustomerDashboardLayout";
+import Notification from "../Pages/Notification/Notification";
+import AdminLogin from "../Pages/Auth/AdminLogin/AdminLogin";
 
 export const routes = createBrowserRouter([
   {
@@ -31,6 +33,14 @@ export const routes = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+
+      {
+        path: "/notification",
+        element: 
+      <ProtectedRoutes role={"user"}>
+        <Notification/>
+      </ProtectedRoutes>
       },
       
       // {
@@ -81,6 +91,10 @@ export const routes = createBrowserRouter([
       {
         path: "/login",
         element: <Login/>,
+      },
+      {
+        path: "/admin-login",
+        element: <AdminLogin/>,
       },
       {
         path: "/register",

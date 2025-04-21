@@ -12,7 +12,7 @@ import { setUser, useCurrentToken, useCurrentUser } from '../../../redux/Feature
 import ZPhone from '../../../components/Form/ZPhone';
 
      
-const Login = () => {
+const AdminLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
  const dispatch = useAppDispatch();
@@ -48,23 +48,19 @@ const Login = () => {
 
     if (loginData.success) {
       dispatch(setUser({ token: loginData.token, user: loginData.user }));
-      if (loginData?.user?.role === "user") {
-        navigate(location?.state?.from || "/");
-
-      } 
-      // else if (loginData?.user?.role === "admin") {
-      //   localStorage.removeItem("dropDown");
-      //   navigate(location?.state?.from || "/admin/home");
-      // }
+      if (loginData?.user?.role === "admin") {
+        localStorage.removeItem("dropDown");
+        navigate(location?.state?.from || "/admin/home");
+      }
     }
   };
   return (
     <>
 
-    <section className="relative flex flex-wrap flex-row-reverse lg:items-center">
+    <section className="relative flex mb-10 flex-wrap flex-row-reverse lg:items-center">
     <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-lg text-center">
-        <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">Admin Login Here!</h1>
   
         {/* <p className="mt-4 text-gray-500">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla eaque error neque
@@ -99,14 +95,14 @@ const Login = () => {
                 </div>
               </div>
             </ZFormTwo>
-            <div className="flex items-center justify-center mt-5 mb-10">
+            {/* <div className="flex items-center justify-center mt-5 mb-10">
               <p className="text-sm text-gray-500">
                 Don't have an account?
                 <Link to={"/register"}>
                   <span className="underline text-blue-500">Sign up</span>
                 </Link>
               </p>
-            </div>     
+            </div>      */}
     </div>
   
     <div className="h-64 w-full sm:h-96 hidden lg:block lg:h-full lg:w-1/2 mt-16 mb-16">
@@ -121,4 +117,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default AdminLogin;

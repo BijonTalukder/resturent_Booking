@@ -10,9 +10,10 @@ import image from "../../assets/icon.png";
 const Header = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation(); // Get current path
+  const location = useLocation();
   const user = useAppSelector(useCurrentUser);  
   const token = useAppSelector(useCurrentToken);
+  const isNotificationPage = location.pathname === '/notification';
 
   const handleLogout = () => {
     dispatch(logout());
@@ -53,7 +54,7 @@ const Header = () => {
 
   return (
     <>
-      <div className="py-2 px-4 lg:px-10 mb-3 shadow-sm border-b border-gray-200">
+      <div className={`py-2 px-4 lg:px-10 mb-3 shadow-sm border-b border-gray-200 ${isNotificationPage ? "hidden" : ""}`}>
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           <div className="flex justify-between  items-center gap-x-1">
             <div className="hidden lg:block">
