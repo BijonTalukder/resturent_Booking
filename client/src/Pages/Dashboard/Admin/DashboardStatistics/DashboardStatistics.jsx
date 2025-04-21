@@ -5,7 +5,7 @@ import { useGetBookingsQuery } from "../../../../redux/Feature/Admin/booking/boo
 const DashboardStatistics = () => {
   // Fetch booking data
   const { data: bookings, error, isLoading: bookingsIsLoading } = useGetBookingsQuery();
-  console.log(bookings);
+  // console.log(bookings);
 
   // Calculate booking status counts
   const getBookingStatusCounts = (bookings) => {

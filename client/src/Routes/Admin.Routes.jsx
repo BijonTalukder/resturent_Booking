@@ -1,4 +1,4 @@
-import { MdContacts, MdOutlineShoppingCartCheckout } from "react-icons/md";
+import { MdContacts, MdNotificationImportant, MdOutlineShoppingCartCheckout } from "react-icons/md";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { TfiLayoutSlider } from "react-icons/tfi";
 import DashboardStatistics from "../Pages/Dashboard/Admin/DashboardStatistics/DashboardStatistics";
@@ -18,6 +18,7 @@ import EditHotel from "../Pages/Dashboard/Admin/Hotel/EditHotel";
 import ViewHotel from "../Pages/Dashboard/Admin/Hotel/ViewHotel";
 import EditRoom from "../Pages/Dashboard/Admin/Room/EditRoom";
 import Bookings from "../Pages/Dashboard/Admin/Bookings/Bookings";
+import AddNotification from "../Pages/Dashboard/Admin/AddNotification/AddNotification";
 
 
 export const adminRoutes = [
@@ -98,13 +99,13 @@ export const adminRoutes = [
     icon: <TfiLayoutSlider size={20}></TfiLayoutSlider>,
     permissionName: "view slider",
   },
-  // {
-  //   path: "subscriptions",
-  //   label: "Subscriptions",
-  //   element: <Subscription/>,
-  //   icon: <BiSolidPurchaseTag  size={20}/>,
-  //   permissionName: "view subscription",
-  // },
+  {
+    path: "notification",
+    label: "Notification",
+    element: <AddNotification/>,
+    icon: <MdNotificationImportant  size={20}/>,
+    permissionName: "view notification",
+  },
   {
     path: "users/add-user",
     element: <AddUser/>,
