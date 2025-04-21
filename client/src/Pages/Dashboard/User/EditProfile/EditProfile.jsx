@@ -48,7 +48,7 @@ const EditProfile = () => {
 
   return (
     <>
-      <div className="bg-white p-6 md:p-10 grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-10">
+      <div className="bg-white  p-6 md:p-10 grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-10">
         <div className="flex flex-col justify-center items-center">
           <div className="relative w-56 h-[150px] left-5 lg:mt-[-70px]">
             <img
