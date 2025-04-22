@@ -24,6 +24,7 @@ import CustomerDashboardLayout from "../Layouts/Dashboard/CustomerDashboardLayou
 import Notification from "../Pages/Notification/Notification";
 import AdminLogin from "../Pages/Auth/AdminLogin/AdminLogin";
 
+
 export const routes = createBrowserRouter([
   {
     path: "/",
@@ -34,7 +35,6 @@ export const routes = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-
       {
         path: "/notification",
         element: 
