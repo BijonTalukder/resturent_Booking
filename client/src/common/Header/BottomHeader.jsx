@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { HomeIcon, BellIcon, UserIcon } from "@heroicons/react/24/outline";
 import { BellOutlined, CheckOutlined } from "@ant-design/icons";
 import { useAppSelector } from "../../redux/Hook/Hook";
@@ -10,6 +10,9 @@ import { Badge } from "antd";
 const BottomHeader = () => {
     const user = useAppSelector(useCurrentUser);
     const [unreadCount, setUnreadCount] = useState(0);
+    const location = useLocation();
+  const isAdminLogin = location.pathname === '/admin-login';
+    
   
     const {
       data: notifications,
@@ -24,7 +27,7 @@ const BottomHeader = () => {
     }, [notifications]);
   
   return (
-    <div className="fixed  bottom-0 left-0 right-0 bg-white shadow-md border-t border-gray-200 z-50">
+    <div className={`fixed  bottom-0 left-0 right-0 bg-white shadow-md border-t border-gray-200 z-50 ${isAdminLogin ? "hidden" : ""}`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <NavLink
