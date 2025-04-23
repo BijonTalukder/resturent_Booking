@@ -20,6 +20,8 @@ class RoomService {
 
     //update hotel room
 
+
+
     async getSingleRoom(roomId) {
         return await this.prisma.room.findUnique({
             where: { id: roomId },
