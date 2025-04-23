@@ -54,6 +54,9 @@ router.get("/user/:id",async(req,res,next)=>{
 router.put("/user/:id",async(req,res,next)=>{
     userController.updateUser(req,res,next)
 })
+router.delete("/user/:id",async(req,res,next)=>{
+    userController.deleteUser(req,res,next)
+})
 
 //-------------------Hotel Routes-----------------------
 router.post("/hotel/create",async(req,res,next)=>{

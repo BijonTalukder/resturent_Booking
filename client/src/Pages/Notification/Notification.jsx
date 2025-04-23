@@ -14,42 +14,34 @@ const Notification = () => {
   const navigate = useNavigate();
   const user = useAppSelector(useCurrentUser);
 
-  const {
-    data: notifications,
-    refetch,
-    isFetching,
-  } = useGetUserNotificationsQuery(user?.id, {
+  // Optimized query
+  const { data: notifications , isFetching } = useGetUserNotificationsQuery(user?.id, {
     pollingInterval: 30000,
+    refetchOnMountOrArgChange: false,
+    refetchOnFocus: false
   });
 
   const [markAsRead] = useMarkNotificationAsReadMutation();
 
   const handleNotificationClick = async (item) => {
     try {
-      // Mark as read first
       await markAsRead(item.id).unwrap();
       
-      // Then navigate to the link if it exists
       if (item.link) {
         navigate(item.link);
-      } 
-      else {
- 
-        switch(item.type) {
-          case "BOOKING_CONFIRMATION":
-            navigate(`/bookings/${item.bookingId}`);
-          break;
-          case "REVIEW_REMINDER":
-          break  
-          case "BOOKING_CANCELLATION":
-          break;
-          case "PROMOTION":
-          default:
-            navigate('/notifications');
-        }
+        return;
       }
       
-      refetch();
+      switch(item.type) {
+        case "BOOKING_CONFIRMATION":
+          navigate(`/bookings/${item.bookingId}`);
+          break;
+        case "REVIEW_REMINDER":
+        case "BOOKING_CANCELLATION":
+        case "PROMOTION":
+        default:
+          navigate('/notification');
+      }
     } catch (err) {
       message.error("Failed to process notification");
     }

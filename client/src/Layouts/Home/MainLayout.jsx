@@ -5,6 +5,8 @@ import BottomHeader from "../../common/Header/BottomHeader";
 
 const MainLayout = () => {
    const location= useLocation()
+  // const isDetails = location?.pathname?.startsWith('/hotel');
+
   return (
     <div>
       <Header />
