@@ -14,6 +14,8 @@ const Home = () => {
 
   return (
     <div className="">
+       <BannerSlider />
+
     {/* <DashboardTitle windowTitle={"Home"}/> */}
 
         {/* <div className="mt-5">
@@ -33,7 +35,6 @@ const Home = () => {
        */}
        <AllHotel/>
        {/* <NewsSletter/> */}
-       <BannerSlider />
 
 
     </div>

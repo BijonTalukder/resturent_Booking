@@ -3,7 +3,7 @@ import ErrorImage from "../../assets/404.svg";
 
 
 const ErrorPage = () => {
-    const error = (useRouteError());
+    const error = useRouteError();
   
 
   

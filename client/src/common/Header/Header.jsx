@@ -14,6 +14,8 @@ const Header = () => {
   const user = useAppSelector(useCurrentUser);  
   const token = useAppSelector(useCurrentToken);
   const isNotificationPage = location.pathname === '/notification';
+  const isAdminLogin = location.pathname === '/admin-login';
+  const isDetails = location?.pathname?.startsWith('/hotel');
 
   const handleLogout = () => {
     dispatch(logout());
@@ -54,7 +56,7 @@ const Header = () => {
 
   return (
     <>
-      <div className={`py-2 px-4 lg:px-10 mb-3 shadow-sm border-b border-gray-200 ${isNotificationPage ? "hidden" : ""}`}>
+      <div className={`py-2 px-4 lg:px-10 mb-3 shadow-sm border-b border-gray-200 ${isNotificationPage || isAdminLogin || isDetails ? "hidden" : ""}`}>
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           <div className="flex justify-between  items-center gap-x-1">
             <div className="hidden lg:block">

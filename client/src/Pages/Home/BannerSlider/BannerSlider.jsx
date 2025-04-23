@@ -3,8 +3,8 @@ import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { useGetSlidersQuery } from "../../../redux/Feature/Admin/slider/sliderApi";
 import { Spin } from "antd";
-import ProductsSkeleton from "../../../components/Skeleton/ProductsSkeleton";
 import Skeleton from "../../../components/Skeleton/Skeleton";
+import SectionTitle from "../SectionTitle/SectionTitle";
 
 
 const BannerSlider = () => {
@@ -40,23 +40,24 @@ const BannerSlider = () => {
   }));
 
   return (
-    <div className="mb-[80px]">
-    <h1 className="font-bold md:text-xl mb-5">More for You</h1>
+    <div className="mb-[30px]">
+     <SectionTitle title="Offer available on hotels" />
           {
             sliderIsLoading || showSkeleton ? 
           <Skeleton />
           :
           <>
       <ImageGallery
+        // className="w-full !h-[300px] md:!h-[400px] lg:!h-[500px]"
         items={galleryImages}
         autoPlay={true}
         slideInterval={8000}
         showThumbnails={false} 
-        showFullscreenButton={true} 
+        showFullscreenButton={false} 
         showPlayButton={false} 
         showNav={true} 
         infinite={true} 
-        lazyLoad={true} 
+        // lazyLoad={true} 
 
       />
         </>
