@@ -118,6 +118,10 @@ router.post("/booking/check-availability",async(req,res,next)=>{
     bookingController.checkAvailability(req,res,next)
 })
 
+router.get("/booking/user/:userId",async(req,res,next)=>{
+    bookingController.getBookingsByUser(req,res,next)
+})
+
 
 //slider routes
 //[route("/sliders/create")]

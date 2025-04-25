@@ -136,7 +136,7 @@ model Notification {
   title     String
   orderId   String?         // optional order ID for order-related notifications
   bookingId String?         // optional booking ID for booking-related notifications
-  
+
   message   String
   link      String?         // link to open on click
   data      Json?           // optional payload

@@ -54,7 +54,15 @@ class BookingController {
         }
     }
 
-
+    async getBookingsByUser(req, res, next) {
+        try {
+            const userId = req.params.userId;
+            const result = await this.bookingService.getBookingsByUser(userId);
+            ResponseHandler.success(res, `Bookings for user with ID ${userId} fetched successfully`, result);
+        } catch (error) {
+            next(error);
+        }
+    }
      
 checkAvailability=catchAsync(async (req, res, next) => {
     const { roomId, checkIn, checkOut } = req.body;
