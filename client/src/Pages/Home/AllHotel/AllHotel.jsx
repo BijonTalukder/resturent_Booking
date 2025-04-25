@@ -1,25 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button } from "@material-tailwind/react";
-import { CiHeart, CiShoppingCart } from "react-icons/ci";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import {
-  FaAngleLeft,
-  FaAngleRight,
-  FaCity,
-  FaSwimmingPool,
-  FaWifi,
-} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import SectionTitle from "../SectionTitle/SectionTitle";
 import ProductsSkeleton from "../../../components/Skeleton/ProductsSkeleton";
-import { useAppDispatch, useAppSelector } from "../../../redux/Hook/Hook";
-import { setIsProductViewModalOpen } from "../../../redux/Modal/ModalSlice";
-import { Modal } from "antd";
 import { IoLocationOutline, IoSearch } from "react-icons/io5";
 import Image1 from "../../../../public/image.png";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import Adjustment from "../../../common/Adjustment/Adjustment";
-import { useGetHotelQuery, useGetHotelsBySearchQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
+import { useGetHotelsBySearchQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
 
 const AllHotel = () => {
   // const { data, error, isFetching, isLoading } = useGetHotelQuery();
@@ -56,7 +43,7 @@ const AllHotel = () => {
   };
 
 
-  const noProductsFound =
+  const noHotelsFound =
   !isLoading &&
   !showSkeleton &&
   data?.data?.length === 0 &&
@@ -67,6 +54,7 @@ const AllHotel = () => {
 
   return (
     <div className="pb-[80px]">
+      <SectionTitle title="Check our all  hotels" />
       <div className="relative w-[100%] md:w-[75%] lg:w-[50%] mx-auto mb-5 items-center flex py-[8px] gap-2">
         <div className="w-full">
           <label htmlFor="Search" className="sr-only">
@@ -105,8 +93,8 @@ const AllHotel = () => {
       {(isLoading || showSkeleton) && <ProductsSkeleton hotelData={data?.data}/>}
 
       {/* Show "No products found" message if no products match the search or price range */}
-      {noProductsFound && (
-        <div className="text-center text-xl font-bold text-red-500 mt-10">
+      {noHotelsFound && (
+        <div className="text-center text-[13px] md:text-xl font-bold text-red-500 mt-10">
           No hotel found for the given criteria.
         </div>
       )}

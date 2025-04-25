@@ -53,7 +53,7 @@ const EditSlider = ({ selectedSlider }) => {
         isActive: formData?.isActive,
       };
   
-      console.log("Updating slider with data:", sliderData); // Debugging
+      // console.log("Updating slider with data:", sliderData);
   
       // Update slider with API
       await updateSlider({ id: selectedSlider.id, data: sliderData }).unwrap();

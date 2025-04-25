@@ -15,7 +15,7 @@ const AddUser = () => {
 
   const handleSubmit = async (formData) => {
     const response = await createUser({ ...formData, role: "user" });
-    console.log("Mutation Response:", response);
+
     if(response){
       toast.success("User created Successfully")
       navigate("/admin/users"); // 

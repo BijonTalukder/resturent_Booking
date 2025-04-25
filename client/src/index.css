@@ -194,94 +194,37 @@
 }
 
 
+/* BannerSlider.css */
 
-/* product banner key framing */
-
-@keyframes zoomInOut {
-  0% {
-      transform: scale(0.5);
-  }
-  50% {
-      transform: scale(1);
-  }
-  100% {
-      transform: scale(0.5);
-  }
-}
-
-.animate-zoom.animate-zoom-2s {
-  animation: zoomInOut 4s ease-in-out infinite;
-}
-
-.animate-zoom.animate-zoom-3s {
-  animation: zoomInOut 5s ease-in-out infinite;
-}
-
-.animate-zoom.animate-zoom-4s {
-  animation: zoomInOut 4s ease-in-out infinite;
-}
-
-.animate-zoom.animate-zoom-5s {
-  animation: zoomInOut 5s ease-in-out infinite;
-}
-
-/* banner left sidebar */
-.arrow-icon {
-  display: none; 
-}
-
-.flex:hover .arrow-icon {
-  display: inline-block;
-}
-
-/* swiper */
-
-.swiper-slide {
-  text-align: center;
-  font-size: 18px;
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-size: cover;
-  background-position: center;
-}
-
-.swiper-slide img {
-  display: block;
+/* Container to control overall width and padding */
+.amenities-slider-container {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.swiper {
-  width: 100%;
-  height: 390px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-.mySwiper2 {
-  /* height: 80%; */
-  width: 100%;
-}
-
-.mySwiper {
-  /* height: 20%; */
+  padding: 0 8px;
   box-sizing: border-box;
-  padding: 10px 0;
   cursor: pointer;
 }
 
-.mySwiper .swiper-slide {
-  width: 25%;
-  height: 50%;
-  opacity: 0.4;
-  border: #265eda 1px solid;
+/* Swiper container */
+.amenities-swiper {
+  width: 100%;
+  height: 70px;
 }
 
-.mySwiper .swiper-slide-thumb-active {
-  opacity: 1;
+/* Individual amenity slides */
+.amenity-slide {
+  width: 80px !important;
+  padding: 0 12px;
+  height: 40px;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  font-size: 14px;
+  white-space: nowrap;
 }
+
+/* Remove Swiper's default padding */
+.amenities-swiper .swiper-wrapper {
+  padding-left: 0px;
+}
+
 

@@ -86,7 +86,7 @@ const Adjustment = ({
     >
       <h2 className="text-xl font-bold mb-4 text-center">Modify Your Search</h2>
       
-      <div className="grid gap-4">
+      <div className="grid gap-4  overflow-y-auto p-4 mb-14">
         {/* Division Selection */}
         <div className="field">
           <label htmlFor="division" className="block font-medium mb-2">Division</label>
@@ -173,8 +173,10 @@ const Adjustment = ({
           </div>
         </div> */}
 
-        {/* Action Buttons */}
-        <div className="flex gap-4 mt-4">
+
+      </div>
+              {/* Action Buttons */}
+      <div className="flex fixed bottom-0 gap-4 py-2  justify-center w-[90%] bg-white rounded-b-2xl shadow-lg  md:w-[450px] mx-auto">
           <Button
             onClick={handleClearFilters}
             className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg transition-all"
@@ -188,7 +190,6 @@ const Adjustment = ({
             Apply Filters
           </Button>
         </div>
-      </div>
     </Sidebar>
   );
 };
