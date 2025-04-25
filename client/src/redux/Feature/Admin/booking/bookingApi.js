@@ -12,7 +12,7 @@ const bookingApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ['booking'], // Invalidates booking cache
+      invalidatesTags: ['booking'], 
     }),
 
     // Get All Bookings
@@ -20,7 +20,7 @@ const bookingApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/booking",
       }),
-      providesTags: ['booking'], // Provides booking cache
+      providesTags: ['booking'], 
     }),
 
     // Get Single User's Bookings
@@ -28,7 +28,7 @@ const bookingApi = baseApi.injectEndpoints({
       query: (userId) => ({
         url: `/booking/user/${userId}`,
       }),
-      providesTags: ['booking'], // Provides booking cache
+      providesTags: ['booking'], 
     }),
 
     // Get Booking Details
@@ -36,7 +36,7 @@ const bookingApi = baseApi.injectEndpoints({
       query: (id) => ({
         url: `/booking/${id}`,
       }),
-      providesTags: ['booking'], // Provides booking cache
+      providesTags: ['booking'], 
     }),
 
     // Update Booking
@@ -58,7 +58,7 @@ const bookingApi = baseApi.injectEndpoints({
         url: `/booking/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ['booking'], // Invalidates booking cache
+      invalidatesTags: ['booking'], 
     }),
 
     checkRoomAvailabilityBooking: builder.mutation({

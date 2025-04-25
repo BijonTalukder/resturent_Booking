@@ -4,7 +4,7 @@ import { Card, Row, Col, Typography, Steps, Divider, Table } from "antd";
 const { Title, Text } = Typography;
 const { Step } = Steps;
 
-const ViewOrder = ({ selectedOrder }) => {
+const ViewBooking = ({ selectedOrder }) => {
   if (!selectedOrder) {
     return <div>Loading...</div>;
   }
@@ -197,4 +197,4 @@ const ViewOrder = ({ selectedOrder }) => {
   );
 };
 
-export default ViewOrder;
+export default ViewBooking;
