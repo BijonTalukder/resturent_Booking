@@ -2,10 +2,10 @@ const { PrismaClient } = require("@prisma/client");
 const PaymentGatewayService = require("../PaymentGateway/PaymentGatewayService");
 const catchAsync = require("../../shared/catchAsync");
 const { ObjectId } = require('mongodb');
-class BookingService  {
+class BookingService {
     constructor() {
         this.prisma = new PrismaClient();
-        this.paymentService =new PaymentGatewayService();
+        this.paymentService = new PaymentGatewayService();
     }
 
     async createBooking(data) {
@@ -21,9 +21,9 @@ class BookingService  {
             productName: "Room Booking",
             price: data.totalPrice
         });
-console.log(GatewayPageURL,"--------------------")
-       
-// console.log(this.prisma,"--------------------")
+        console.log(GatewayPageURL, "--------------------")
+
+        // console.log(this.prisma,"--------------------")
         const booking = await this.prisma.booking.create({
             data: {
                 ...data,
@@ -45,9 +45,26 @@ console.log(GatewayPageURL,"--------------------")
     }
 
     async getAllBookings() {
-        return await this.prisma.booking.findMany({
-            // include: { room: true },
-        });
+        const bookings = await this.prisma.booking.findMany({
+           
+          });
+        
+          // For each booking, fetch the rooms using the roomIds
+        //   const bookingsWithRooms = await Promise.all(bookings.map(async (booking) => {
+        //     const rooms = await this.prisma.room.findMany({
+        //       where: {
+        //         id: {
+        //           in: booking.roomIds, // Use roomIds to filter the rooms
+        //         }
+        //       }
+        //     });
+        
+        //     return {
+        //         bookings // Add the rooms to the booking object
+        //     };
+        //   }));
+        
+          return bookingsWithRooms;
     }
 
     async getSingleBooking(bookingId) {
@@ -69,36 +86,41 @@ console.log(GatewayPageURL,"--------------------")
             where: { id: bookingId },
         });
     }
-
+    async getBookingsByUser(userId) {
+        return await this.prisma.booking.findMany({
+            where: { userId },
+            // include: { room: true },
+        });
+    }
     async checkAvailability({ roomId, checkIn, checkOut }) {
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-    
-    const overlappingBookings = await this.prisma.booking.findMany({
-        where: {
-            roomIds: {
-                has: roomId // Use has operator for array field
-            },
-            AND: [
-                { checkIn: { lt: end } },
-                { checkOut: { gt: start } }
-            ]
-        }
-    });
+        const start = new Date(checkIn);
+        const end = new Date(checkOut);
 
-    if (overlappingBookings.length > 0) {
+        const overlappingBookings = await this.prisma.booking.findMany({
+            where: {
+                roomIds: {
+                    has: roomId // Use has operator for array field
+                },
+                AND: [
+                    { checkIn: { lt: end } },
+                    { checkOut: { gt: start } }
+                ]
+            }
+        });
+
+        if (overlappingBookings.length > 0) {
+            return {
+                available: false,
+                message: "Room is already booked in this time slot.",
+                bookings: overlappingBookings
+            };
+        }
+
         return {
-            available: false,
-            message: "Room is already booked in this time slot.",
-            bookings: overlappingBookings
+            available: true,
+            message: "Room is available for booking."
         };
     }
-
-    return {
-        available: true,
-        message: "Room is available for booking."
-    };
-}
 
     // async checkAvailability(roomId, checkIn, checkOut) {
     //     const overlappingBookings = await this.prisma.booking.findMany({
