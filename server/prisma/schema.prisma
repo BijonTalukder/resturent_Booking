@@ -83,7 +83,7 @@ model Booking {
   updatedAt      DateTime       @updatedAt
   paymentStatus  PaymentStatus  @default(pending)
   transactionId  String?        @unique
-  payment        Payment?       @relation("BookingToPayment")
+  payment         Payment?       @relation("BookingToPayment")
 
  }
  model RoomBooking {

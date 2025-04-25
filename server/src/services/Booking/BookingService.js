@@ -50,19 +50,19 @@ class BookingService {
           });
         
           // For each booking, fetch the rooms using the roomIds
-        //   const bookingsWithRooms = await Promise.all(bookings.map(async (booking) => {
-        //     const rooms = await this.prisma.room.findMany({
-        //       where: {
-        //         id: {
-        //           in: booking.roomIds, // Use roomIds to filter the rooms
-        //         }
-        //       }
-        //     });
+          const bookingsWithRooms = await Promise.all(bookings.map(async (booking) => {
+            const rooms = await this.prisma.room.findMany({
+              where: {
+                id: {
+                  in: booking.roomIds, // Use roomIds to filter the rooms
+                }
+              }
+            });
         
-        //     return {
-        //         bookings // Add the rooms to the booking object
-        //     };
-        //   }));
+            return {
+                bookings // Add the rooms to the booking object
+            };
+          }));
         
           return bookingsWithRooms;
     }
@@ -89,7 +89,7 @@ class BookingService {
     async getBookingsByUser(userId) {
         return await this.prisma.booking.findMany({
             where: { userId },
-            // include: { room: true },
+            
         });
     }
     async checkAvailability({ roomId, checkIn, checkOut }) {
