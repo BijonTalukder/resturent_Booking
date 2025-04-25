@@ -7,14 +7,14 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/Hook/Hook";
 import { AiFillEye } from "react-icons/ai";
 import ViewModal from "../../../../components/Modal/ViewModal";
 // import { useGetSingleOrderQuery } from "../../../../redux/Feature/Admin/order/orderApi";
-import ViewOrder from "./ViewOrder";
+import ViewOrder from "./ViewBooking";
 import { useCurrentUser } from "../../../../redux/Feature/auth/authSlice";
 import moment from "moment";
 import { FaGreaterThan, FaHome } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 
-const OrderHistory = () => {
+const BookingHistory = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(useCurrentUser);
   const { data, error, isLoading } = useGetSingleOrderQuery(user?.id);
@@ -155,4 +155,4 @@ const OrderHistory = () => {
   );
 };
 
-export default OrderHistory;
+export default BookingHistory;

@@ -14,8 +14,6 @@ import Checkout from "../Pages/Checkout/Checkout";
 import ProtectedRoutes from "./UserProtectedRoutes/ProtectedRoutes";
 import Success from "../Pages/Success/Success";
 import PaymentError from "../Pages/Error/PaymentError";
-import OrderHistory from "../Pages/Dashboard/User/OrderHistory/OrderHistory";
-import EditProfile from "../Pages/Dashboard/User/EditProfile/EditProfile";
 import Verify from "../Pages/Verify/Verify";
 import OrderTrack from "../Pages/Track-Order/OrderTrack";
 import HotelDetails from "../Pages/Home/HotelDetails/HotelDetails";
@@ -43,20 +41,7 @@ export const routes = createBrowserRouter([
       </ProtectedRoutes>
       },
       
-      // {
-      //   path: "/order-history",
-      //   element:  
-      //   <ProtectedRoutes role={"user"}>
-      //   <OrderHistory/>
-      // </ProtectedRoutes>,
-      // },
-      // {
-      //   path: "/edit-profile",
-      //   element:  
-      //   <ProtectedRoutes role={"user"}>
-      //   <EditProfile/>
-      // </ProtectedRoutes>,
-      // },
+    
       {
         path: "/checkout",
         element: 

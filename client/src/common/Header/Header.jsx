@@ -125,7 +125,7 @@ const Header = ({ onSearch, onFilterChange }) => {
             {token ? (
               <Button 
                 onClick={handleLogout} 
-                className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-red-500 bg-white hover:bg-gray-100 transition-all duration-300"
+                className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-red-500 bg-white hover:bg-gray-100 transition-all duration-300 text-[12px] md:text-base"
               >
                 Log out
               </Button>

@@ -34,11 +34,12 @@ const Notification = () => {
       
       switch(item.type) {
         case "BOOKING_CONFIRMATION":
-          navigate(`/bookings/${item.bookingId}`);
+          navigate(`/user/user-booking`);
           break;
         case "REVIEW_REMINDER":
         case "BOOKING_CANCELLATION":
         case "PROMOTION":
+        case "GENERAL":  
         default:
           navigate('/notification');
       }
