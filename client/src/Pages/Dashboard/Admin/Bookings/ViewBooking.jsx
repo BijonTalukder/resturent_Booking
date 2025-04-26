@@ -1,70 +1,210 @@
-import { Descriptions, Tag } from 'antd';
-import React from 'react';
-import moment from 'moment';
+import React from "react";
+import { Card, Row, Col, Typography, Steps, Divider, Table, Tag } from "antd";
+
+
+const { Title, Text } = Typography;
+const { Step } = Steps;
 
 const ViewBooking = ({ selectedBooking }) => {
-  console.log(selectedBooking)
+  if (!selectedBooking) {
+    return <div>Loading...</div>;
+  }
+
+  // Booking status steps
+  const getBookingSteps = (status) => {
+    const steps = [
+      { title: "Pending", key: "pending", description: "Booking is awaiting confirmation." },
+      { title: "Confirmed", key: "confirmed", description: "Your booking has been confirmed." },
+      // { title: "Checked In", key: "checkedIn", description: "You have checked in." },
+      // { title: "Checked Out", key: "checkedOut", description: "Your stay has been completed." },
+      { title: "Cancelled", key: "cancelled", description: "Your booking has been cancelled." },
+    ];
+
+    const currentStepIndex = steps.findIndex((step) => step.key === status);
+
+    return { steps, currentStepIndex };
+  };
+
+  const { steps, currentStepIndex } = getBookingSteps(selectedBooking.status);
+
+  // Table columns for rooms
+  const roomColumns = [
+    {
+      title: "Room Number",
+      dataIndex: "roomNumber",
+      key: "roomNumber",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      render: (price) => `$${price}`,
+    },
+    {
+      title: "Capacity",
+      dataIndex: "capacity",
+      key: "capacity",
+      render: (capacity) => `${capacity} person${capacity > 1 ? 's' : ''}`,
+    },
+    {
+      title: "Amenities",
+      dataIndex: "amenities",
+      key: "amenities",
+      render: (amenities) => (
+      <div className="flex flex-wrap max-w-[200px] mx-auto items-center justify-center gap-3" >
+                {amenities.map((amenity, index) => (
+                  <Tag key={index} color="blue">
+                    {amenity}
+                  </Tag>
+                ))}
+              </div>
+      ),
+    },
+  ];
+
+  // Table data for rooms
+  const roomData = selectedBooking.rooms.map((room, index) => ({
+    key: index,
+    ...room,
+  }));
+
   return (
-    <div>
-      <Descriptions bordered column={1}>
-        <Descriptions.Item label="Booking ID">
-          {selectedBooking?.id}
-        </Descriptions.Item>
-        <Descriptions.Item label="Booked At">
-          {selectedBooking?.createdAt}
-        </Descriptions.Item>
-        <Descriptions.Item label="Guest Name">
-          {selectedBooking?.name}
-        </Descriptions.Item>
-        <Descriptions.Item label="Email">
-          {selectedBooking?.email}
-        </Descriptions.Item>
-        <Descriptions.Item label="Phone">
-          {selectedBooking?.phone}
-        </Descriptions.Item>
-        <Descriptions.Item label="Room ID">
-          <div>
-          {selectedBooking?.roomIds}  
-          </div>
-        </Descriptions.Item>
-        <Descriptions.Item label="User ID">
-          {selectedBooking?.userId}
-        </Descriptions.Item>
-        <Descriptions.Item label="Check-In">
-          {selectedBooking?.checkIn}
-        </Descriptions.Item>
-        <Descriptions.Item label="Check-Out">
-          {selectedBooking?.checkOut}
-        </Descriptions.Item>
-        <Descriptions.Item label="Total Price">
-          ${selectedBooking?.totalPrice}
-        </Descriptions.Item>
-        <Descriptions.Item label="Payment Status">
-          <Tag
-            color={selectedBooking?.paymentStatus === "paid" ? "green" : "volcano"}
-          >
-            {selectedBooking?.paymentStatus}
-          </Tag>
-        </Descriptions.Item>
-        <Descriptions.Item label="Booking Status">
-          <Tag
-            color={
-              selectedBooking?.status === "pending"
-                ? "blue"
-                : selectedBooking?.status === "confirmed"
-                ? "green"
-                : selectedBooking?.status === "cancelled"
-                ? "red"
-                : "default"
-            }
-          >
-            {selectedBooking?.status}
-          </Tag>
-        </Descriptions.Item>
-        <Descriptions.Item label="Transaction ID">
-          {selectedBooking?.transactionId}
-        </Descriptions.Item>
-      </Descriptions>
+    <div style={{ padding: "" }}>
+
+        {/* Booking Header */}
+        <div className="text-center">
+          <h1 className="text-2xl mb-5 font-bold">Booking Details</h1>
+        </div>
+        <Row gutter={[16, 16]}>
+  {/* Transaction ID - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Transaction ID:</Text> {selectedBooking.transactionId}
+  </Col>
+  
+  {/* Booking Date - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Booking Date:</Text> {selectedBooking.createdAt}
+  </Col>
+  
+  {/* Name - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Name:</Text> {selectedBooking.name}
+  </Col>
+  
+  {/* Email - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Email:</Text> {selectedBooking.email}
+  </Col>
+  
+  {/* Phone - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Phone:</Text> {selectedBooking.phone}
+  </Col>
+  
+  {/* Check-In - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Check-In:</Text> {selectedBooking.checkIn}
+  </Col>
+  
+  {/* Check-Out - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Check-Out:</Text> {selectedBooking.checkOut}
+  </Col>
+  
+  {/* Payment Status - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Payment Status:  </Text> 
+    <Tag color={selectedBooking.paymentStatus === "paid" ? "green" : "red"}>
+      {selectedBooking.paymentStatus}
+    </Tag>
+  </Col>
+  
+  {/* Booking Status - Full width on mobile */}
+  <Col xs={24} sm={12}>
+    <Text strong>Booking Status:  </Text> 
+    <Tag color={
+      selectedBooking.status === "pending" ? "blue" :
+      selectedBooking.status === "confirmed" ? "green" :
+      selectedBooking.status === "cancelled" ? "red" : "orange"
+    }>
+      {selectedBooking.status}
+    </Tag>
+  </Col>
+</Row>
+
+        {/* Booking Progress */}
+        <Divider />
+        <div className="">
+          <Steps direction="vertical" current={currentStepIndex} style={{ marginTop: "24px" }}>
+            {steps.map((step, index) => (
+              <Step key={index} title={step.title} description={step.description} />
+            ))}
+          </Steps>
+        </div>
+
+        {/* Room Details */}
+        <Divider />
+        <div className="text-center">
+          <Title level={5}>Booked Rooms</Title>
+        </div>
+        <Table
+          columns={roomColumns}
+          dataSource={roomData}
+          pagination={false}
+          bordered
+          scroll={{ x: 800 }}
+          responsive={true}
+          summary={() => (
+            <Table.Summary.Row>
+              <Table.Summary.Cell colSpan={4} align="right">
+                <Text strong>Total Price</Text>
+              </Table.Summary.Cell>
+              <Table.Summary.Cell>
+                <Text strong>${selectedBooking.totalPrice}</Text>
+              </Table.Summary.Cell>
+            </Table.Summary.Row>
+          )}
+        />
+
+        {/* Booking Summary */}
+        <Divider />
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <Title level={5}>Booking Summary</Title>
+            <Row>
+              <Col span={12}>
+                <Text>Number of Rooms</Text>
+              </Col>
+              <Col span={12}>
+                <Text>{selectedBooking.rooms.length}</Text>
+              </Col>
+            </Row>
+            {/* <Row>
+              <Col span={12}>
+                <Text>Nights</Text>
+              </Col>
+              <Col span={12}>
+                <Text>
+                  {moment(selectedBooking.checkOut).diff(moment(selectedBooking.checkIn), 'days')} nights
+                </Text>
+              </Col>
+            </Row> */}
+            <Row>
+              <Col span={12}>
+                <Text strong>Total Price</Text>
+              </Col>
+              <Col span={12}>
+                <Text strong>${selectedBooking.totalPrice}</Text>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+
     </div>
   );
 };

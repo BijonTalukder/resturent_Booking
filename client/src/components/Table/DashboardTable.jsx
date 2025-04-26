@@ -16,6 +16,7 @@ const DashboardTable = ({columns, data, loading }) => {
     pagination={true}
     bordered={true}
     loading={loading}
+    
   />
  )
 };

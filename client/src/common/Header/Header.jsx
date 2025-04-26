@@ -88,8 +88,8 @@ const Header = ({ onSearch, onFilterChange }) => {
               </Link>
             </div>
             <Link to={"/"}>
-              <div className="block lg:hidden">
-                <img src={image} className="w-12 h-12 object-contain" alt="" />
+              <div className="block lg:hidden ">
+                <img src={image} className="w-20 h-20 object-contain" alt="" />
               </div>
             </Link>
             <div>

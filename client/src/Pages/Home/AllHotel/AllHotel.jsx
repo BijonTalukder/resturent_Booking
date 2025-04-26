@@ -16,7 +16,7 @@ const AllHotel = () => {
   });
 
   useEffect(() => {
-    if (isFetching) {
+    if (isFetching || isLoading) {
       setShowSkeleton(true);
     } else {
       const timer = setTimeout(() => {
@@ -24,7 +24,7 @@ const AllHotel = () => {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [isFetching]);
+  }, [isFetching , isLoading]);
 
   // const handleSearch = (query) => {
   //   setSearchQuery(query);
@@ -51,9 +51,10 @@ const AllHotel = () => {
           No hotel found for the given criteria.
         </div>
       )}
-
+      
       <div className="lg:max-w-[98%] grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto">
         {!isLoading && !showSkeleton && data?.data?.map((hotel, index) => (
+          <Link to={`/hotel/${hotel?.id}`}>
           <div key={index} className="flex flex-col rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white">
             <div className="relative h-[110px] object-cover md:h-[300px]">
               <img
@@ -109,6 +110,7 @@ const AllHotel = () => {
               </div>
             </div>
           </div>
+        </Link>
         ))}
       </div>
     </div>

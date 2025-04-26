@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import LoadingPage from "./components/LoadingPage";
 import "primereact/resources/themes/saga-blue/theme.css"; // Theme
 import "primereact/resources/primereact.min.css"; // Core CSS
+import image from "./assets/icon.png";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,12 +16,14 @@ function App() {
       setIsLoading(false);
     }, 500);
 
-    return () => clearTimeout(timer); // Cleanup the timer
+    return () => clearTimeout(timer); 
   }, []);
 
   // If loading, show the loading page
   if (isLoading) {
-    return <LoadingPage />;
+    return <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <img src={image} alt="Loading..." className="w-[150px] h-[120px] mx-auto mt-10" />
+    </div>;
   }
 
   // Otherwise, render the main app
