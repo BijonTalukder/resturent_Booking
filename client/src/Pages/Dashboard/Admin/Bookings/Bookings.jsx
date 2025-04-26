@@ -28,7 +28,7 @@ const Bookings = () => {
     name: booking?.name,
     email: booking?.email,
     phone: booking?.phone,
-    roomIds: booking?.roomIds?.map((roomId) => roomId),
+    rooms: booking?.rooms,
     userId: booking?.userId,
     totalPrice: booking?.totalPrice,
     transactionId: booking?.transactionId,
@@ -84,16 +84,16 @@ const Bookings = () => {
       dataIndex: "phone",
       key: "phone",
     },
-    {
-      title: "Check-In",
-      dataIndex: "checkIn",
-      key: "checkIn",
-    },
-    {
-      title: "Check-Out",
-      dataIndex: "checkOut",
-      key: "checkOut",
-    },
+    // {
+    //   title: "Check-In",
+    //   dataIndex: "checkIn",
+    //   key: "checkIn",
+    // },
+    // {
+    //   title: "Check-Out",
+    //   dataIndex: "checkOut",
+    //   key: "checkOut",
+    // },
     {
       title: "Total Price",
       dataIndex: "totalPrice",
@@ -181,7 +181,7 @@ const Bookings = () => {
         <EditBooking selectedBooking={selectedBooking} />
       </EditModal>
 
-      <ViewModal isViewModalOpen={isViewModalOpen} title="View Booking">
+      <ViewModal width={800} isViewModalOpen={isViewModalOpen}  >
         <ViewBooking selectedBooking={selectedBooking} />
       </ViewModal>
 
