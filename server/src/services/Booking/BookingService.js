@@ -45,27 +45,27 @@ class BookingService {
     }
 
     async getAllBookings() {
-        const bookings = await this.prisma.booking.findMany({
-           
-          });
-        
-          // For each booking, fetch the rooms using the roomIds
-          const bookingsWithRooms = await Promise.all(bookings.map(async (booking) => {
+        const bookings = await this.prisma.booking.findMany();
+      
+        const bookingsWithRooms = await Promise.all(
+          bookings.map(async (booking) => {
             const rooms = await this.prisma.room.findMany({
               where: {
                 id: {
-                  in: booking.roomIds, // Use roomIds to filter the rooms
-                }
-              }
+                  in: booking.roomIds,
+                },
+              },
             });
-        
+      
             return {
-                bookings // Add the rooms to the booking object
+              ...booking,
+              rooms, // attach the rooms here
             };
-          }));
-        
-          return bookingsWithRooms;
-    }
+          })
+        );
+      
+        return bookingsWithRooms;
+      }
 
     async getSingleBooking(bookingId) {
         return await this.prisma.booking.findUnique({
@@ -87,11 +87,30 @@ class BookingService {
         });
     }
     async getBookingsByUser(userId) {
-        return await this.prisma.booking.findMany({
-            where: { userId },
-            
+        const bookings = await this.prisma.booking.findMany({
+          where: { userId },
         });
-    }
+      
+        const bookingsWithRooms = await Promise.all(
+          bookings.map(async (booking) => {
+            const rooms = await this.prisma.room.findMany({
+              where: {
+                id: {
+                  in: booking.roomIds,
+                },
+              },
+            });
+      
+            return {
+              ...booking,
+              rooms, // attach rooms here
+            };
+          })
+        );
+      
+        return bookingsWithRooms;
+      }
+      
     async checkAvailability({ roomId, checkIn, checkOut }) {
         const start = new Date(checkIn);
         const end = new Date(checkOut);
