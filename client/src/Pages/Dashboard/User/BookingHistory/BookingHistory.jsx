@@ -253,7 +253,7 @@ const BookingHistory = () => {
       title: "Total Price",
       dataIndex: "totalPrice",
       key: "totalPrice",
-      render: (totalPrice) => <Tag color="cyan">${totalPrice}</Tag>,
+      render: (totalPrice) => <Tag color="cyan">{totalPrice} Tk</Tag>,
     },
     {
       title: "Payment Status",

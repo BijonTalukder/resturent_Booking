@@ -3,8 +3,7 @@ import ErrorImage from "../../assets/404.svg";
 
 
 const ErrorPage = () => {
-    const error = useRouteError();
-  
+    // const error = useRouteError();
 
   
     return (
@@ -15,7 +14,7 @@ const ErrorPage = () => {
         <h1>Oops!</h1>
         <p>Sorry, an unexpected error has occurred.</p>
         <p>
-          <i>URL {error.statusText || error.message}!</i>
+          {/* <i>URL {error.statusText || error.message}!</i> */}
         </p>
         <Link to='/'><button className="p-2 bg-cyan-900 text-white rounded-xl mt-5"> Go back</button></Link>
         
