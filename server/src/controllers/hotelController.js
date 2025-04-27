@@ -72,6 +72,20 @@ class HotelController{
         }
     }
 
+    async getHotelByDivision(req,res,next){
+        try {
+            const divisionId = req.params.divisionId
+
+            const result=await this.hotelService.getHotelByDivision(divisionId)
+            ResponseHandler.success(res,`Hotel with ID ${divisionId} fetched successfully`,result)
+
+            
+        } catch (error) {
+            next(error)
+            
+        }
+    }
+
 
 }
 module.exports=HotelController

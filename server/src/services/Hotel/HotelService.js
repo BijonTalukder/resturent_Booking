@@ -70,6 +70,13 @@ class HotelService {
             where: { id: hotelId },
         });
     }
+
+    async getHotelByDivision(divisionId){
+        const hotel = await this.prisma.hotel.findUnique({
+            where: { divisionId: divisionId },
+        });
+        return hotel;
+    }
 }
 
 module.exports = HotelService

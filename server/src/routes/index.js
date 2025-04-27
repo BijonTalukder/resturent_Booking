@@ -74,6 +74,11 @@ router.put("/hotel/:id",async(req,res,next)=>{
 router.delete("/hotel/:id",async(req,res,next)=>{
     hotelController.deleteHotel(req,res,next)
 })
+
+
+router.get("/hotel/:divisionId/division",async(req,res,next)=>{
+    hotelController.getHotelByDivision(req,res,next)
+})
 //-------------------Room Routes-----------------------
 router.post("/room/create",async(req,res,next)=>{
     roomController.createRoom(req,res,next)
