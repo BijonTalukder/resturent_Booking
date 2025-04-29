@@ -60,7 +60,9 @@ model Room {
   roomNumber  String    
   type        String    
   price       Float    
-  capacity    Int       
+  capacity    Int      
+  child       Int
+  // type        String 
   images      String[]  
   amenities   String[]  
   isAvailable Boolean   @default(true) 

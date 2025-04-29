@@ -36,6 +36,7 @@ import {
   GiftOutlined,
   TeamOutlined,
   LeftCircleFilled,
+  EnvironmentOutlined,
 } from "@ant-design/icons";
 import SliderAminities from "../../../components/SliderAminities";
 
@@ -75,6 +76,7 @@ const HotelDetails = () => {
   const [checkOutDate, setCheckOutDate] = useState(
     addDays(startOfDay(new Date()), 1)
   );
+  const [showMap, setShowMap] = useState(false);
 
   if (isHotelLoading || isRoomsLoading) {
     return <Skeleton />;
@@ -108,7 +110,6 @@ const HotelDetails = () => {
       }).unwrap();
 
       if (res?.data?.available === true) {
-        // Room is available, proceed with selection logic
         if (isSelected(room.id)) {
           setSelectedRooms((prev) => prev.filter((r) => r.id !== room.id));
           message.info(`Deselected ${room.type} room`);
@@ -117,7 +118,6 @@ const HotelDetails = () => {
           message.success(`Selected ${room.type} room`);
         }
       } else {
-        // Room is not available
         message.error("Room is not available for the selected dates.");
       }
     } catch (error) {
@@ -180,12 +180,14 @@ const HotelDetails = () => {
     navigate("/checkout");
   };
 
+  const toggleMap = () => {
+    setShowMap(!showMap);
+  };
+
   return (
     <div className="py-8">
       <Link to="/">
-
-           <LeftCircleFilled className="ms-2" />
-
+        <LeftCircleFilled className="ms-2" />
       </Link>
 
       <div className="mb-8">
@@ -198,6 +200,16 @@ const HotelDetails = () => {
         </Title>
         <Paragraph type="secondary" className="!mb-0">
           {hotel?.location}
+          {hotel?.latitude && hotel?.longitude && (
+            <Tooltip title={showMap ? "Hide map" : "Show map"}>
+              <Button
+                type="text"
+                icon={<EnvironmentOutlined />}
+                onClick={toggleMap}
+                className="ml-2"
+              />
+            </Tooltip>
+          )}
         </Paragraph>
       </div>
 
@@ -209,13 +221,12 @@ const HotelDetails = () => {
         <Divider />
 
         <div>
-        <Text strong>Amenities: </Text>
-        <SliderAminities amenities={hotel?.amenities || []} />
-      </div>
+          <Text strong>Amenities: </Text>
+          <SliderAminities amenities={hotel?.amenities || []} />
+        </div>
       </Card>
 
-
-      {hotel?.latitude && hotel?.longitude && (
+      {showMap && hotel?.latitude && hotel?.longitude && (
         <div className="mb-8">
           <Title level={4}>Location Map</Title>
           <iframe
