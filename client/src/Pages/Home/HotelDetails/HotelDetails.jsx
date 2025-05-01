@@ -38,7 +38,7 @@ import {
   LeftCircleFilled,
   EnvironmentOutlined,
 } from "@ant-design/icons";
-import SliderAminities from "../../../components/SliderAminities";
+import SliderAminities from "./SliderAminities";
 
 const amenityIcons = {
   "Free WiFi": <WifiOutlined />,
@@ -198,20 +198,37 @@ const HotelDetails = () => {
         <Title level={2} className="!mb-2">
           {hotel?.name}
         </Title>
-        <Paragraph type="secondary" className="!mb-0">
-          {hotel?.location}
+        <Paragraph type="secondary" className="">
+        <EnvironmentOutlined />  {hotel?.location} <br />
           {hotel?.latitude && hotel?.longitude && (
-            <Tooltip title={showMap ? "Hide map" : "Show map"}>
+   
               <Button
-                type="text"
-                icon={<EnvironmentOutlined />}
+
                 onClick={toggleMap}
-                className="ml-2"
-              />
-            </Tooltip>
+                className="mt-2"
+        >
+                {showMap ? "Hide Map" : "Show Map"}
+        </Button>
+
           )}
         </Paragraph>
       </div>
+
+      {showMap && hotel?.latitude && hotel?.longitude && (
+        <div className="mb-8">
+          <Title level={4}>Location Map</Title>
+          <iframe
+            width="100%"
+            height="300"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            src={`https://www.google.com/maps?q=${encodeURIComponent(
+              hotel.name
+            )}+${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
+          ></iframe>
+        </div>
+      )}
 
       <Card className="mb-8 shadow-sm">
         <Title level={4} className="!mb-4">
@@ -226,21 +243,7 @@ const HotelDetails = () => {
         </div>
       </Card>
 
-      {showMap && hotel?.latitude && hotel?.longitude && (
-        <div className="mb-8">
-          <Title level={4}>Location Map</Title>
-          <iframe
-            width="100%"
-            height="400"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowFullScreen
-            src={`https://www.google.com/maps?q=${encodeURIComponent(
-              hotel.name
-            )}+${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
-          ></iframe>
-        </div>
-      )}
+
 
       <Card className="mb-8 shadow-sm">
         <Title level={4} className="!mb-4">
