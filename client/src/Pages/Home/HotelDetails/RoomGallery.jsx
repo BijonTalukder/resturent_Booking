@@ -19,10 +19,10 @@ const RoomImageGallery = ({ rooms }) => {
   }
 
   return (
-    <div className="">
-      <Title level={3} className="text-center mb-6">
+    <div className="mt-3">
+      {/* <Title level={3} className="text-center mb-6">
         Explore All Images
-      </Title>
+      </Title> */}
 
       <Image.PreviewGroup items={allImages.map(img => img.src)}>
         {/* First row - 2 images */}
