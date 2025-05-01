@@ -29,7 +29,7 @@ const AdminProtectedRoute = ({ children }) => {
 
 
   if (!token || token == null || user == null) {
-    return <Navigate to={"/login"}></Navigate>;
+    return <Navigate to={"/admin-login"}></Navigate>;
   }
   if (isLoading || isFetching || loading) {
     return <LoadingPage></LoadingPage>;
@@ -38,7 +38,7 @@ const AdminProtectedRoute = ({ children }) => {
   // console.log(loggedInUser)
   if (!loggedInUser || loggedInUser.role !== "admin") {
     dispatch(logout());
-    return <Navigate to={"/login"}></Navigate>;
+    return <Navigate to={"/admin-login"}></Navigate>;
   }
 
   return children;

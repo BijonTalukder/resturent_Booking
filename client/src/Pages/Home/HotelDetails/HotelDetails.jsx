@@ -25,33 +25,12 @@ import { useCheckRoomAvailabilityBookingMutation } from "../../../redux/Feature/
 import { useAppDispatch } from "../../../redux/Hook/Hook";
 import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
 import {
-  WifiOutlined,
-  CarOutlined,
-  CoffeeOutlined,
-  ShoppingOutlined,
-  SafetyOutlined,
-  FireOutlined,
-  MedicineBoxOutlined,
-  SwitcherOutlined,
-  GiftOutlined,
-  TeamOutlined,
+
   LeftCircleFilled,
   EnvironmentOutlined,
 } from "@ant-design/icons";
 import SliderAminities from "./SliderAminities";
 
-const amenityIcons = {
-  "Free WiFi": <WifiOutlined />,
-  "Parking": <CarOutlined />,
-  "Restaurant": <CoffeeOutlined />,
-  "Shop": <ShoppingOutlined />,
-  "24/7 Security": <SafetyOutlined />,
-  "Gym": <FireOutlined />,
-  "Spa": <MedicineBoxOutlined />,
-  "Swimming Pool": <SwitcherOutlined />,
-  "Gift Shop": <GiftOutlined />,
-  "Meeting Rooms": <TeamOutlined />,
-};
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -190,9 +169,14 @@ const HotelDetails = () => {
         <LeftCircleFilled className="ms-2" />
       </Link>
 
-      <div className="mb-8">
+      <Card className="mb-8 !px-0 mt-2 shadow-sm">
+      <div className="">
         <RoomGallery rooms={rooms} />
+        <div className="mt-5 mb-2">
+          <SliderAminities amenities={hotel?.amenities || []} />
+        </div>
       </div>
+      </Card>
 
       <div className="text-center mb-8">
         <Title level={2} className="!mb-2">
@@ -235,12 +219,7 @@ const HotelDetails = () => {
           Hotel Description
         </Title>
         <Paragraph>{hotel?.description}</Paragraph>
-        <Divider />
 
-        <div>
-          <Text strong>Amenities: </Text>
-          <SliderAminities amenities={hotel?.amenities || []} />
-        </div>
       </Card>
 
 
@@ -334,21 +313,21 @@ const HotelDetails = () => {
                           {room.price} Tk per night
                         </div>
                         <div className="mb-2">
-                          <Text strong>Capacity: </Text>
+                          <Text strong>Adult : </Text>
                           {room.capacity}{" "}
                           {room.capacity > 1 ? "people" : "person"}
                         </div>
+                        <div className="mb-2">
+                          <Text strong>Child : </Text>
+                          {room.child}{" "}
+                          {room.capacity > 1 ? "people" : "person"}
+
+
+                        </div>
                         <div className="">
-                          <Text strong>Amenities: </Text>
+             
                           <Space className="mt-1">
-                            {room.amenities?.slice(0, 2).map((item, i) => (
-                              <Tag key={i} color="green">
-                                {item}
-                              </Tag>
-                            ))}
-                            {room.amenities?.length > 3 && (
-                              <Tag>+{room.amenities.length - 3} more</Tag>
-                            )}
+                          <SliderAminities amenities={room.amenities} hideText />
                           </Space>
                         </div>
                       </>

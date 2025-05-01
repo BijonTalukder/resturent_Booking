@@ -50,6 +50,7 @@ const AddRoom = ({ hotelId }) => {
         type: formData?.type,
         price: parseFloat(formData?.price),
         capacity: parseInt(formData?.capacity),
+        child: parseInt(formData?.child),
         images: imageUrls || [],
         amenities: formData?.amenities || [],
         isAvailable: formData?.isAvailable || true
@@ -129,8 +130,16 @@ const AddRoom = ({ hotelId }) => {
           <ZInputTwo
             name="capacity"
             type="number"
-            label="Capacity"
-            placeholder="Enter room capacity"
+            label="Capacity(Adult)"
+            placeholder="Enter adult capacity"
+            required={1}
+            reset
+          />
+          <ZInputTwo
+            name="child"
+            type="number"
+            label="Capacity(Child)"
+            placeholder="Enter child  capacity"
             required={1}
             reset
           />
