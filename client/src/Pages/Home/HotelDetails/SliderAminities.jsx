@@ -27,7 +27,7 @@ const amenityIcons = {
 
 const SliderAminities = ({ amenities = [] }) => {
   return (
-    <div className="amenities-slider-container">
+    <div className="amenities-slider-container ">
       <Swiper
         slidesPerView={'auto'}
         spaceBetween={30}
