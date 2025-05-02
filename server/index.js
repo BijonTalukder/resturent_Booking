@@ -46,7 +46,59 @@ app.use((err, req, res, next) => {
     });
   }
 });
+const axios = require("axios");
 
+async function fetchAndSaveDistricts() {
+    console.log("Fetching and saving districts...");
+    
+    try {
+        console.log(1);
+        
+      // Step 1: Fetch division mapping
+      const localDivisions = await axios.get("http://localhost:5000/api/v1/division");
+      console.log(2, localDivisions);
+      
+      const divisionMap = {};
+  
+      if (Array.isArray(localDivisions.data?.data)) {
+        for (const div of localDivisions.data.data) {
+          divisionMap[div.serialId] = div._id; // external id -> Mongo _id
+        }
+      }
+  
+      // Step 2: Fetch districts from external API
+      const { data } = await axios.get("https://bdapi.vercel.app/api/v.1/district");
+  
+      if (Array.isArray(data?.data)) {
+        for (const district of data.data) {
+          const divisionId = divisionMap[district.division_id]; // Get MongoDB _id
+          if (!divisionId) {
+            console.warn(`Division not found for district: ${district.name}`);
+            continue;
+          }
+  
+          // Step 3: Insert into your local DB
+          await axios.post("http://localhost:5000/api/v1/district/create", {
+            serialId: parseInt(district.id),
+            name: district.name,
+            bn_name: district.bn_name,
+            division_id: district.division_id, // optional for reference
+            divisionId: divisionId, // this is the actual MongoDB _id to join
+          });
+  
+          console.log(`Saved district: ${district.name}`);
+        }
+  
+        console.log("All districts saved.");
+      } else {
+        console.log("No districts found in response.");
+      }
+    } catch (err) {
+      console.error("Error fetching or saving districts:", err);
+    }
+  }
+  
+// fetchAndSaveDistricts();
 // Database connection
 (async () => {
   try {
@@ -57,6 +109,9 @@ app.use((err, req, res, next) => {
     app.listen(port, () => {
       console.log(`Server is running on port: ${port}`);
     });
+
+    // fetchAndSaveDistricts();
+
   } catch (error) {
     console.error('Failed to connect to the database:', error.message);
     process.exit(1);
