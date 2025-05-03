@@ -77,6 +77,13 @@ class HotelService {
         });
         return hotel;
     }
+
+    async getHotelByArea(areaId){
+        const hotel = await this.prisma.hotel.findUnique({
+            where: { areaId: areaId },
+        });
+        return hotel;
+    }
 }
 
 module.exports = HotelService

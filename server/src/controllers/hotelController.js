@@ -86,6 +86,20 @@ class HotelController{
         }
     }
 
+    async getHotelByArea(req,res,next){
+        try {
+            const areaId = req.params.areaId
+
+            const result=await this.hotelService.getHotelByArea(areaId)
+            ResponseHandler.success(res,`Hotel with ID ${areaId} fetched successfully`,result)
+
+            
+        } catch (error) {
+            next(error)
+            
+        }
+    }
+
 
 }
 module.exports=HotelController
