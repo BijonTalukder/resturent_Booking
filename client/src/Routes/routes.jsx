@@ -21,6 +21,7 @@ import { CustomerRoutes } from "./Customer.Routes";
 import CustomerDashboardLayout from "../Layouts/Dashboard/CustomerDashboardLayout";
 import Notification from "../Pages/Notification/Notification";
 import AdminLogin from "../Pages/Auth/AdminLogin/AdminLogin";
+import AreaList from "../common/AreaList/AreaList";
 
 
 export const routes = createBrowserRouter([
@@ -32,6 +33,10 @@ export const routes = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path:"/area",
+        element:<AreaList/>
       },
       {
         path: "/notification",
@@ -106,6 +111,7 @@ export const routes = createBrowserRouter([
     errorElement: <ErrorPageDashboard />,
     children: routesGenerator(adminRoutes),
   },
+ 
   {
     path: "/user",
     children: routesGenerator(CustomerRoutes),
