@@ -23,6 +23,7 @@ import Notification from "../Pages/Notification/Notification";
 import AdminLogin from "../Pages/Auth/AdminLogin/AdminLogin";
 import Division from "../Pages/Home/Division/Division";
 import DivisionDetails from "../Pages/Home/Division/DivisionDetails";
+import AreaList from "../common/AreaList/AreaList";
 
 
 export const routes = createBrowserRouter([
@@ -42,6 +43,11 @@ export const routes = createBrowserRouter([
       {
         path: "/division/:divisionId",
         element: <DivisionDetails />,
+      
+      },
+      {
+        path:"/area",
+        element:<AreaList/>   
       },
       {
         path: "/notification",
@@ -115,6 +121,7 @@ export const routes = createBrowserRouter([
     errorElement: <ErrorPageDashboard />,
     children: routesGenerator(adminRoutes),
   },
+ 
   {
     path: "/user",
     children: routesGenerator(CustomerRoutes),

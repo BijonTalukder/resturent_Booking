@@ -21,6 +21,9 @@ const DistrictService = require('../services/District/districtService');
 const DistrictController = require('../controllers/districtController');
 const divisionService = new DivisionService();
 const divisionController = new DivisionController(divisionService);
+const AreaService = require('../services/Area/AreaService');
+const AreaController = require('../controllers/areaController');
+
 const router = express.Router();
 
 const prisma = new PrismaClient();
@@ -41,7 +44,8 @@ const notificationService = new NotificationService(prisma);
 const notificationController = new NotificationController(notificationService)
 const districtService = new DistrictService();
 const districtController = new DistrictController(districtService); 
-
+const areaService = new AreaService();
+const areaController = new AreaController(areaService)
 //-------------------User Routes-----------------------
 router.post("/user/register",async(req,res,next)=>{
     userController.createUser(req,res,next)
@@ -213,60 +217,18 @@ router.delete("/district/:id", (req, res, next) => {
     districtController.deleteDistrict(req, res, next)
 })
 
+router.get("/district/by-division/:id",(req, res, next) => {
+    districtController.districtByDivision(req, res, next)
+})
 
-const axios = require("axios");
-
-async function fetchAndSaveDistricts() {
-    console.log("Fetching and saving districts...");
-    
-    try {
-        console.log(1);
-        
-      // Step 1: Fetch division mapping
-      const localDivisions = await axios.get("http://localhost:5000/api/v1/division");
-      console.log(2, localDivisions);
-      
-      const divisionMap = {};
-  
-      if (Array.isArray(localDivisions.data?.data)) {
-        for (const div of localDivisions.data.data) {
-          divisionMap[div.serialId] = div._id; // external id -> Mongo _id
-        }
-      }
-  
-      // Step 2: Fetch districts from external API
-      const { data } = await axios.get("https://bdapi.vercel.app/api/v.1/district");
-  
-      if (Array.isArray(data?.data)) {
-        for (const district of data.data) {
-          const divisionId = divisionMap[district.division_id]; // Get MongoDB _id
-          if (!divisionId) {
-            console.warn(`Division not found for district: ${district.name}`);
-            continue;
-          }
-  
-          // Step 3: Insert into your local DB
-          await axios.post("http://localhost:5000/api/v1/district/create", {
-            serialId: parseInt(district.id),
-            name: district.name,
-            bn_name: district.bn_name,
-            division_id: district.division_id, // optional for reference
-            divisionId: divisionId, // this is the actual MongoDB _id to join
-          });
-  
-          console.log(`Saved district: ${district.name}`);
-        }
-  
-        console.log("All districts saved.");
-      } else {
-        console.log("No districts found in response.");
-      }
-    } catch (err) {
-      console.error("Error fetching or saving districts:", err);
-    }
-  }
-  
-// fetchAndSaveDistricts();
-
+//area
+router.post("/area/create", (req, res, next) => {
+    areaController.createArea(req, res, next)
+})
+router.get("/area", areaController.getAllAreas.bind(areaController));
+router.get("/area/:id", areaController.getAreaById.bind(areaController));
+router.put("/area/:id", areaController.updateArea.bind(areaController));
+router.delete("/area/:id", areaController.deleteArea.bind(areaController));
+router.get("/area/by-district",areaController.areaByDistrict.bind(areaController));
 
 module.exports = router;

@@ -21,7 +21,7 @@ class BookingService {
             productName: "Room Booking",
             price: data.totalPrice
         });
-        console.log(GatewayPageURL, "--------------------")
+        // console.log(GatewayPageURL, "--------------------")
 
         // console.log(this.prisma,"--------------------")
         const booking = await this.prisma.booking.create({
