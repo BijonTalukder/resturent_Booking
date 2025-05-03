@@ -8,7 +8,7 @@ class DistrictService {
   // Create a new District
   async createDistrict(data) {
     try {
-      const District = await this.prisma.disrtict.create({
+      const District = await this.prisma.district.create({
         data,
       });
       return District;
@@ -18,9 +18,9 @@ class DistrictService {
   }
 
   // Get all cities
-  async getAllCities() {
+  async getAllDistricts() {
     try {
-      const cities = await this.prisma.disrtict.findMany();
+      const cities = await this.prisma.district.findMany();
       return cities;
     } catch (error) {
       throw new Error("Error fetching cities: " + error.message);
@@ -30,7 +30,7 @@ class DistrictService {
   // Get a single District by ID
   async getDistrictById(id) {
     try {
-      const District = await this.prisma.disrtict.findUnique({
+      const District = await this.prisma.district.findUnique({
         where: { id },
       });
       return District;
@@ -42,7 +42,7 @@ class DistrictService {
   // Update a District's data
   async updateDistrict(id, data) {
     try {
-      const District = await this.prisma.disrtict.update({
+      const District = await this.prisma.district.update({
         where: { id },
         data,
       });
@@ -55,12 +55,30 @@ class DistrictService {
   // Delete a District
   async deleteDistrict(id) {
     try {
-      const District = await this.prisma.disrtict.delete({
+      const District = await this.prisma.district.delete({
         where: { id },
       });
       return District;
     } catch (error) {
       throw new Error("Error deleting District: " + error.message);
+    }
+  }
+
+
+  async districtByDivision(id){
+    try {
+
+      const divisionId=parseInt(id)
+      const cities = await this.prisma.district.findMany(
+        {
+          where:{
+            division_id:divisionId
+          }
+        }
+      );
+      return cities;
+    } catch (error) {
+      throw new Error("Error fetching cities: " + error.message);
     }
   }
 }

@@ -77,6 +77,19 @@ class DistrictController {
       next(error);
     }
   }
+
+  async districtByDivision(req,res,next){
+    try {
+      const cities = await this.districtService.districtByDivision(req.params.id);
+      res.status(200).json({
+        success: true,
+        data: cities,
+      });
+    } catch (error) {
+      next(error);
+    }
+
+  }
 }
 
 module.exports = DistrictController;

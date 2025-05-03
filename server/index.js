@@ -27,7 +27,8 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Root route
-app.get('/', (req, res) => {
+app.get('/district', (req, res) => {
+  // fetchAndSaveDistricts()
   res.send('Welcome to the Inkspire API!');
 });
 
@@ -55,35 +56,35 @@ async function fetchAndSaveDistricts() {
         console.log(1);
         
       // Step 1: Fetch division mapping
-      const localDivisions = await axios.get("http://localhost:5000/api/v1/division");
-      console.log(2, localDivisions);
+      // const localDivisions = await axios.get("http://localhost:5000/api/v1/division");
+      // console.log(2, localDivisions);
       
-      const divisionMap = {};
+      // const divisionMap = {};
   
-      if (Array.isArray(localDivisions.data?.data)) {
-        for (const div of localDivisions.data.data) {
-          divisionMap[div.serialId] = div._id; // external id -> Mongo _id
-        }
-      }
+      // if (Array.isArray(localDivisions.data?.data)) {
+      //   for (const div of localDivisions.data.data) {
+      //     divisionMap[div.serialId] = div._id; // external id -> Mongo _id
+      //   }
+      // }
   
       // Step 2: Fetch districts from external API
       const { data } = await axios.get("https://bdapi.vercel.app/api/v.1/district");
   
       if (Array.isArray(data?.data)) {
         for (const district of data.data) {
-          const divisionId = divisionMap[district.division_id]; // Get MongoDB _id
-          if (!divisionId) {
-            console.warn(`Division not found for district: ${district.name}`);
-            continue;
-          }
+          // const divisionId = divisionMap[district.division_id]; // Get MongoDB _id
+          // if (!divisionId) {
+          //   console.warn(`Division not found for district: ${district.name}`);
+          //   continue;
+          // }
   
           // Step 3: Insert into your local DB
           await axios.post("http://localhost:5000/api/v1/district/create", {
             serialId: parseInt(district.id),
             name: district.name,
             bn_name: district.bn_name,
-            division_id: district.division_id, // optional for reference
-            divisionId: divisionId, // this is the actual MongoDB _id to join
+            division_id: parseInt(district.division_id), // optional for reference
+            // divisionId: divisionId, // this is the actual MongoDB _id to join
           });
   
           console.log(`Saved district: ${district.name}`);
