@@ -1,9 +1,53 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import { LeftCircleFilled } from "@ant-design/icons";
+import { Link, useParams } from "react-router-dom";
+import { useGetDistrictsByDivisionQuery } from "../../redux/Feature/User/place/placeApi";
 
 const District = () => {
-  return (
-    <div>District</div>
-  )
-}
+  const { divisionId } = useParams();
+  const [districts, setDistricts] = useState([]);
+  const { data: districtsData, isLoading, isError } = useGetDistrictsByDivisionQuery(divisionId);
 
-export default District
+  useEffect(() => {
+    if (districtsData) {
+      setDistricts(districtsData.data); // Assuming the API returns { data: [...] }
+    }
+  }, [districtsData]);
+
+  if (isLoading) return (
+    <div className="flex justify-center items-center min-h-screen">
+      <div>Loading districts...</div>
+    </div>
+  );
+
+  if (isError) return (
+    <div className="flex justify-center items-center min-h-screen">
+      <div>Error loading districts</div>
+    </div>
+  );
+
+  return (
+    <>
+      <Link to="/divisions"> {/* Update this to your actual route */}
+        <LeftCircleFilled className="ms-2 mt-2 text-2xl" />
+      </Link>
+      <div className="w-full max-w-md mx-auto bg-white min-h-screen p-4 space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-md font-medium">Districts</h3>
+          <ul className="space-y-2">
+            {districts.map((district, idx) => (
+              <li
+                key={idx}
+                className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200"
+              >
+                {district.name} {/* Adjust based on your district object structure */}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default District;
