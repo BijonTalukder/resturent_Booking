@@ -30,6 +30,17 @@ class BookingService {
                 transactionId: tranId,
             },
         });
+        await this.prisma.notification.create({
+            data: {
+                userId: data.userId,
+                title:"Booking Confirmation",
+                message: `Your booking has been created successfully. Booking ID: ${booking.id}`,
+               bookingId: booking.id,
+               
+                type: 'BOOKING_CONFIRMATION',
+                link:"/user/user-booking",
+            },
+        })
         await this.prisma.payment.create({
             data: {
                 bookingId: booking.id, // after creating booking
