@@ -24,6 +24,7 @@ import HomeDivision from "../Pages/Home/Home-Division/HomeDivision";
 import HomeDivisionDetails from "../Pages/Home/Home-Division/HomeDivisionDetails";
 import Division from "../Pages/Division/Division";
 import District from "../Pages/District/District";
+import Area from "../Pages/Area/Area";
 
 
 
@@ -51,8 +52,12 @@ export const routes = createBrowserRouter([
         element:<Division/>   
       },
       {
-        path:"/district/:id",
+        path:"/district/:divisionId",
         element:<District/>   
+      },
+      {
+        path:"/area/:districtId",
+        element:<Area/>   
       },
       {
         path: "/notification",

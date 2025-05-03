@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import DashboardTitle from "../../components/DashboardTitle/DashboardTitle";
 import AllHotel from "./AllHotel/AllHotel";
 import BannerSlider from "./BannerSlider/BannerSlider";
 import Division from "./Home-Division/HomeDivision";
@@ -15,7 +14,7 @@ const Home = () => {
 
   return (
     <div className="">
-       <Division/>
+       {/* <Division/> */}
        <BannerSlider />
        <AllHotel/>
 

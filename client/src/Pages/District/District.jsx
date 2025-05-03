@@ -28,20 +28,21 @@ const District = () => {
 
   return (
     <>
-      <Link to="/divisions"> {/* Update this to your actual route */}
+      <Link to="/division"> {/* Update this to your actual route */}
         <LeftCircleFilled className="ms-2 mt-2 text-2xl" />
       </Link>
-      <div className="w-full max-w-md mx-auto bg-white min-h-screen p-4 space-y-6">
+      <div className="w-full max-w-md mx-auto bg-white min-h-screen p-4 space-y-6 mb-16">
         <div className="space-y-2">
-          <h3 className="text-md font-medium">Districts</h3>
+          <h3 className="text-md font-medium">Select District</h3>
           <ul className="space-y-2">
             {districts.map((district, idx) => (
-              <li
-                key={idx}
-                className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200"
-              >
-                {district.name} {/* Adjust based on your district object structure */}
-              </li>
+             <Link to={`/area/${district.serialId}`} key={idx}>
+                <li
+                  className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200 mb-4"
+                >
+                  {district.name} {/* Adjust based on your district object structure */}
+                </li>
+              </Link>
             ))}
           </ul>
         </div>
