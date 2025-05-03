@@ -44,7 +44,7 @@ const Checkout = () => {
       checkIn: checkInDate,
       checkOut: checkOutDate,
       totalPrice,
-      email: formData?.email,
+      email: formData?.email || "",
       phone: formData?.phone,
       name: formData?.name,
       status: "pending",
@@ -132,7 +132,7 @@ const Checkout = () => {
     placeholder="Enter your full name"
     required
   />
-  <ZEmail name="email" label="Email Address" required />
+  <ZEmail name="email" label="Email Address(Optional)" />
   <ZPhone name="phone" label="Phone Number" type="text" required />
 
   <button

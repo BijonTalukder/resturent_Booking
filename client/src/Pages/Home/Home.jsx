@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DashboardTitle from "../../components/DashboardTitle/DashboardTitle";
 import AllHotel from "./AllHotel/AllHotel";
 import BannerSlider from "./BannerSlider/BannerSlider";
+import Division from "./Home-Division/HomeDivision";
 
 
 const Home = () => {
@@ -14,28 +15,9 @@ const Home = () => {
 
   return (
     <div className="">
+       <Division/>
        <BannerSlider />
-
-    {/* <DashboardTitle windowTitle={"Home"}/> */}
-
-        {/* <div className="mt-5">
-          <div className="w-full h-full md:h-[80%]">      
-            <BannerSlider />
-          </div>
-          <div className="mt-[3px] md:mt-[3px]">
-            <ProductBanner />
-          </div>
-        </div> */}
-   
-
-
-   
-       {/* <TopSaleProduct/>
-            <NewProduct/> 
-       */}
        <AllHotel/>
-       {/* <NewsSletter/> */}
-
 
     </div>
   );

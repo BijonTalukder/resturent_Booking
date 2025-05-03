@@ -7,7 +7,7 @@ import { Button, Skeleton, Table, Tag, Typography } from "antd";
 // import { useTraceOrderQuery } from "../../redux/Feature/Admin/order/orderApi";
 import { toast } from "sonner";
 import moment from "moment";
-import Image from "../../assets/complete.png";
+// import Image from "../../assets/complete.png";
 import DashboardTitle from "../../components/DashboardTitle/DashboardTitle";
 
 const { Title, Text } = Typography;

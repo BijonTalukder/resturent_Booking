@@ -19,6 +19,7 @@ const Header = ({ onSearch, onFilterChange }) => {
   const isNotificationPage = location.pathname === '/notification';
   const isAdminLogin = location.pathname === '/admin-login';
   const isDetails = location?.pathname?.startsWith('/hotel');
+  const isDivision = location?.pathname === '/division';
 
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleRight, setVisibleRight] = useState(false);
@@ -74,7 +75,7 @@ const Header = ({ onSearch, onFilterChange }) => {
 
   return (
     <>
-      <div className={`py-3 px-4 lg:px-10 mb-3 bg-[#3498db] shadow-sm border-b border-gray-200 ${isNotificationPage || isAdminLogin || isDetails ? "hidden" : ""}`}>
+      <div className={`py-3 px-4 lg:px-10 mb-3 bg-[#3498db] shadow-sm border-b border-gray-200 ${isNotificationPage || isAdminLogin || isDetails || isDivision? "hidden" : ""}`}>
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           {/* Left Side - Logo/User */}
           <div className="flex justify-between items-center gap-x-1">

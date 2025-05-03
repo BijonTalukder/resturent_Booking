@@ -35,6 +35,9 @@ const baseApi = createApi({
     "contact",
     "booking",
     "notification",
+    "division",
+    "district",
+    "area",
   ],
 });
 

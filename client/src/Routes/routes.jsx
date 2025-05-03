@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../Pages/Home/Home";
-import Contact from "../Pages/Contact/Contact";
 import ErrorPageDashboard from "../Pages/Error/ErrorPageDashboard";
 import { routesGenerator } from "../utils/routesGenerator";
 import { adminRoutes } from "./Admin.Routes";
@@ -21,7 +20,10 @@ import { CustomerRoutes } from "./Customer.Routes";
 import CustomerDashboardLayout from "../Layouts/Dashboard/CustomerDashboardLayout";
 import Notification from "../Pages/Notification/Notification";
 import AdminLogin from "../Pages/Auth/AdminLogin/AdminLogin";
-import AreaList from "../common/AreaList/AreaList";
+import HomeDivision from "../Pages/Home/Home-Division/HomeDivision";
+import HomeDivisionDetails from "../Pages/Home/Home-Division/HomeDivisionDetails";
+import Division from "../Pages/Division/Division";
+
 
 
 export const routes = createBrowserRouter([
@@ -35,8 +37,17 @@ export const routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path:"/area",
-        element:<AreaList/>
+        path: "/home-division",
+        element: <HomeDivision/>,
+      },
+      {
+        path: "/home-division/:divisionId",
+        element: <HomeDivisionDetails/>,
+      
+      },
+      {
+        path:"/division",
+        element:<Division/>   
       },
       {
         path: "/notification",
@@ -71,13 +82,9 @@ export const routes = createBrowserRouter([
       {
         path: "/hotel/:id",
         element: <HotelDetails/>,
-        // loader: ({ params }) =>
-        //   fetch(`${import.meta.env.VITE_BACKEND_URL}/hotel/${params.id}`)
+       
       },
-      {
-        path: "/contact",
-        element: <Contact />,
-      },
+    
       {
         path: "/login",
         element: <Login/>,
