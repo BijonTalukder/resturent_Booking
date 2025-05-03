@@ -35,12 +35,14 @@ const Division = () => {
           <h3 className="text-md text-center font-bold mb-3">Select Division</h3>
           <ul className="space-y-2">
             {divisions.map((division, idx) => (
+              <Link to={`/district/${division?.serialId}`}>
               <li
                 key={idx}
-                className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200"
+                className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200 mb-3"
               >
-                {division.name} {/* Adjust based on your division object structure */}
+                {division.name}
               </li>
+              </Link>
             ))}
           </ul>
         </div>
