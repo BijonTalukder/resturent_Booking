@@ -21,6 +21,8 @@ import { CustomerRoutes } from "./Customer.Routes";
 import CustomerDashboardLayout from "../Layouts/Dashboard/CustomerDashboardLayout";
 import Notification from "../Pages/Notification/Notification";
 import AdminLogin from "../Pages/Auth/AdminLogin/AdminLogin";
+import Division from "../Pages/Home/Division/Division";
+import DivisionDetails from "../Pages/Home/Division/DivisionDetails";
 
 
 export const routes = createBrowserRouter([
@@ -32,6 +34,14 @@ export const routes = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/division",
+        element: <Division />,
+      },
+      {
+        path: "/division/:divisionId",
+        element: <DivisionDetails />,
       },
       {
         path: "/notification",
@@ -66,8 +76,7 @@ export const routes = createBrowserRouter([
       {
         path: "/hotel/:id",
         element: <HotelDetails/>,
-        // loader: ({ params }) =>
-        //   fetch(`${import.meta.env.VITE_BACKEND_URL}/hotel/${params.id}`)
+       
       },
       {
         path: "/contact",
