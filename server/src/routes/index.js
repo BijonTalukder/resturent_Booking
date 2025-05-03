@@ -90,6 +90,10 @@ router.delete("/hotel/:id",async(req,res,next)=>{
 router.get("/hotel/:divisionId/division",async(req,res,next)=>{
     hotelController.getHotelByDivision(req,res,next)
 })
+
+router.get("/hotel/:areaId/area",async(req,res,next)=>{
+    hotelController.getHotelByArea(req,res,next)
+})
 //-------------------Room Routes-----------------------
 router.post("/room/create",async(req,res,next)=>{
     roomController.createRoom(req,res,next)
@@ -229,6 +233,6 @@ router.get("/area", areaController.getAllAreas.bind(areaController));
 router.get("/area/:id", areaController.getAreaById.bind(areaController));
 router.put("/area/:id", areaController.updateArea.bind(areaController));
 router.delete("/area/:id", areaController.deleteArea.bind(areaController));
-router.get("/area/by-district",areaController.areaByDistrict.bind(areaController));
+router.get("/area/by-district/:id",areaController.areaByDistrict.bind(areaController));
 
 module.exports = router;

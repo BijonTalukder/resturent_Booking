@@ -43,6 +43,7 @@ model Hotel {
   image       String
   divisionId  String
   cityId      String
+  areaId      String
   amenities   String[]
   ownerId     String   @db.ObjectId
   isActive    Boolean  @default(true)
