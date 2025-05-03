@@ -46,11 +46,10 @@ const Login = () => {
   const handleSubmit = async (data) => {
     const { data: loginData } = await login(data);
 
-    if (loginData.success) {
+    if (loginData?.success) {
       dispatch(setUser({ token: loginData.token, user: loginData.user }));
-      if (loginData?.user?.role === "user") {
+      if (loginData?.user?.role && loginData?.user?.role === "user") {
         navigate(location?.state?.from || "/");
-
       } 
       // else if (loginData?.user?.role === "admin") {
       //   localStorage.removeItem("dropDown");

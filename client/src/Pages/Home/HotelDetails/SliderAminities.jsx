@@ -1,16 +1,21 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import { 
-  WifiOutlined, 
-  CarOutlined, 
+import {
+  WifiOutlined,
+  CarOutlined,
   CoffeeOutlined,
   SafetyOutlined,
   FireOutlined,
   MedicineBoxOutlined,
-  FundProjectionScreenOutlined
+  FundProjectionScreenOutlined,
+  LockOutlined,
+  BorderOutlined,
+  // SnowflakeOutlined
 } from '@ant-design/icons';
-import { FaSwimmingPool } from "react-icons/fa";
+import { FaSwimmingPool, FaWineGlassAlt } from "react-icons/fa";
+import { TbAirConditioning } from "react-icons/tb";
+
 
 // Amenity icons mapping
 const amenityIcons = {
@@ -21,32 +26,40 @@ const amenityIcons = {
   'Security': <SafetyOutlined className="text-blue-500" />,
   'Gym': <FireOutlined className="text-blue-500" />,
   'Spa': <MedicineBoxOutlined className="text-blue-500" />,
-  'Swimming Pool': <FaSwimmingPool  className="text-blue-500 text-4xl" />,
-  'AC': <span className="text-blue-500">AC</span> // For amenities without icons
+  'Swimming Pool': <FaSwimmingPool className="text-blue-500 text-[28px]" />,
+  'AC': <TbAirConditioning className="text-blue-500" />,
+  'Air Conditioning': <TbAirConditioning className="text-blue-500" />,
+  'Mini Bar': <FaWineGlassAlt className="text-blue-500" />,
+  'Safe': <LockOutlined className="text-blue-500" />,
+  'Balcony': <BorderOutlined className="text-blue-500" />
 };
 
-const SliderAminities = ({ amenities = [] }) => {
+
+const SliderAminities = ({ amenities = [] , hideText= false}) => {
   return (
-    <div className="amenities-slider-container ">
-      <Swiper
+    <div className={`amenities-slider-container grid grid-cols-3 lg:grid-cols-5 gap-5 
+    ${hideText ? 'grid-cols-5 lg:grid-cols-6' : ''}`}>
+      {/* <Swiper
         slidesPerView={'auto'}
         spaceBetween={30}
         initialSlide={0}
         className="amenities-swiper"
-      >
+      > */}
         {amenities.map((amenity, index) => (
-          <SwiperSlide key={index} className="amenity-slide">
-            <div className="flex flex-col items-center gap-1 p-2">
-              <div className="text-3xl">
+          //<SwiperSlide key={index} className="amenity-slide">
+            <div key={index} className="flex flex-col items-center gap-1 p-2 justify-center">
+              <div className="text-xl">
                 {amenityIcons[amenity] || <span className="text-blue-500">•</span>}
-              </div>
-              <div className="text-sm text-gray-600 whitespace-nowrap">
-                {amenity}
-              </div>
+              </div>             
+              {!hideText && (
+            <div className="text-[12px] text-gray-600 whitespace-nowrap">
+              {amenity}
             </div>
-          </SwiperSlide>
+          )}
+            </div>
+          //</SwiperSlide>
         ))}
-      </Swiper>
+      {/* </Swiper> */}
     </div>
   );
 };

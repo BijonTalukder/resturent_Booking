@@ -197,12 +197,12 @@
 /* BannerSlider.css */
 
 /* Container to control overall width and padding */
-.amenities-slider-container {
+/* .amenities-slider-container {
   width: 100%;
   padding: 0 8px;
   box-sizing: border-box;
   cursor: pointer;
-}
+} */
 
 /* Swiper container */
 .amenities-swiper {
