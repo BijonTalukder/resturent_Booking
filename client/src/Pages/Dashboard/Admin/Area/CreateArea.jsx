@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useCreateAreaMutation } from "../../../../redux/Feature/Admin/area/areaApi";
 
 const CreateAreaForm = () => {
   const [districts, setDistricts] = useState([]);
@@ -9,15 +10,17 @@ const CreateAreaForm = () => {
     districtId: "",
   });
 
+  const [createArea, { isLoading, isSuccess, isError, error }] = useCreateAreaMutation();
+
   useEffect(() => {
-    // Fetch districts
-    axios.get("/districts")
-      .then(res => setDistricts(res.data.data))
-      .catch(err => console.error("Failed to load districts", err));
+    axios
+      .get("http://localhost:5000/api/v1/district")
+      .then((res) => setDistricts(res.data.data))
+      .catch((err) => console.error("Failed to load districts", err));
   }, []);
 
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -26,8 +29,9 @@ const CreateAreaForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/area/create", formData);
+      await createArea(formData).unwrap();
       alert("Area created successfully!");
+      setFormData({ name: "", bn_name: "", districtId: "" }); // Reset form
     } catch (err) {
       console.error(err);
       alert("Error creating area");
@@ -82,9 +86,13 @@ const CreateAreaForm = () => {
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          disabled={isLoading}
         >
-          Create Area
+          {isLoading ? "Creating..." : "Create Area"}
         </button>
+
+        {isError && <p className="text-red-600">Failed to create area: {error?.data?.message || error?.error}</p>}
+        {isSuccess && <p className="text-green-600">Area created successfully!</p>}
       </form>
     </div>
   );
