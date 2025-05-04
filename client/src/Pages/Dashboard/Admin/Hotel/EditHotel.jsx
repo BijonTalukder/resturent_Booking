@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/Hook/Hook";
 import { setIsEditModalOpen } from "../../../../redux/Modal/ModalSlice";
 import axios from "axios";
-import { message } from "antd";
+import { message, Checkbox } from "antd";
 import ZFormTwo from "../../../../components/Form/ZFormTwo";
 import ZInputTwo from "../../../../components/Form/ZInputTwo";
 import ZSelect from "../../../../components/Form/ZSelect";
@@ -11,14 +11,20 @@ import { useUpdateHotelMutation, useGetHotelByIdQuery } from "../../../../redux/
 import { useCurrentUser } from "../../../../redux/Feature/auth/authSlice";
 import ZInputTextArea from "../../../../components/Form/ZInputTextArea";
 import { Link, useParams } from "react-router-dom";
+import { useGetAreasQuery } from "../../../../redux/Feature/Admin/area/areaApi";
 
 const EditHotel = () => {
   const { id } = useParams();
   const [updateHotel, { isLoading, isError, error, isSuccess, data }] = useUpdateHotelMutation();
   const { data: hotelData, isLoading: isHotelLoading } = useGetHotelByIdQuery(id);
+  const { data: areasData } = useGetAreasQuery();
   const [divisions, setDivisions] = useState([]);
   const [cities, setCities] = useState([]);
+  const [areas, setAreas] = useState([]);
   const [selectedDivision, setSelectedDivision] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedAreas, setSelectedAreas] = useState([]);
+  const [selectAllAreas, setSelectAllAreas] = useState(false);
   const user = useAppSelector(useCurrentUser);
   const [uploading, setUploading] = useState(false);
 
@@ -39,10 +45,12 @@ const EditHotel = () => {
     fetchDivisions();
   }, []);
 
-  // Set initial division and fetch cities when hotel data loads
+  // Set initial values when hotel data loads
   useEffect(() => {
     if (hotelData?.data) {
       setSelectedDivision(hotelData.data.divisionId);
+      setSelectedCity(hotelData.data.cityId);
+      setSelectedAreas(hotelData?.data?.areaId ? hotelData.data.areaId : []);
     }
   }, [hotelData]);
 
@@ -65,10 +73,34 @@ const EditHotel = () => {
     }
   }, [selectedDivision]);
 
+  // Filter areas when city is selected
+  useEffect(() => {
+    if (selectedCity && areasData?.data) {
+      const filteredAreas = areasData.data.filter(
+        area => area.district_id?.toString() === selectedCity.toString()
+      );
+      setAreas(filteredAreas);
+
+    // Preserve any existing selections that match the current city's areas
+    //   const validSelections = selectedAreas.filter(serialId => 
+    //   filteredAreas.some(area => area.serialId === serialId)
+    // );
+    // setSelectedAreas(validSelections);
+      
+      // Update select all state based on current selection
+      if (filteredAreas.length > 0) {
+        const allSelected = filteredAreas.every(area => 
+          selectedAreas.includes(area.serialId)
+        );
+        setSelectAllAreas(allSelected);
+      }
+    }
+  }, [selectedCity, areasData, selectedAreas]);
+
   const handleSubmit = async (formData) => {
     try {
       setUploading(true);
-       let imageUrl = hotelData?.data?.image;
+      let imageUrl = hotelData?.data?.image;
 
       // Handle image upload if a new image is provided
       if (formData?.image && typeof formData.image !== 'string') {
@@ -91,7 +123,7 @@ const EditHotel = () => {
         }
       }
 
-      const updatedHotelData  = {
+      const updatedHotelData = {
         name: formData?.name,
         description: formData?.description,
         location: formData?.location,
@@ -100,14 +132,17 @@ const EditHotel = () => {
         image: imageUrl,
         divisionId: formData?.divisionId,
         cityId: formData?.cityId,
+        areaId: (selectedAreas[0]).toString(), 
         amenities: formData?.amenities || [],
         ownerId: user?.id,
         isActive: formData?.isActive
       };
 
+      console.log(updatedHotelData)
+
       await updateHotel({
-        id: id ,
-        data: updatedHotelData 
+        id: id,
+        data: updatedHotelData
       }).unwrap();
 
       message.success('Hotel updated successfully!');
@@ -119,6 +154,23 @@ const EditHotel = () => {
       setUploading(false);
     }
   };
+
+  const handleAreaSelection = (serialId) => {
+  setSelectedAreas(prev => {
+    // Ensure prev is always treated as an array
+    const currentSelection = Array.isArray(prev) ? prev : [];
+    return currentSelection.includes(serialId) 
+      ? currentSelection.filter(id => id !== serialId) 
+      : [...currentSelection, serialId];
+  });
+};
+
+// 4. Update the select all handler similarly
+const handleSelectAllAreas = (e) => {
+  const checked = e.target.checked;
+  setSelectAllAreas(checked);
+  setSelectedAreas(checked ? areas.map(area => area.serialId) : []);
+};
 
   const amenitiesOptions = [
     { label: "Free WiFi", value: "Free WiFi" },
@@ -132,13 +184,14 @@ const EditHotel = () => {
 
   return (
     <div className="">
-          <Link to={`/admin/hotels`}>
-            <div className="flex flex-col lg:flex-row items-center gap-x-2 justify-end my-5">
-              <button className="bg-primary font-Poppins font-medium py-2 px-5 rounded-lg text-white">
-                Back
-              </button>
-            </div>
-          </Link>
+      <Link to={`/admin/hotels`}>
+        <div className="flex flex-col lg:flex-row items-center gap-x-2 justify-end my-5">
+          <button className="bg-primary font-Poppins font-medium py-2 px-5 rounded-lg text-white">
+            Back
+          </button>
+        </div>
+      </Link>
+      
       <ZFormTwo
         isLoading={isLoading || uploading}
         isSuccess={isSuccess}
@@ -160,6 +213,7 @@ const EditHotel = () => {
               required={1}
             />
           </div>
+          
           <div className="lg:col-span-2">
             <ZInputTextArea
               name="description"
@@ -169,6 +223,7 @@ const EditHotel = () => {
               required={1}
             />
           </div>
+          
           <div className="lg:col-span-2">
             <ZInputTwo
               name="location"
@@ -206,7 +261,7 @@ const EditHotel = () => {
               uid: '-1',
               name: 'Current Image',
               status: 'done',
-              url: hotelData.data.image
+              url: hotelData?.data?.image
             }] : []}
           />
 
@@ -226,7 +281,35 @@ const EditHotel = () => {
             placeholder="Select city"
             required={1}
             disabled={!selectedDivision}
+            onChange={(value) => setSelectedCity(value)}
           />
+
+          {areas.length > 0 && (
+            <div className="lg:col-span-2 space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-gray-700">Areas</label>
+                <Checkbox
+                  checked={selectAllAreas}
+                  onChange={handleSelectAllAreas}
+                >
+                  Select All
+                </Checkbox>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto p-2 border rounded">
+                {areas.map(area => (
+                  <Checkbox
+                    key={area.serialId}
+                    checked={selectedAreas.includes(area.serialId)}
+                    onChange={() => handleAreaSelection(area.serialId)}
+                    className="m-1"
+                    value={area.serialId}
+                  >
+                    {area.name}
+                  </Checkbox>
+                ))}
+              </div>
+            </div>
+          )}
 
           <ZSelect
             name="amenities"
@@ -234,7 +317,6 @@ const EditHotel = () => {
             options={amenitiesOptions}
             placeholder="Select amenities"
             mode="multiple"
-
           />
 
           <ZSelect
@@ -245,7 +327,6 @@ const EditHotel = () => {
               { label: "Inactive", value: false },
             ]}
             placeholder="Select status"
-
           />
         </div>
       </ZFormTwo>
