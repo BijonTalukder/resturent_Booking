@@ -302,7 +302,7 @@ const handleSelectAllAreas = (e) => {
                     checked={selectedAreas.includes(area.serialId)}
                     onChange={() => handleAreaSelection(area.serialId)}
                     className="m-1"
-                    value={area.serialId}
+                    // value={area.serialId}
                   >
                     {area.name}
                   </Checkbox>
