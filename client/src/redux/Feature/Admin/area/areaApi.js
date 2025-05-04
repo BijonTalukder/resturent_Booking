@@ -37,7 +37,7 @@ const bookingApi = baseApi.injectEndpoints({
     // Update Area
     updateArea: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/area/update/${id}`,
+        url: `/area/${id}`,
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ const bookingApi = baseApi.injectEndpoints({
     // Delete Area
     deleteArea: builder.mutation({
       query: (id) => ({
-        url: `/area/delete/${id}`,
+        url: `/area/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ['area'],

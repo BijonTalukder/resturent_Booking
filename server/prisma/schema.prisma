@@ -182,6 +182,7 @@ model Area {
   name        String
   bn_name     String?
   district_id Int?
+  district_name String
   districtId  String?  @db.ObjectId
   divisionId  String?  @db.ObjectId
   createdAt   DateTime @default(now())
