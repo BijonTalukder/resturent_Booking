@@ -67,9 +67,9 @@ class AreaController {
       }
     }
 
-    async areaByDistrict(id){
+    async areaByDistrict(req,res,next){
         try {
-            const result = await this.areaService.areaByDistrict(id);
+            const result = await this.areaService.areaByDistrict(req.params.id);
             res.status(200).json({
               success: true,
               message: "All areas fetched successfully",
