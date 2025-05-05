@@ -49,13 +49,13 @@ const Areas = () => {
   };
 
   const columns = [
+    // {
+    //   title: "Area Serial No",
+    //   dataIndex: "serialId",
+    //   key: "serialId",
+    // },
     {
-      title: "Area Serial No",
-      dataIndex: "serialId",
-      key: "serialId",
-    },
-    {
-      title: "Name (English)",
+      title: "Area Name",
       dataIndex: "name",
       key: "name",
     },
@@ -65,7 +65,7 @@ const Areas = () => {
     //   key: "bn_name",
     // },
     {
-      title: "District",
+      title: "District Name",
       dataIndex: "district_name",
       key: "district_name",
     },
