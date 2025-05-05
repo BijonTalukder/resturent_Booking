@@ -203,7 +203,7 @@ const HotelDetails = () => {
           <Title level={4}>Location Map</Title>
           <iframe
             width="100%"
-            height="300"
+            height="200"
             style={{ border: 0 }}
             loading="lazy"
             allowFullScreen

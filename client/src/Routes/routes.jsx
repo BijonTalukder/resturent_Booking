@@ -25,6 +25,7 @@ import HomeDivisionDetails from "../Pages/Home/Home-Division/HomeDivisionDetails
 import Division from "../Pages/Division/Division";
 import District from "../Pages/District/District";
 import Area from "../Pages/Area/Area";
+import PrivacyPolicy from "../Pages/PrivacyPolicy/PrivacyPolicy";
 
 
 
@@ -114,6 +115,10 @@ export const routes = createBrowserRouter([
       {
         path: "/order-track",
         element: <OrderTrack/>,
+      },
+      {
+        path:"/privacy-policy",
+        element:<PrivacyPolicy/>
       }
     ],
   },
