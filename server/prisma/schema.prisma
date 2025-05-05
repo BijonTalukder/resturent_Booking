@@ -63,6 +63,7 @@ model Room {
   price       Float
   capacity    Int
   child       Int
+  roomQty     Int
   // type        String 
   images      String[]
   amenities   String[]
