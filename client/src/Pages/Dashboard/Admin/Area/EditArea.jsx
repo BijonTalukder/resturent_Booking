@@ -13,7 +13,7 @@ const EditArea = ({ selectedArea }) => {
   const dispatch = useAppDispatch();
   const [districtOptions, setDistrictOptions] = useState([]);
   const { data: districtsData, isLoading: districtsLoading } = useGetDistrictsQuery();
-  
+  const [selectedDistrict, setSelectedDistrict] = useState(null); 
   
   const [updateArea, { isLoading, isError, error, isSuccess, data }] = useUpdateAreaMutation();
 
@@ -21,27 +21,31 @@ const EditArea = ({ selectedArea }) => {
     if (districtsData?.data) {
       const options = districtsData.data.map(district => ({
         label: district.name,
-        value: district.serialId,
-        name: district.name
+        value: district.serialId, // This is what will be stored in the form field
+        name: district.name,
+        id: district.id,
+
       }));
       setDistrictOptions(options);
+
     }
   }, [districtsData]);
 
+  const handleDistrictChange = (value) => {
+    // Find the complete district object when selection changes
+    const district = districtOptions.find(opt => opt.value === value);
+    setSelectedDistrict(district);
+  };
 
   const handleSubmit = async (formData) => {
     try {
-      // Find the selected district to get its name
-      const selectedDistrict = districtOptions.find(
-        district => district.value === parseInt(formData.district_id)
-      );
-
       const payload = {
         name: formData.name,
         bn_name: formData.bn_name || null,
-        serialId: parseInt(formData.serialId),
+        serialId: null,
         district_id: parseInt(formData.district_id),
         district_name: selectedDistrict?.name || '',
+        districtId: selectedDistrict?.id || null,
       };
 
       await updateArea({ id: selectedArea.id, data: payload }).unwrap();
@@ -76,7 +80,7 @@ const EditArea = ({ selectedArea }) => {
             label="Area Name (English)"
             placeholder="Enter area name in English"
             required={1}
-            value={selectedArea?.name} // Set default value from selected area
+            value={selectedArea.name} // Pre-fill with selected area name
           />
 
           <ZInputTwo
@@ -84,16 +88,15 @@ const EditArea = ({ selectedArea }) => {
             type="text"
             label="Area Name (Bengali)"
             placeholder="Enter area name in Bengali"
-            value={selectedArea?.bn_name} // Set default value from selected area
+            value={selectedArea.bn_name} // Pre-fill with selected area name in Bengali
           />
 
           <ZNumber 
             name="serialId"
             label="Serial ID"
             placeholder="Enter serial ID"
-            required={1}
-            value={selectedArea?.serialId} // Set default value from selected area
-            
+            // required={1}
+            value={selectedArea.serialId} // Pre-fill with selected area serial ID
           />
 
           <ZSelect
@@ -103,7 +106,8 @@ const EditArea = ({ selectedArea }) => {
             loading={districtsLoading}
             placeholder="Select a district"
             required={1}
-            value={selectedArea?.district_id} // Set default value from selected area
+            onChange={handleDistrictChange}
+            value={selectedArea.district_id} // Pre-fill with selected area district ID
           />
         </div>
       </ZFormTwo>
