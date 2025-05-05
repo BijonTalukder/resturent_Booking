@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import img from "../../../assets/banner/contact-banner.jpg";
+// import img from "../../../assets/banner/contact-banner.jpg";
 import { FaGreaterThan, FaHome } from 'react-icons/fa';
 import ZFormTwo from '../../../components/Form/ZFormTwo';
 import ZEmail from '../../../components/Form/ZEmail';
@@ -61,11 +61,7 @@ const AdminLogin = () => {
     <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-lg text-center">
         <h1 className="text-2xl font-bold sm:text-3xl">Admin Login Here!</h1>
-  
-        {/* <p className="mt-4 text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla eaque error neque
-          ipsa culpa autem, at itaque nostrum!
-        </p> */}
+
       </div>
   
       <ZFormTwo

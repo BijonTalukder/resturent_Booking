@@ -19,6 +19,7 @@ import ViewHotel from "../Pages/Dashboard/Admin/Hotel/ViewHotel";
 import EditRoom from "../Pages/Dashboard/Admin/Room/EditRoom";
 import Bookings from "../Pages/Dashboard/Admin/Bookings/Bookings";
 import AddNotification from "../Pages/Dashboard/Admin/AddNotification/AddNotification";
+import Area from "../Pages/Dashboard/Admin/Area/Area";
 
 
 export const adminRoutes = [
@@ -55,6 +56,12 @@ export const adminRoutes = [
       //   element: <Attribute></Attribute>,
       //   permissionName: "view attribute",
       // },
+      {
+        path: "areas",
+        label: "Areas",
+        element: <Area/>,
+        permissionName: "view area",
+      },
       {
         path: "hotels",
         label: "Hotels",

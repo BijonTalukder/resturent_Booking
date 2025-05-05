@@ -104,7 +104,6 @@ const ZNumber = ({
               handleChange(e.target.value);
             }}
             placeholder={placeholder}
-            onKeyPress={handleKeyPress}
           
             
           />

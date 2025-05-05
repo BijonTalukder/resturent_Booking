@@ -5,7 +5,7 @@ import ZFormTwo from "../../../components/Form/ZFormTwo";
 import ZEmail from "../../../components/Form/ZEmail";
 import ZPhone from "../../../components/Form/ZPhone";
 import { FaGreaterThan, FaHome } from "react-icons/fa";
-import img from "../../../assets/banner/contact-banner.jpg";
+// import img from "../../../assets/banner/contact-banner.jpg";
 import { useAppSelector } from "../../../redux/Hook/Hook";
 import { useCurrentToken, useCurrentUser } from "../../../redux/Feature/auth/authSlice";
 import { Modal } from "antd"; // Import Ant Design Modal

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import img from "../../../assets/banner/contact-banner.jpg";
+// import img from "../../../assets/banner/contact-banner.jpg";
 import { FaGreaterThan, FaHome } from 'react-icons/fa';
 import ZFormTwo from '../../../components/Form/ZFormTwo';
 import ZEmail from '../../../components/Form/ZEmail';
