@@ -44,7 +44,7 @@ const AddArea = () => {
         bn_name: formData.bn_name || null,
         serialId: parseInt(formData.serialId),
         district_id: parseInt(formData.district_id),
-        district_name: selectedDistrict?.name || '', // Include district name
+        district_name: selectedDistrict?.name || '',
       };
       // console.log(payload)
 

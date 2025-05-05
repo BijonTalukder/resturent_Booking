@@ -28,7 +28,7 @@ const Area = () => {
 
   return (
     <>
-      <Link to={`/districts/${districtId}`}> {/* Link back to districts */}
+      <Link to={`/districts/${districtId}`}> 
         <LeftCircleFilled className="ms-2 mt-2 text-2xl" />
       </Link>
       <div className="w-full max-w-md mx-auto bg-white min-h-screen p-4 space-y-6">
