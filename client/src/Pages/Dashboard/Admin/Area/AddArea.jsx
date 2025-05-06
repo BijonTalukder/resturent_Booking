@@ -12,7 +12,7 @@ import { useGetDistrictsQuery } from "../../../../redux/Feature/User/place/place
 const AddArea = () => {
   const dispatch = useAppDispatch();
   const [districtOptions, setDistrictOptions] = useState([]);
-  const [selectedDistrictId, setSelectedDistrictId] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(null); // Store the entire selected district
   const { data: districtsData, isLoading: districtsLoading } = useGetDistrictsQuery();
   
   const [createArea, { isLoading, isError, error, isSuccess, data }] = useCreateAreaMutation();
@@ -21,32 +21,31 @@ const AddArea = () => {
     if (districtsData?.data) {
       const options = districtsData.data.map(district => ({
         label: district.name,
-        value: district.serialId,
-        name: district.name
+        value: district.serialId, // This is what will be stored in the form field
+        name: district.name,
+        id: district.id,
       }));
       setDistrictOptions(options);
     }
   }, [districtsData]);
 
   const handleDistrictChange = (value) => {
-    setSelectedDistrictId(value);
+    // Find the complete district object when selection changes
+    const district = districtOptions.find(opt => opt.value === value);
+    setSelectedDistrict(district);
   };
 
   const handleSubmit = async (formData) => {
     try {
-      // Find the selected district to get its name
-      const selectedDistrict = districtOptions.find(
-        district => district.value === parseInt(formData.district_id)
-      );
-
       const payload = {
         name: formData.name,
         bn_name: formData.bn_name || null,
-        serialId: parseInt(formData.serialId),
-        district_id: parseInt(formData.district_id),
-        district_name: selectedDistrict?.name || '', // Include district name
+        serialId: null,
+        district_id: parseInt(formData.district_id), // This is the serialId from the form
+        district_name: selectedDistrict?.name || '',
+        districtId: selectedDistrict?.id || null, // This is the actual database ID
       };
-      // console.log(payload)
+      console.log(payload);
 
       await createArea(payload).unwrap();
   
@@ -93,7 +92,7 @@ const AddArea = () => {
             name="serialId"
             label="Serial ID"
             placeholder="Enter serial ID"
-            required={1}
+            // required={1}
           />
 
           <ZSelect
@@ -103,7 +102,7 @@ const AddArea = () => {
             loading={districtsLoading}
             placeholder="Select a district"
             required={1}
-            onChange={handleDistrictChange} // Track district selection
+            onChange={handleDistrictChange}
           />
         </div>
       </ZFormTwo>

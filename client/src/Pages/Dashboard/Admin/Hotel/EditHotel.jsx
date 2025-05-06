@@ -90,7 +90,7 @@ const EditHotel = () => {
       // Update select all state based on current selection
       if (filteredAreas.length > 0) {
         const allSelected = filteredAreas.every(area => 
-          selectedAreas.includes(area.serialId)
+          selectedAreas.includes(area.id)
         );
         setSelectAllAreas(allSelected);
       }
@@ -155,13 +155,13 @@ const EditHotel = () => {
     }
   };
 
-  const handleAreaSelection = (serialId) => {
+  const handleAreaSelection = (id) => {
   setSelectedAreas(prev => {
     // Ensure prev is always treated as an array
     const currentSelection = Array.isArray(prev) ? prev : [];
-    return currentSelection.includes(serialId) 
-      ? currentSelection.filter(id => id !== serialId) 
-      : [...currentSelection, serialId];
+    return currentSelection.includes(id) 
+      ? currentSelection.filter(id => id !== id) 
+      : [...currentSelection, id];
   });
 };
 
@@ -169,7 +169,7 @@ const EditHotel = () => {
 const handleSelectAllAreas = (e) => {
   const checked = e.target.checked;
   setSelectAllAreas(checked);
-  setSelectedAreas(checked ? areas.map(area => area.serialId) : []);
+  setSelectedAreas(checked ? areas.map(area => area.id) : []);
 };
 
   const amenitiesOptions = [
@@ -298,9 +298,9 @@ const handleSelectAllAreas = (e) => {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto p-2 border rounded">
                 {areas.map(area => (
                   <Checkbox
-                    key={area.serialId}
-                    checked={selectedAreas.includes(area.serialId)}
-                    onChange={() => handleAreaSelection(area.serialId)}
+                    key={area.id}
+                    checked={selectedAreas.includes(area.id)}
+                    onChange={() => handleAreaSelection(area.id)}
                     className="m-1"
                     // value={area.serialId}
                   >

@@ -36,7 +36,7 @@ const District = () => {
           <h3 className="text-md font-medium">Select District</h3>
           <ul className="space-y-2">
             {districts.map((district, idx) => (
-             <Link to={`/area/${district.serialId}`} key={idx}>
+             <Link to={`/area/${district.id}`} key={idx}>
                 <li
                   className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200 mb-4"
                 >

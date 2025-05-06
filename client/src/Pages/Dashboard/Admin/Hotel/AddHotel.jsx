@@ -128,18 +128,18 @@ const AddHotel = () => {
     dispatch(setIsAddModalOpen());
   };
 
-  const handleAreaSelection = (serialId) => {
+  const handleAreaSelection = (id) => {
     setSelectedAreas(prev => 
-      prev.includes(serialId) 
-        ? prev.filter(id => id !== serialId) 
-        : [...prev, serialId]
+      prev.includes(id) 
+        ? prev.filter(id => id !== id) 
+        : [...prev, id]
     );
   };
 
   const handleSelectAllAreas = (e) => {
     const checked = e.target.checked;
     setSelectAllAreas(checked);
-    setSelectedAreas(checked ? areas.map(area => area.serialId) : []);
+    setSelectedAreas(checked ? areas.map(area => area.id) : []);
   };
 
   const amenitiesOptions = [
@@ -257,9 +257,9 @@ const AddHotel = () => {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto p-2 border rounded">
                 {areas.map(area => (
                   <Checkbox
-                    key={area.serialId}
-                    checked={selectedAreas.includes(area.serialId)}
-                    onChange={() => handleAreaSelection(area.serialId)}
+                    key={area.id}
+                    checked={selectedAreas.includes(area.id)}
+                    onChange={() => handleAreaSelection(area.id)}
                     className="m-1"
                   >
                     {area.name}
