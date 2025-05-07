@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/Hook/Hook";
 import { setIsAddModalOpen } from "../../../../redux/Modal/ModalSlice";
 import axios from "axios";
-import { message, Checkbox } from "antd";
+import { message, Checkbox, Radio } from "antd";
 import ZFormTwo from "../../../../components/Form/ZFormTwo";
 import ZInputTwo from "../../../../components/Form/ZInputTwo";
 import ZSelect from "../../../../components/Form/ZSelect";
@@ -11,6 +11,7 @@ import { useCreateHotelMutation } from "../../../../redux/Feature/Admin/hotel/ho
 import { useCurrentUser } from "../../../../redux/Feature/auth/authSlice";
 import ZInputTextArea from "../../../../components/Form/ZInputTextArea";
 import { useGetAreasQuery } from "../../../../redux/Feature/Admin/area/areaApi";
+import { Link } from "react-router-dom";
 
 const AddHotel = () => {
   const dispatch = useAppDispatch();
@@ -20,7 +21,7 @@ const AddHotel = () => {
   const [areas, setAreas] = useState([]);
   const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedAreas, setSelectedAreas] = useState([]);
+  const [selectedAreas, setSelectedAreas] = useState(null);
   const [selectAllAreas, setSelectAllAreas] = useState(false);
   const user = useAppSelector(useCurrentUser);
   
@@ -110,13 +111,14 @@ const AddHotel = () => {
         image: imageUrl || "https://example.com/hotel-image.jpg",
         divisionId: formData?.divisionId,
         cityId: formData?.cityId,
-        areaId: (selectedAreas[0]).toString(), 
+        areaId: (selectedAreas).toString(), 
         amenities: formData?.amenities || [],
         ownerId: user?.id,
         isActive: formData?.isActive || true
       };
+      console.log(hotelData )
 
-      createHotel(hotelData);
+      // createHotel(hotelData);
 
     } catch (error) {
       console.error('Error handling form submission:', error);
@@ -128,12 +130,16 @@ const AddHotel = () => {
     dispatch(setIsAddModalOpen());
   };
 
-  const handleAreaSelection = (id) => {
-    setSelectedAreas(prev => 
-      prev.includes(id) 
-        ? prev.filter(id => id !== id) 
-        : [...prev, id]
-    );
+  // const handleAreaSelection = (id) => {
+  //   setSelectedAreas(prev => 
+  //     prev.includes(id) 
+  //       ? prev.filter(id => id !== id) 
+  //       : [...prev, id]
+  //   );
+  // };
+
+  const handleAreaSelection = (e) => {
+    setSelectedAreas(e.target.value);
   };
 
   const handleSelectAllAreas = (e) => {
@@ -152,13 +158,21 @@ const AddHotel = () => {
 
   return (
     <div className="">
+
+          <Link to={`/admin/hotels`}>
+            <div className="flex flex-col lg:flex-row items-center gap-x-2 justify-end my-5">
+              <button className="bg-primary font-Poppins font-medium py-2 px-5 rounded-lg text-white">
+                Back
+              </button>
+            </div>
+          </Link>
       <ZFormTwo
         isLoading={isLoading}
         isSuccess={isSuccess}
         isError={isError}
         error={error}
         submit={handleSubmit}
-        closeModal={handleCloseAndOpen}
+        // closeModal={handleCloseAndOpen}
         formType="create"
         data={data}
         buttonName="Create Hotel"
@@ -245,7 +259,7 @@ const AddHotel = () => {
           
           {areas.length > 0 && (
             <div className="lg:col-span-2 space-y-2">
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <label className="block text-sm font-medium text-gray-700">Areas</label>
                 <Checkbox
                   checked={selectAllAreas}
@@ -253,18 +267,33 @@ const AddHotel = () => {
                 >
                   Select All
                 </Checkbox>
-              </div>
+              </div> */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto p-2 border rounded">
-                {areas.map(area => (
+                {/* {areas.map(area => (
                   <Checkbox
                     key={area.id}
                     checked={selectedAreas.includes(area.id)}
                     onChange={() => handleAreaSelection(area.id)}
                     className="m-1"
+                    // value={area.serialId}
                   >
                     {area.name}
                   </Checkbox>
-                ))}
+                ))} */}
+             <Radio.Group 
+        onChange={handleAreaSelection} 
+        value={selectedAreas}
+      >
+        {areas.map(area => (
+          <Radio 
+            key={area.id} 
+            value={area.id}
+            className="m-1"
+          >
+            {area.name}
+          </Radio>
+        ))}
+      </Radio.Group>
               </div>
             </div>
           )}

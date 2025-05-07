@@ -156,7 +156,7 @@ const Hotels = () => {
         <BreadCrumb />
       </div>
       <div className="flex flex-col lg:flex-row items-center gap-x-2 justify-end my-5">
-        <ButtonWithModal title="Add Hotel"></ButtonWithModal>
+        <ButtonWithModal title="Add Hotel" path={`/admin/add-hotel`}></ButtonWithModal>
       </div>
 
       <DashboardTable 
