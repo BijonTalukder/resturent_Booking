@@ -46,7 +46,7 @@ const EditArea = ({ selectedArea }) => {
         serialId: null,
         district_id: parseInt(formData.district_id),
         district_name: selectedDistrict?.name || selectedArea.district_name,
-        districtId: selectedDistrict?.id || null,
+        districtId: selectedDistrict?.id || selectedArea.districtId,
       };
 
       await updateArea({ id: selectedArea.id, data: payload }).unwrap();

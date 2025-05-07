@@ -28,7 +28,7 @@ const {areaId} = useParams()
 
   return (
     <div className="pb-[80px]">
-      <SectionTitle title="Check all hotel under this area" />
+      <SectionTitle title="Check all hotel under the area" />
 
       {/* Show Skeleton While Loading */}
       {(isLoading || showSkeleton) && <ProductsSkeleton hotelData={data?.data}/>}
@@ -42,7 +42,7 @@ const {areaId} = useParams()
       
       <div className="lg:max-w-[98%] grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto">
         {!isLoading && !showSkeleton && data?.data?.map((hotel, index) => (
-          <Link to={`/hotel/${hotel?.id}`}>
+          <Link to={`/hotel-details/${hotel?.id}`}>
           <div key={index} className="flex flex-col rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white">
             <div className="relative h-[110px] object-cover md:h-[300px]">
               <img
@@ -88,7 +88,7 @@ const {areaId} = useParams()
                     </span>
                   </div>
                   <div>
-                    <Link to={`/hotel/${hotel?.id}`}>
+                    <Link to={`/hotel-details/${hotel?.id}`}>
                       <button className="text-[#5054D9] text-xs lg:text-base py-1 lg:py-3 w-full rounded-lg border border-[#5054D9] transition font-medium px-1 mb-4">
                         Choose Room
                       </button>

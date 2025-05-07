@@ -34,7 +34,7 @@ const Area = () => {
       </Link> */}
       <div className="w-full max-w-md mx-auto bg-white min-h-screen p-4 space-y-6">
         <div className="space-y-2">
-          <h3 className="text-md font-medium">Select Areas</h3>
+          <h3 className="text-md font-medium">Select Area</h3>
           <ul className="space-y-2">
             {areas.map((area, idx) => (
              <Link to={`/hotel/${area.id}`} key={idx}>

@@ -43,6 +43,8 @@ const Header = ({ onSearch, onFilterChange }) => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
     onSearch(e.target.value);
+    setIsSearchOverlay(false); 
+
   };
 
   const handleApplyFilters = (division, city) => {
