@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Image,
@@ -56,6 +56,10 @@ const HotelDetails = () => {
     addDays(startOfDay(new Date()), 1)
   );
   const [showMap, setShowMap] = useState(false);
+  const [roomQuantities, setRoomQuantities] = useState({});
+const [adultCounts, setAdultCounts] = useState({});
+const [childCounts, setChildCounts] = useState({});
+
 
   if (isHotelLoading || isRoomsLoading) {
     return <Skeleton />;
@@ -67,8 +71,25 @@ const HotelDetails = () => {
 
   const hotel = hotelData?.data;
   const rooms = roomsData?.data || [];
-
   const isSelected = (roomId) => selectedRooms.some((r) => r.id === roomId);
+
+  useEffect(() => {
+    if (rooms.length > 0) {
+      const initialQuantities = {};
+      const initialAdultCounts = {};
+      const initialChildCounts = {};
+      
+      rooms.forEach(room => {
+        initialQuantities[room.id] = 1;
+        initialAdultCounts[room.id] = 1;
+        initialChildCounts[room.id] = 0;
+      });
+      
+      setRoomQuantities(initialQuantities);
+      setAdultCounts(initialAdultCounts);
+      setChildCounts(initialChildCounts);
+    }
+  }, [rooms]);
 
   const handleRoomSelect = async (room) => {
     try {
@@ -78,22 +99,29 @@ const HotelDetails = () => {
         );
         return utcDate.toISOString();
       };
-
+  
       const checkInDateFormatted = toUtcMidnightISOString(checkInDate);
       const checkOutDateFormatted = toUtcMidnightISOString(checkOutDate);
-
+  
       const res = await checkRoomAvailabilityBooking({
         roomId: room.id,
         checkIn: checkInDateFormatted,
         checkOut: checkOutDateFormatted,
+        quantity: roomQuantities[room.id] || 1
       }).unwrap();
-
+  
       if (res?.data?.available === true) {
         if (isSelected(room.id)) {
           setSelectedRooms((prev) => prev.filter((r) => r.id !== room.id));
           message.info(`Deselected ${room.type} room`);
         } else {
-          setSelectedRooms((prev) => [...prev, room]);
+          const selectedRoomWithDetails = {
+            ...room,
+            quantity: roomQuantities[room.id] || 1,
+            adults: adultCounts[room.id] || 1,
+            children: childCounts[room.id] || 0
+          };
+          setSelectedRooms((prev) => [...prev, selectedRoomWithDetails]);
           message.success(`Selected ${room.type} room`);
         }
       } else {
@@ -161,6 +189,27 @@ const HotelDetails = () => {
 
   const toggleMap = () => {
     setShowMap(!showMap);
+  };
+
+  const handleQuantityChange = (roomId, value) => {
+    setRoomQuantities(prev => ({
+      ...prev,
+      [roomId]: Math.max(1, value)
+    }));
+  };
+  
+  const handleAdultCountChange = (roomId, value) => {
+    setAdultCounts(prev => ({
+      ...prev,
+      [roomId]: Math.max(1, value)
+    }));
+  };
+  
+  const handleChildCountChange = (roomId, value) => {
+    setChildCounts(prev => ({
+      ...prev,
+      [roomId]: Math.max(0, value)
+    }));
   };
 
   return (
@@ -313,17 +362,65 @@ const HotelDetails = () => {
                           {room.price} Tk per night
                         </div>
                         <div className="mb-2">
-                          <Text strong>Adult : </Text>
-                          {room.capacity}{" "}
-                          {room.capacity > 1 ? "people" : "person"}
-                        </div>
-                        <div className="mb-2">
-                          <Text strong>Child : </Text>
-                          {room.child}{" "}
-                          {room.capacity > 1 ? "people" : "person"}
+  <Text strong>Quantity: </Text>
+  <div className="flex items-center mt-1">
+    <Button 
+      size="small" 
+      onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) - 1)}
+      disabled={(roomQuantities[room.id] || 1) <= 1}
+    >
+      -
+    </Button>
+    <span className="mx-2">{roomQuantities[room.id] || 1}</span>
+    <Button 
+      size="small" 
+      onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) + 1)}
+    >
+      +
+    </Button>
+  </div>
+</div>
 
+<div className="mb-2">
+  <Text strong>Adults: </Text>
+  <div className="flex items-center mt-1">
+    <Button 
+      size="small" 
+      onClick={() => handleAdultCountChange(room.id, (adultCounts[room.id] || 1) - 1)}
+      disabled={(adultCounts[room.id] || 1) <= 1}
+    >
+      -
+    </Button>
+    <span className="mx-2">{adultCounts[room.id] || 1}</span>
+    <Button 
+      size="small" 
+      onClick={() => handleAdultCountChange(room.id, (adultCounts[room.id] || 1) + 1)}
+      // disabled={(adultCounts[room.id] || 1) >= room.capacity}
+    >
+      +
+    </Button>
+  </div>
+</div>
 
-                        </div>
+<div className="mb-2">
+  <Text strong>Children: </Text>
+  <div className="flex items-center mt-1">
+    <Button 
+      size="small" 
+      onClick={() => handleChildCountChange(room.id, (childCounts[room.id] || 0) - 1)}
+      disabled={(childCounts[room.id] || 0) <= 0}
+    >
+      -
+    </Button>
+    <span className="mx-2">{childCounts[room.id] || 0}</span>
+    <Button 
+      size="small" 
+      onClick={() => handleChildCountChange(room.id, (childCounts[room.id] || 0) + 1)}
+    >
+      +
+    </Button>
+  </div>
+</div>
                         <div className="">
              
                           <Space className="mt-1">

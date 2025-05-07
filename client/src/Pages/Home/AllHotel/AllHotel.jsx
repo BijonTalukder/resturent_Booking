@@ -100,7 +100,7 @@ const AllHotel = () => {
                     </span>
                   </div>
                   <div>
-                    <Link to={`/hotel/${hotel?.id}`}>
+                    <Link to={`/hotel-details/${hotel?.id}`}>
                       <button className="text-[#5054D9] text-xs lg:text-base py-1 lg:py-3 w-full rounded-lg border border-[#5054D9] transition font-medium px-1 mb-4">
                         Choose Room
                       </button>
