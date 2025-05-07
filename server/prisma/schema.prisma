@@ -78,6 +78,7 @@ model Booking {
   userId        String        @db.ObjectId
   email         String
   phone         String
+  bookingItem   Json[]
   name          String
   checkIn       DateTime
   checkOut      DateTime
