@@ -191,6 +191,12 @@ const Header = ({ onSearch, onFilterChange }) => {
                 setIsSearchOverlay(false); 
                 onSearch(searchQuery);     
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setIsSearchOverlay(false);
+                  onSearch(searchQuery);
+                }
+              }}
               prefix={<IoSearch className="text-gray-400" />}
               // suffix={
               //   <button onClick={() => setVisibleRight(true)}>
