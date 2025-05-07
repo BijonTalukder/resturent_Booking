@@ -49,7 +49,6 @@ const HotelDetails = () => {
   const { data: hotelData, isLoading: hotelLoading, error: hotelError } = useGetHotelByIdQuery(id);
   const { data: roomsData, isLoading: roomsLoading } = useGetRoomsByHotelIdQuery(id);
   const [checkRoomAvailability] = useCheckRoomAvailabilityBookingMutation();
-
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [checkInDate, setCheckInDate] = useState(startOfDay(new Date()));
   const [checkOutDate, setCheckOutDate] = useState(addDays(startOfDay(new Date()), 1));
@@ -80,10 +79,10 @@ const HotelDetails = () => {
       if (res?.data?.available) {
         if (isSelected(room.id)) {
           setSelectedRooms((prev) => prev.filter((r) => r.id !== room.id));
-          message.info(${room.type} room deselected.);
+          message.info(`${room.type} room deselected.`);
         } else {
           setSelectedRooms((prev) => [...prev, room]);
-          message.success(${room.type} room selected.);
+          message.success(`${room.type} room selected.`);
         }
       } else {
         message.warning("Room not available for selected dates.");
@@ -147,7 +146,7 @@ const HotelDetails = () => {
       {/* Hotel Name & Location */}
       <div className="px-4 py-3">
         <Title level={3} style={{ margin: '0 0 4px 0' }}>{hotel?.name}</Title>
-        <div className="flex items-center text-gray-600">
+        <div className="flex items-center text-gray-600 mt-5 mb-5">
           <EnvironmentOutlined />
           <Text className="ml-1">{hotel?.location}</Text>
         </div>
@@ -156,7 +155,7 @@ const HotelDetails = () => {
       {/* Date Selection */}
       <Card className="mx-4 mb-4 shadow-sm">
         <div 
-          className="flex justify-between items-center" 
+          className="flex  justify-between items-center" 
           onClick={() => setDatePickerVisible(true)}
         >
           <div>
@@ -169,7 +168,7 @@ const HotelDetails = () => {
               <Tag color="blue">{nights} {nights === 1 ? 'night' : 'nights'}</Tag>
             </div>
           </div>
-          <Button type="primary" shape="round" size="small">
+          <Button type="default" shape="round" size="small">
             Change
           </Button>
         </div>
@@ -216,7 +215,7 @@ const HotelDetails = () => {
             width="100%"
             height="200"
             frameBorder="0"
-            src={https://www.google.com/maps?q=${hotel.latitude},${hotel.longitude}&hl=en&output=embed}
+            src={`https://www.google.com/maps?q=${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
             allowFullScreen
           />
         </Card>
@@ -231,7 +230,7 @@ const HotelDetails = () => {
           renderItem={(room) => (
             <List.Item className="p-0 mb-4">
               <Card 
-                className={w-full ${isSelected(room.id) ? "border-2 border-blue-500" : "border border-gray-200"}}
+                className={`w-full ${isSelected(room.id) ? "border-2 border-blue-500" : "border border-gray-200"}`}
                 bodyStyle={{ padding: '12px' }}
                 hoverable
               >
@@ -276,7 +275,7 @@ const HotelDetails = () => {
                         Details
                       </Button>
                       <Button
-                        type={isSelected(room.id) ? "default" : "primary"}
+                        type={isSelected(room.id) ? "default" : "link"}
                         onClick={() => handleRoomToggle(room)}
                         disabled={!room.isAvailable}
                       >
@@ -295,23 +294,24 @@ const HotelDetails = () => {
 
       {/* Fixed Bottom Checkout Bar */}
       {selectedRooms.length > 0 && (
-        <Affix offsetBottom={0}>
-          <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200 shadow-lg">
+        //<Affix offsetBottom={0}>
+          <div className="">
             <div className="flex justify-between items-center">
-              <div>
+              {/* <div>
                 <Text strong className="block">{selectedRooms.length} {selectedRooms.length === 1 ? 'room' : 'rooms'}</Text>
-                <Text className="text-lg font-medium">Total: {totalPrice} Tk</Text>
-              </div>
+              </div> */}
               <Button 
-                type="primary" 
+                // type="primary" 
                 size="large"
                 onClick={handleCheckout}
+                disabled={selectedRooms.length === 0}
+                className="bg-green-500 hover:bg-green-600 text-white"
               >
-                Proceed to Checkout
+                Proceed to Checkout ({totalPrice} Tk)
               </Button>
             </div>
           </div>
-        </Affix>
+       // </Affix>
       )}
 
       {/* Date Picker Drawer */}
@@ -371,6 +371,7 @@ const HotelDetails = () => {
         height="70%"
         onClose={() => setRoomDetailsVisible(false)}
         open={roomDetailsVisible && currentRoom}
+        className=""
       >
         {currentRoom && (
           <div>
