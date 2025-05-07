@@ -41,7 +41,7 @@ const AddArea = () => {
         name: formData.name,
         bn_name: formData.bn_name || null,
         serialId: null,
-        district_id: parseInt(formData.district_id), // This is the serialId from the form
+        district_id: parseInt(formData.district_id),
         district_name: selectedDistrict?.name || '',
         districtId: selectedDistrict?.id || null, // This is the actual database ID
       };

@@ -96,7 +96,7 @@ export const routes = createBrowserRouter([
       // </ProtectedRoutes>
       },
       {
-        path: "/hotel/:id",
+        path: "/hotel-details/:id",
         element: <HotelDetails/>,
        
       },

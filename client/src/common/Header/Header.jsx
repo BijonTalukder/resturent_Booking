@@ -43,6 +43,8 @@ const Header = ({ onSearch, onFilterChange }) => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
     onSearch(e.target.value);
+    // setIsSearchOverlay(false); 
+
   };
 
   const handleApplyFilters = (division, city) => {
@@ -184,7 +186,7 @@ const Header = ({ onSearch, onFilterChange }) => {
               placeholder="Search hotels..."
               // onFocus={() => navigate("/division")}
               value={searchQuery}
-              onChange={handleSearchChange}
+              // onChange={handleSearchChange}
               onFocus={() => setIsSearchOverlay(true)}
               
               onPressEnter={() => {
@@ -213,6 +215,16 @@ const Header = ({ onSearch, onFilterChange }) => {
               placeholder="Search hotels..."
               value={searchQuery}
               onChange={handleSearchChange}
+              onPressEnter={() => {
+                setIsSearchOverlay(false); 
+                onSearch(searchQuery);     
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setIsSearchOverlay(false);
+                  onSearch(searchQuery);
+                }
+              }}
               prefix={<IoSearch className="text-gray-400" />}
               className="w-full rounded-full"
             />

@@ -92,6 +92,8 @@ const EditRoom = () => {
         type: formData?.type,
         price: parseFloat(formData?.price),
         capacity: parseInt(formData?.capacity),
+        roomQty: parseInt(formData?.roomQty),
+        child: parseInt(formData?.child),
         images: imageUrls,
         amenities: formData?.amenities || [],
         isAvailable: formData?.isAvailable
@@ -183,10 +185,27 @@ const EditRoom = () => {
           <ZInputTwo
             name="capacity"
             type="number"
-            label="Capacity"
+            label="Capacity(Adult)"
             placeholder="Enter room capacity"
-            required={1}
+  
           />
+
+          <ZInputTwo
+                      name="child"
+                      type="number"
+                      label="Capacity(Child)"
+                      placeholder="Enter child  capacity"
+  
+                      
+                    />
+                    <ZInputTwo
+                      name="roomQty"
+                      type="number"
+                      label="Room Quantity"
+                      placeholder="Enter room quantity"
+
+                      
+                    />
 
           <div className="lg:col-span-2">
             <ZMultipleImage 

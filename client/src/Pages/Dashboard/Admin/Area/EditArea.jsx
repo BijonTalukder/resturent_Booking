@@ -10,6 +10,7 @@ import { useUpdateAreaMutation } from "../../../../redux/Feature/Admin/area/area
 import { useGetDistrictsQuery } from "../../../../redux/Feature/User/place/placeApi";
 
 const EditArea = ({ selectedArea }) => {
+  // console.log(selectedArea)
   const dispatch = useAppDispatch();
   const [districtOptions, setDistrictOptions] = useState([]);
   const { data: districtsData, isLoading: districtsLoading } = useGetDistrictsQuery();
@@ -44,8 +45,8 @@ const EditArea = ({ selectedArea }) => {
         bn_name: formData.bn_name || null,
         serialId: null,
         district_id: parseInt(formData.district_id),
-        district_name: selectedDistrict?.name || '',
-        districtId: selectedDistrict?.id || null,
+        district_name: selectedDistrict?.name || selectedArea.district_name,
+        districtId: selectedDistrict?.id || selectedArea.districtId,
       };
 
       await updateArea({ id: selectedArea.id, data: payload }).unwrap();
@@ -107,7 +108,7 @@ const EditArea = ({ selectedArea }) => {
             placeholder="Select a district"
             required={1}
             onChange={handleDistrictChange}
-            value={selectedArea.district_id} // Pre-fill with selected area district ID
+            value={selectedArea.district_id}
           />
         </div>
       </ZFormTwo>
