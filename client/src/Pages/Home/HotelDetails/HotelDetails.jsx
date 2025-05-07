@@ -1,464 +1,437 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
-  Image,
-  Tag,
-  Button,
-  Divider,
-  Row,
-  Col,
   Typography,
   List,
-  Space,
+  Button,
   message,
-  Tooltip,
+  Tag,
+  Badge,
+  Drawer,
+  Space,
+  Divider,
+  Collapse,
+  Row,
+  Col,
+  Affix
 } from "antd";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { format, addDays, isBefore, isAfter, startOfDay } from "date-fns";
+import { format, addDays, startOfDay, isAfter } from "date-fns";
 import Skeleton from "../../../components/Skeleton/Skeleton";
 import { useGetRoomsByHotelIdQuery } from "../../../redux/Feature/Admin/room/roomApi";
 import { useGetHotelByIdQuery } from "../../../redux/Feature/Admin/hotel/hotelApi";
 import RoomGallery from "./RoomGallery";
+import SliderAminities from "./SliderAminities";
 import { useCheckRoomAvailabilityBookingMutation } from "../../../redux/Feature/Admin/booking/bookingApi";
 import { useAppDispatch } from "../../../redux/Hook/Hook";
 import { setBookingDetails } from "../../../redux/Booking/bookingSlice";
-import {
-
-  LeftCircleFilled,
-  EnvironmentOutlined,
+import { 
+  LeftCircleFilled, 
+  EnvironmentOutlined, 
+  CalendarOutlined, 
+  InfoCircleOutlined,
+  UserOutlined,
+  HomeOutlined,
+  DownOutlined,
+  BellOutlined,
+  DollarOutlined
 } from "@ant-design/icons";
-import SliderAminities from "./SliderAminities";
-
 
 const { Title, Text, Paragraph } = Typography;
+const { Panel } = Collapse;
 
 const HotelDetails = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const {
-    data: hotelData,
-    isLoading: isHotelLoading,
-    error: hotelError,
-  } = useGetHotelByIdQuery(id);
-  const {
-    data: roomsData,
-    isLoading: isRoomsLoading,
-    error: roomsError,
-  } = useGetRoomsByHotelIdQuery(id);
-  const [checkRoomAvailabilityBooking] =
-    useCheckRoomAvailabilityBookingMutation();
+  const { data: hotelData, isLoading: hotelLoading, error: hotelError } = useGetHotelByIdQuery(id);
+  const { data: roomsData, isLoading: roomsLoading } = useGetRoomsByHotelIdQuery(id);
+  const [checkRoomAvailability] = useCheckRoomAvailabilityBookingMutation();
+
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [checkInDate, setCheckInDate] = useState(startOfDay(new Date()));
-  const [checkOutDate, setCheckOutDate] = useState(
-    addDays(startOfDay(new Date()), 1)
-  );
+  const [checkOutDate, setCheckOutDate] = useState(addDays(startOfDay(new Date()), 1));
   const [showMap, setShowMap] = useState(false);
-  const [roomQuantities, setRoomQuantities] = useState({});
-const [adultCounts, setAdultCounts] = useState({});
-const [childCounts, setChildCounts] = useState({});
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [roomDetailsVisible, setRoomDetailsVisible] = useState(false);
+  const [currentRoom, setCurrentRoom] = useState(null);
 
-
-  if (isHotelLoading || isRoomsLoading) {
-    return <Skeleton />;
-  }
-
-  if (hotelError) {
-    return <div>Error loading hotel details.</div>;
-  }
+  if (hotelLoading || roomsLoading) return <Skeleton />;
+  if (hotelError) return <div>Error loading hotel details.</div>;
 
   const hotel = hotelData?.data;
   const rooms = roomsData?.data || [];
-  const isSelected = (roomId) => selectedRooms.some((r) => r.id === roomId);
+  const nights = Math.max(1, Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)));
 
-  useEffect(() => {
-    if (rooms.length > 0) {
-      const initialQuantities = {};
-      const initialAdultCounts = {};
-      const initialChildCounts = {};
-      
-      rooms.forEach(room => {
-        initialQuantities[room.id] = 1;
-        initialAdultCounts[room.id] = 1;
-        initialChildCounts[room.id] = 0;
-      });
-      
-      setRoomQuantities(initialQuantities);
-      setAdultCounts(initialAdultCounts);
-      setChildCounts(initialChildCounts);
-    }
-  }, [rooms]);
+  const isSelected = (roomId) => selectedRooms.some((room) => room.id === roomId);
 
-  const handleRoomSelect = async (room) => {
+  const formatToUTC = (date) => new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())).toISOString();
+
+  const handleRoomToggle = async (room) => {
     try {
-      const toUtcMidnightISOString = (date) => {
-        const utcDate = new Date(
-          Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-        );
-        return utcDate.toISOString();
-      };
-  
-      const checkInDateFormatted = toUtcMidnightISOString(checkInDate);
-      const checkOutDateFormatted = toUtcMidnightISOString(checkOutDate);
-  
-      const res = await checkRoomAvailabilityBooking({
+      const res = await checkRoomAvailability({
         roomId: room.id,
-        checkIn: checkInDateFormatted,
-        checkOut: checkOutDateFormatted,
-        quantity: roomQuantities[room.id] || 1
+        checkIn: formatToUTC(checkInDate),
+        checkOut: formatToUTC(checkOutDate),
       }).unwrap();
-  
-      if (res?.data?.available === true) {
+
+      if (res?.data?.available) {
         if (isSelected(room.id)) {
           setSelectedRooms((prev) => prev.filter((r) => r.id !== room.id));
-          message.info(`Deselected ${room.type} room`);
+          message.info(${room.type} room deselected.);
         } else {
-          const selectedRoomWithDetails = {
-            ...room,
-            quantity: roomQuantities[room.id] || 1,
-            adults: adultCounts[room.id] || 1,
-            children: childCounts[room.id] || 0
-          };
-          setSelectedRooms((prev) => [...prev, selectedRoomWithDetails]);
-          message.success(`Selected ${room.type} room`);
+          setSelectedRooms((prev) => [...prev, room]);
+          message.success(${room.type} room selected.);
         }
       } else {
-        message.error("Room is not available for the selected dates.");
+        message.warning("Room not available for selected dates.");
       }
-    } catch (error) {
-      console.error("Availability check failed", error);
-      message.error("Failed to check room availability. Please try again.");
+    } catch (err) {
+      message.error("Error checking availability. Please try again.");
     }
   };
 
-  const handleCheckInChange = (date) => {
-    if (date) {
-      const newCheckIn = startOfDay(date);
-      setCheckInDate(newCheckIn);
-
-      if (isAfter(newCheckIn, checkOutDate)) {
-        setCheckOutDate(addDays(newCheckIn, 1));
+  const handleDateChange = (date, isCheckIn = true) => {
+    const newDate = startOfDay(date);
+    if (isCheckIn) {
+      setCheckInDate(newDate);
+      if (isAfter(newDate, checkOutDate)) {
+        setCheckOutDate(addDays(newDate, 1));
       }
-    }
-  };
-
-  const handleCheckOutChange = (date) => {
-    if (date) {
-      const newCheckOut = startOfDay(date);
-      if (isAfter(newCheckOut, checkInDate)) {
-        setCheckOutDate(newCheckOut);
+    } else {
+      if (isAfter(newDate, checkInDate)) {
+        setCheckOutDate(newDate);
       } else {
-        message.warning("Check-out date must be after check-in date");
+        message.warning("Check-out must be after check-in.");
       }
     }
   };
 
-  const nights = Math.max(
-    1,
-    Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24))
-  );
+  const totalPrice = selectedRooms.reduce((sum, room) => sum + room.price * nights, 0);
 
-  const totalPrice = selectedRooms.reduce(
-    (sum, room) => sum + room.price * nights,
-    0
-  );
-
-  const handleProceedToCheckout = () => {
-    const toUtcMidnightISOString = (date) => {
-      const utcDate = new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-      );
-      return utcDate.toISOString();
-    };
-
-    const checkInDateFormatted = toUtcMidnightISOString(checkInDate);
-    const checkOutDateFormatted = toUtcMidnightISOString(checkOutDate);
+  const handleCheckout = () => {
     dispatch(
       setBookingDetails({
         selectedRooms,
-        checkInDate: checkInDateFormatted,
-        checkOutDate: checkOutDateFormatted,
+        checkInDate: formatToUTC(checkInDate),
+        checkOutDate: formatToUTC(checkOutDate),
         totalPrice,
       })
     );
-
     navigate("/checkout");
   };
 
-  const toggleMap = () => {
-    setShowMap(!showMap);
+  const openRoomDetails = (room) => {
+    setCurrentRoom(room);
+    setRoomDetailsVisible(true);
   };
 
-  const handleQuantityChange = (roomId, value) => {
-    setRoomQuantities(prev => ({
-      ...prev,
-      [roomId]: Math.max(1, value)
-    }));
-  };
-  
-  const handleAdultCountChange = (roomId, value) => {
-    setAdultCounts(prev => ({
-      ...prev,
-      [roomId]: Math.max(1, value)
-    }));
-  };
-  
-  const handleChildCountChange = (roomId, value) => {
-    setChildCounts(prev => ({
-      ...prev,
-      [roomId]: Math.max(0, value)
-    }));
-  };
+  const formatDate = (date) => format(date, "EEE, MMM d, yyyy");
 
   return (
-    <div className="py-8">
-      <Link to="/">
-        <LeftCircleFilled className="ms-2" />
-      </Link>
+    <div className="pb-24">
+      {/* Back Button */}
+      <div className="sticky top-0 z-10 bg-white p-4 shadow-sm">
+        <Link to="/">
+          <Button type="text" icon={<LeftCircleFilled />} style={{ fontSize: '16px' }}>
+            Back
+          </Button>
+        </Link>
+      </div>
 
-      <Card className="mb-8 !px-0 mt-2 shadow-sm">
-      <div className="">
-        <RoomGallery rooms={rooms} />
-        <div className="mt-5 mb-2">
-          <SliderAminities amenities={hotel?.amenities || []} />
+      {/* Main Gallery */}
+      <RoomGallery rooms={rooms} />
+
+      {/* Hotel Name & Location */}
+      <div className="px-4 py-3">
+        <Title level={3} style={{ margin: '0 0 4px 0' }}>{hotel?.name}</Title>
+        <div className="flex items-center text-gray-600">
+          <EnvironmentOutlined />
+          <Text className="ml-1">{hotel?.location}</Text>
         </div>
       </div>
+
+      {/* Date Selection */}
+      <Card className="mx-4 mb-4 shadow-sm">
+        <div 
+          className="flex justify-between items-center" 
+          onClick={() => setDatePickerVisible(true)}
+        >
+          <div>
+            <div className="flex items-center mb-1">
+              <CalendarOutlined className="mr-2 text-blue-600" />
+              <Text strong>Your Stay</Text>
+            </div>
+            <Text>{formatDate(checkInDate)} - {formatDate(checkOutDate)}</Text>
+            <div className="mt-1">
+              <Tag color="blue">{nights} {nights === 1 ? 'night' : 'nights'}</Tag>
+            </div>
+          </div>
+          <Button type="primary" shape="round" size="small">
+            Change
+          </Button>
+        </div>
       </Card>
 
-      <div className="text-center mb-8">
-        <Title level={2} className="!mb-2">
-          {hotel?.name}
-        </Title>
-        <Paragraph type="secondary" className="">
-        <EnvironmentOutlined />  {hotel?.location} <br />
-          {hotel?.latitude && hotel?.longitude && (
-   
-              <Button
-
-                onClick={toggleMap}
-                className="mt-2"
-        >
-                {showMap ? "Hide Map" : "Show Map"}
-        </Button>
-
-          )}
-        </Paragraph>
+      {/* Amenities */}
+      <div className="px-4 mb-4">
+        <Title level={4} style={{ marginBottom: '12px' }}>Amenities</Title>
+        <SliderAminities amenities={hotel?.amenities || []} />
       </div>
 
-      {showMap && hotel?.latitude && hotel?.longitude && (
-        <div className="mb-8">
-          <Title level={4}>Location Map</Title>
-          <iframe
-            width="100%"
-            height="200"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowFullScreen
-            src={`https://www.google.com/maps?q=${encodeURIComponent(
-              hotel.name
-            )}+${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
-          ></iframe>
+      {/* Description */}
+      <Collapse 
+        bordered={false} 
+        className="mx-4 mb-4 shadow-sm" 
+        expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+      >
+        <Panel 
+          header={<span className="font-medium">Hotel Description</span>} 
+          key="1"
+        >
+          <Paragraph>{hotel?.description}</Paragraph>
+        </Panel>
+      </Collapse>
+
+      {/* Map Button */}
+      {hotel?.latitude && hotel?.longitude && (
+        <div className="mx-4 mb-4">
+          <Button 
+            onClick={() => setShowMap(!showMap)} 
+            icon={<EnvironmentOutlined />}
+            block
+            style={{ height: '40px' }}
+          >
+            {showMap ? "Hide Map" : "View on Map"}
+          </Button>
         </div>
       )}
 
-      <Card className="mb-8 shadow-sm">
-        <Title level={4} className="!mb-4">
-          Hotel Description
-        </Title>
-        <Paragraph>{hotel?.description}</Paragraph>
+      {/* Map */}
+      {showMap && hotel?.latitude && hotel?.longitude && (
+        <Card className="mx-4 mb-4 shadow-sm">
+          <iframe
+            width="100%"
+            height="200"
+            frameBorder="0"
+            src={https://www.google.com/maps?q=${hotel.latitude},${hotel.longitude}&hl=en&output=embed}
+            allowFullScreen
+          />
+        </Card>
+      )}
 
-      </Card>
-
-
-
-      <Card className="mb-8 shadow-sm">
-        <Title level={4} className="!mb-4">
-          Select Dates
-        </Title>
-        <Row gutter={16} align="middle">
-          <Col className="mb-5 md:mb-0" xs={24} sm={12} md={8}>
-            <Text className="me-2" strong>
-              Check-in:
-            </Text>
-            <DatePicker
-              selected={checkInDate}
-              onChange={handleCheckInChange}
-              minDate={startOfDay(new Date())}
-              className="w-full mt-2 p-2 border rounded"
-              dateFormat="MMM d, yyyy"
-            />
-          </Col>
-          <Col xs={24} sm={12} md={8}>
-            <Text className="me-2" strong>
-              Check-out:
-            </Text>
-            <DatePicker
-              selected={checkOutDate}
-              onChange={handleCheckOutChange}
-              minDate={addDays(checkInDate, 1)}
-              className="w-full mt-2 p-2 border rounded"
-              dateFormat="MMM d, yyyy"
-            />
-          </Col>
-        </Row>
-      </Card>
-
-      <Title level={3} className="!mb-6">
-        Available Rooms
-      </Title>
-      <div className="pb-10">
+      {/* Room List */}
+      <div className="px-4 mb-4">
+        <Title level={4}>Available Rooms</Title>
         <List
-          grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 3, xl: 3 }}
+          itemLayout="horizontal"
           dataSource={rooms}
-          renderItem={(room) => {
-            const selected = isSelected(room.id);
-            return (
-              <List.Item>
-                <Card
-                  hoverable
-                  className={`transition-all ${
-                    selected
-                      ? "border-2 border-blue-500 bg-blue-50 shadow-md"
-                      : "shadow"
-                  }`}
-                  cover={
-                    <Image
+          renderItem={(room) => (
+            <List.Item className="p-0 mb-4">
+              <Card 
+                className={w-full ${isSelected(room.id) ? "border-2 border-blue-500" : "border border-gray-200"}}
+                bodyStyle={{ padding: '12px' }}
+                hoverable
+              >
+                <div className="flex flex-col">
+                  {/* Room Image & Basic Info */}
+                  <div className="relative mb-2">
+                    <img
                       alt={room.type}
-                      src={
-                        room.images?.[0] ||
-                        "https://via.placeholder.com/300x200"
-                      }
-                      height={200}
-                      style={{ objectFit: "cover" }}
+                      src={room.images?.[0] || "https://via.placeholder.com/300x200"}
+                      className="w-full h-40 object-cover rounded"
                     />
-                  }
-                  actions={[
-                    <Button
-                      className={`${
-                        selected
-                          ? "bg-red-500 hover:bg-red-600"
-                          : "bg-blue-500 hover:bg-blue-600"
-                      } text-white`}
-                      type="primary"
-                      onClick={() => handleRoomSelect(room)}
-                      disabled={!room.isAvailable}
-                    >
-                      {room.isAvailable
-                        ? selected
-                          ? "Deselect"
-                          : "Select"
-                        : "Unavailable"}
-                    </Button>,
-                  ]}
-                >
-                  <Card.Meta
-                    title={room.type}
-                    description={
-                      <>
-                        <div className="mb-2 text-blue-500 font-medium">
-                          <Text strong>Price: </Text>
-                          {room.price} Tk per night
-                        </div>
-                        <div className="mb-2">
-  <Text strong>Quantity: </Text>
-  <div className="flex items-center mt-1">
-    <Button 
-      size="small" 
-      onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) - 1)}
-      disabled={(roomQuantities[room.id] || 1) <= 1}
-    >
-      -
-    </Button>
-    <span className="mx-2">{roomQuantities[room.id] || 1}</span>
-    <Button 
-      size="small" 
-      onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) + 1)}
-    >
-      +
-    </Button>
-  </div>
-</div>
+                    {isSelected(room.id) && (
+                      <Badge 
+                        count="Selected" 
+                        style={{ backgroundColor: '#1890ff' }}
+                        className="absolute top-2 right-2"
+                      />
+                    )}
+                  </div>
 
-<div className="mb-2">
-  <Text strong>Adults: </Text>
-  <div className="flex items-center mt-1">
-    <Button 
-      size="small" 
-      onClick={() => handleAdultCountChange(room.id, (adultCounts[room.id] || 1) - 1)}
-      disabled={(adultCounts[room.id] || 1) <= 1}
-    >
-      -
-    </Button>
-    <span className="mx-2">{adultCounts[room.id] || 1}</span>
-    <Button 
-      size="small" 
-      onClick={() => handleAdultCountChange(room.id, (adultCounts[room.id] || 1) + 1)}
-      // disabled={(adultCounts[room.id] || 1) >= room.capacity}
-    >
-      +
-    </Button>
-  </div>
-</div>
+                  {/* Room Info */}
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <Title level={5} style={{ margin: 0 }}>{room.type}</Title>
+                      <Text strong className="text-lg">{room.price} Tk</Text>
+                    </div>
+                    
+                    <div className="flex mb-3">
+                      <Text type="secondary">
+                        <UserOutlined className="mr-1" />
+                        {room.capacity} adults, {room.child} children
+                      </Text>
+                    </div>
 
-<div className="mb-2">
-  <Text strong>Children: </Text>
-  <div className="flex items-center mt-1">
-    <Button 
-      size="small" 
-      onClick={() => handleChildCountChange(room.id, (childCounts[room.id] || 0) - 1)}
-      disabled={(childCounts[room.id] || 0) <= 0}
-    >
-      -
-    </Button>
-    <span className="mx-2">{childCounts[room.id] || 0}</span>
-    <Button 
-      size="small" 
-      onClick={() => handleChildCountChange(room.id, (childCounts[room.id] || 0) + 1)}
-    >
-      +
-    </Button>
-  </div>
-</div>
-                        <div className="">
-             
-                          <Space className="mt-1">
-                          <SliderAminities amenities={room.amenities} hideText />
-                          </Space>
-                        </div>
-                      </>
-                    }
-                  />
-                </Card>
-              </List.Item>
-            );
-          }}
+                    {/* Action Buttons */}
+                    <div className="flex justify-between">
+                      <Button 
+                        onClick={() => openRoomDetails(room)}
+                        type="default"
+                        icon={<InfoCircleOutlined />}
+                      >
+                        Details
+                      </Button>
+                      <Button
+                        type={isSelected(room.id) ? "default" : "primary"}
+                        onClick={() => handleRoomToggle(room)}
+                        disabled={!room.isAvailable}
+                      >
+                        {room.isAvailable 
+                          ? (isSelected(room.id) ? "Deselect" : "Select Room") 
+                          : "Unavailable"}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </List.Item>
+          )}
         />
       </div>
 
-      <div className="flex justify-center lg:justify-end mb-10">
-        <Tooltip
-          title={
-            selectedRooms.length === 0
-              ? "Select at least one room to proceed"
-              : ""
-          }
-          placement="top"
-        >
-          <Button
-            disabled={selectedRooms.length === 0}
-            className="bg-green-500 text-white hover:bg-green-500 hover:text-white disabled:cursor-not-allowed w-full lg:w-[25%] rounded-none"
-            type="primary"
-            size="large"
-            onClick={handleProceedToCheckout}
-          >
-            Proceed to Checkout ({totalPrice} Tk/-)
-          </Button>
-        </Tooltip>
-      </div>
+      {/* Fixed Bottom Checkout Bar */}
+      {selectedRooms.length > 0 && (
+        <Affix offsetBottom={0}>
+          <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200 shadow-lg">
+            <div className="flex justify-between items-center">
+              <div>
+                <Text strong className="block">{selectedRooms.length} {selectedRooms.length === 1 ? 'room' : 'rooms'}</Text>
+                <Text className="text-lg font-medium">Total: {totalPrice} Tk</Text>
+              </div>
+              <Button 
+                type="primary" 
+                size="large"
+                onClick={handleCheckout}
+              >
+                Proceed to Checkout
+              </Button>
+            </div>
+          </div>
+        </Affix>
+      )}
+
+      {/* Date Picker Drawer */}
+      <Drawer
+        title="Select Stay Dates"
+        placement="bottom"
+        height={380}
+        onClose={() => setDatePickerVisible(false)}
+        open={datePickerVisible}
+      >
+        <div className="px-2">
+          <Space direction="vertical" size="large" className="w-full">
+            <div>
+              <Text strong className="block mb-2">Check-in:</Text>
+              <DatePicker
+                selected={checkInDate}
+                onChange={(date) => handleDateChange(date, true)}
+                minDate={startOfDay(new Date())}
+                dateFormat="MMM d, yyyy"
+                className="w-full p-3 border rounded"
+                placeholderText="Select check-in date"
+              />
+            </div>
+            <div>
+              <Text strong className="block mb-2">Check-out:</Text>
+              <DatePicker
+                selected={checkOutDate}
+                onChange={(date) => handleDateChange(date, false)}
+                minDate={addDays(checkInDate, 1)}
+                dateFormat="MMM d, yyyy"
+                className="w-full p-3 border rounded"
+                placeholderText="Select check-out date"
+              />
+            </div>
+            <div className="text-center">
+              <Text>
+                <BellOutlined className="mr-1" />
+                {nights} {nights === 1 ? 'night' : 'nights'} stay
+              </Text>
+            </div>
+            <Button 
+              type="primary" 
+              block 
+              size="large"
+              onClick={() => setDatePickerVisible(false)}
+            >
+              Confirm Dates
+            </Button>
+          </Space>
+        </div>
+      </Drawer>
+
+      {/* Room Details Drawer */}
+      <Drawer
+        title={currentRoom?.type || "Room Details"}
+        placement="bottom"
+        height="70%"
+        onClose={() => setRoomDetailsVisible(false)}
+        open={roomDetailsVisible && currentRoom}
+      >
+        {currentRoom && (
+          <div>
+            <img
+              src={currentRoom.images?.[0] || "https://via.placeholder.com/300x200"}
+              alt={currentRoom.type}
+              className="w-full h-48 object-cover rounded mb-4"
+            />
+            
+            <div className="mb-4">
+              <div className="flex justify-between mb-2">
+                <Text strong>Price per night:</Text>
+                <Text>{currentRoom.price} Tk</Text>
+              </div>
+              <div className="flex justify-between mb-2">
+                <Text strong>Capacity:</Text>
+                <Text>{currentRoom.capacity} adults, {currentRoom.child} children</Text>
+              </div>
+            </div>
+
+            <Divider />
+            
+            {currentRoom.amenities && currentRoom.amenities.length > 0 && (
+              <>
+                <Title level={5}>Room Amenities</Title>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {currentRoom.amenities.map((amenity, index) => (
+                    <Tag key={index} color="blue">{amenity}</Tag>
+                  ))}
+                </div>
+              </>
+            )}
+            
+            {currentRoom.description && (
+              <>
+                <Title level={5}>Description</Title>
+                <Paragraph>{currentRoom.description}</Paragraph>
+              </>
+            )}
+            
+            <div className="mt-4">
+              <Button
+                type={isSelected(currentRoom.id) ? "default" : "primary"}
+                onClick={() => {
+                  handleRoomToggle(currentRoom);
+                  setRoomDetailsVisible(false);
+                }}
+                block
+                size="large"
+                disabled={!currentRoom.isAvailable}
+              >
+                {currentRoom.isAvailable
+                  ? (isSelected(currentRoom.id) ? "Deselect Room" : "Select Room")
+                  : "Room Unavailable"}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Drawer>
     </div>
   );
 };
 
-export default HotelDetails;
+export default HotelDetails;
