@@ -136,7 +136,7 @@ const Header = ({ onSearch, onFilterChange }) => {
               <Input
                 placeholder="Search hotels..."
                 value={searchQuery}
-                onFocus={() => navigate("/division")}
+                // onFocus={() => navigate("/division")}
                 onChange={handleSearchChange}
                 prefix={<IoSearch className="text-gray-400" />}
                 className="rounded-full"
@@ -186,6 +186,11 @@ const Header = ({ onSearch, onFilterChange }) => {
               value={searchQuery}
               onChange={handleSearchChange}
               onFocus={() => setIsSearchOverlay(true)}
+              
+              onPressEnter={() => {
+                setIsSearchOverlay(false); 
+                onSearch(searchQuery);     
+              }}
               prefix={<IoSearch className="text-gray-400" />}
               // suffix={
               //   <button onClick={() => setVisibleRight(true)}>
