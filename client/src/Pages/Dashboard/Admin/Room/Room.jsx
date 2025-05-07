@@ -33,6 +33,8 @@ const Room = ({hotelId}) => {
     type: room?.type,
     price: room?.price,
     capacity: room?.capacity,
+    child: room?.child,
+    roomQty: room?.roomQty,
     images: room?.images || [],
     amenities: room?.amenities || [],
     isAvailable: room?.isAvailable,
@@ -97,7 +99,7 @@ const Room = ({hotelId}) => {
       render: (price) => `${price} Tk/-`,
     },
     {
-      title: "Capacity",
+      title: "Adult",
       dataIndex: "capacity",
       key: "capacity",
       render: (capacity) => `${capacity} ${capacity > 1 ? 'people' : 'person'}`,
