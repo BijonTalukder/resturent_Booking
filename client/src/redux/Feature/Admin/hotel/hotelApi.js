@@ -57,12 +57,12 @@ const hotelApi = baseApi.injectEndpoints({
     }),
 
     // Get Nearby Hotels
-    // getNearbyHotels: builder.query({
-    //   query: (id) => ({
-    //     url: `/nearbyHotels/${id}`,
-    //   }),
-    //   providesTags: ['hotels']
-    // }),
+    getHotelByArea: builder.query({
+      query: (areaId) => ({
+        url: `/hotel/${areaId}/area`,
+      }),
+      providesTags: ['hotels']
+    }),
 
     // Update Hotel
     updateHotel: builder.mutation({
@@ -93,7 +93,7 @@ export const {
   useGetHotelQuery,
   useGetHotelsBySearchQuery,
   useGetHotelByIdQuery,
-  // useGetNearbyHotelsQuery,
+  useGetHotelByAreaQuery,
   useUpdateHotelMutation,
   useDeleteHotelMutation,
 } = hotelApi;

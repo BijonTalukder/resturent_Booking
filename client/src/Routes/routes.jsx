@@ -26,6 +26,7 @@ import Division from "../Pages/Division/Division";
 import District from "../Pages/District/District";
 import Area from "../Pages/Area/Area";
 import PrivacyPolicy from "../Pages/PrivacyPolicy/PrivacyPolicy";
+import AreaByHotel from "../Pages/Home/AllHotel/AreaByHotel";
 
 
 
@@ -59,6 +60,10 @@ export const routes = createBrowserRouter([
       {
         path:"/area/:districtId",
         element:<Area/>   
+      },
+      {
+        path:"/hotel/:areaId",
+        element:<AreaByHotel/>   
       },
       {
         path: "/notification",

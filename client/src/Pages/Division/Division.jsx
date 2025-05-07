@@ -27,15 +27,13 @@ const Division = () => {
 
   return (
     <>
-      <Link to="/">
-        <LeftCircleFilled className="ms-2 mt-2 text-2xl" />
-      </Link>
+
       <div className="w-full max-w-md mx-auto bg-white min-h-screen p-4 space-y-6 mb-16">
         <div className="space-y-2">
           <h3 className="text-md text-center font-bold mb-3">Select Division</h3>
           <ul className="space-y-2">
             {divisions.map((division, idx) => (
-              <Link to={`/district/${division?.serialId}`}>
+              <Link key={idx} to={`/district/${division?.serialId}`}>
               <li
                 key={idx}
                 className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200 mb-3"

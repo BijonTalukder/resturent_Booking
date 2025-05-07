@@ -150,7 +150,7 @@ const Header = ({ onSearch, onFilterChange }) => {
                 // }
               />
             </div>
-          </div>
+          </div> 
 
           {/* Right Side - Auth/Links */}
           <div>
