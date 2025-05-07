@@ -79,7 +79,9 @@ class HotelService {
     }
 
     async getHotelByArea(areaId){
-        const hotel = await this.prisma.hotel.findUnique({
+
+        console.log(areaId,"---------")
+        const hotel = await this.prisma.hotel.findMany({
             where: { areaId: areaId },
         });
         return hotel;
