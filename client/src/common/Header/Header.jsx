@@ -9,9 +9,10 @@ import {
 } from "../../redux/Feature/auth/authSlice";
 import { IoChevronDownCircleOutline, IoSearch } from "react-icons/io5";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
+import { IoArrowBack } from "react-icons/io5";
 import image from "../../assets/icon.png";
 import Adjustment from "../Adjustment/Adjustment";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HomeDivision from "../../Pages/Home/Home-Division/HomeDivision";
 import Division from "../../Pages/Division/Division";
 
@@ -28,11 +29,29 @@ const Header = ({ onSearch, onFilterChange }) => {
   const isDistrict = location?.pathname?.startsWith("/district");
   const isArea = location?.pathname?.startsWith("/area");
   const [isSearchOverlay, setIsSearchOverlay] = useState(false);
+  const [recentSearches, setRecentSearches] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleRight, setVisibleRight] = useState(false);
   const [divisionId, setDivisionId] = useState("");
   const [cityId, setCityId] = useState("");
+
+  // Load recent searches from localStorage on component mount
+  useEffect(() => {
+    const savedSearches = localStorage.getItem('recentSearches');
+    if (savedSearches) {
+      setRecentSearches(JSON.parse(savedSearches));
+    }
+  }, []);
+
+  // Save searches to localStorage
+  const saveSearch = (query) => {
+    if (!query.trim()) return;
+    
+    const updatedSearches = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+    setRecentSearches(updatedSearches);
+    localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -42,9 +61,17 @@ const Header = ({ onSearch, onFilterChange }) => {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    onSearch(e.target.value);
-    // setIsSearchOverlay(false); 
+    if (e.target.value.trim()) {
+      onSearch(e.target.value);
+    }
+  };
 
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim()) {
+      saveSearch(searchQuery);
+      onSearch(searchQuery);
+      setIsSearchOverlay(false);
+    }
   };
 
   const handleApplyFilters = (division, city) => {
@@ -138,18 +165,18 @@ const Header = ({ onSearch, onFilterChange }) => {
               <Input
                 placeholder="Search hotels..."
                 value={searchQuery}
-                // onFocus={() => navigate("/division")}
                 onChange={handleSearchChange}
+                onPressEnter={handleSearchSubmit}
                 prefix={<IoSearch className="text-gray-400" />}
                 className="rounded-full"
-                // suffix={
-                //   <button
-                //     onClick={() => setVisibleRight(true)}
-                //     className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                //   >
-                //     <HiOutlineAdjustmentsHorizontal className="text-gray-500 text-xl" />
-                //   </button>
-                // }
+                suffix={
+                  <button
+                    onClick={() => setVisibleRight(true)}
+                    className="text-gray-500"
+                  >
+                    <HiOutlineAdjustmentsHorizontal className="text-xl" />
+                  </button>
+                }
               />
             </div>
           </div> 
@@ -184,73 +211,16 @@ const Header = ({ onSearch, onFilterChange }) => {
           <div className="relative w-full">
             <Input
               placeholder="Search hotels..."
-              // onFocus={() => navigate("/division")}
               value={searchQuery}
-              // onChange={handleSearchChange}
               onFocus={() => setIsSearchOverlay(true)}
-              
-              onPressEnter={() => {
-                setIsSearchOverlay(false); 
-                onSearch(searchQuery);     
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  setIsSearchOverlay(false);
-                  onSearch(searchQuery);
-                }
-              }}
               prefix={<IoSearch className="text-gray-400" />}
-              // suffix={
-              //   <button onClick={() => setVisibleRight(true)}>
-              //     <HiOutlineAdjustmentsHorizontal className="text-gray-500" />
-              //   </button>
-              // }
               className="rounded-full"
+              readOnly
             />
-             {isSearchOverlay && (
-        <div className="fixed inset-0 z-50 bg-white p-4 overflow-y-auto">
-          <div className="flex justify-between items-center mb-4">
-            <Input
-              autoFocus
-              placeholder="Search hotels..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onPressEnter={() => {
-                setIsSearchOverlay(false); 
-                onSearch(searchQuery);     
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  setIsSearchOverlay(false);
-                  onSearch(searchQuery);
-                }
-              }}
-              prefix={<IoSearch className="text-gray-400" />}
-              className="w-full rounded-full"
-            />
-            <button
-              onClick={() => setIsSearchOverlay(false)}
-              className="ml-2 text-2xl text-gray-600"
-            >
-              ✖
-            </button>
-          </div>
-
-        
-          {/* <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Hotels</h2>
-           
-          </div> */}
-
-          {/* Division Suggestions */}
-          <div>
-        <Division/>
-          </div>
-        </div>
-      )}
           </div>
         </div>
 
+        {/* Mobile Filter Panel */}
         <Adjustment
           visibleRight={visibleRight}
           setVisibleRight={setVisibleRight}
@@ -261,6 +231,80 @@ const Header = ({ onSearch, onFilterChange }) => {
           onApplyFilters={handleApplyFilters}
         />
       </div>
+
+      {/* Improved Mobile Search Overlay */}
+      {isSearchOverlay && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col h-full">
+          {/* Search Header */}
+          <div className="sticky top-0 bg-white p-4 border-b shadow-sm z-10">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsSearchOverlay(false)}
+                className="text-gray-600"
+              >
+                <IoArrowBack size={24} />
+              </button>
+              <Input
+                autoFocus
+                placeholder="Search hotels..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onPressEnter={handleSearchSubmit}
+                prefix={<IoSearch className="text-gray-400" />}
+                className="rounded-full w-full"
+                suffix={
+                  searchQuery ? (
+                    <button 
+                      onClick={() => setSearchQuery("")}
+                      className="text-gray-400"
+                    >
+                      ✖
+                    </button>
+                  ) : null
+                }
+              />
+              <button
+                onClick={() => setVisibleRight(true)}
+                className="p-2 bg-gray-100 rounded-full"
+              >
+                <HiOutlineAdjustmentsHorizontal className="text-gray-600" size={20} />
+              </button>
+            </div>
+          </div>
+          
+          {/* Search Content */}
+          <div className="flex-1 overflow-y-auto">
+            {/* Recent Searches */}
+            {recentSearches.length > 0 && (
+              <div className="p-4 border-b">
+                <h3 className="text-sm font-medium text-gray-500 mb-2">Recent Searches</h3>
+                <div className="space-y-2">
+                  {recentSearches.map((search, index) => (
+                    <div 
+                      key={index}
+                      className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                      onClick={() => {
+                        setSearchQuery(search);
+                        onSearch(search);
+                        setIsSearchOverlay(false);
+                      }}
+                    >
+                      <IoSearch className="text-gray-400 mr-2" />
+                      <span>{search}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Popular Divisions */}
+            <div className="p-4">
+              <h3 className="text-sm font-medium text-gray-500 mb-2">Browse by Division</h3>
+              <Division />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
