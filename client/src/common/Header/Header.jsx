@@ -12,6 +12,8 @@ import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import image from "../../assets/icon.png";
 import Adjustment from "../Adjustment/Adjustment";
 import { useState } from "react";
+import HomeDivision from "../../Pages/Home/Home-Division/HomeDivision";
+import Division from "../../Pages/Division/Division";
 
 const Header = ({ onSearch, onFilterChange }) => {
   const dispatch = useAppDispatch();
@@ -25,6 +27,7 @@ const Header = ({ onSearch, onFilterChange }) => {
   const isDetails = location?.pathname?.startsWith("/hotel");
   const isDistrict = location?.pathname?.startsWith("/district");
   const isArea = location?.pathname?.startsWith("/area");
+  const [isSearchOverlay, setIsSearchOverlay] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleRight, setVisibleRight] = useState(false);
@@ -179,9 +182,10 @@ const Header = ({ onSearch, onFilterChange }) => {
           <div className="relative w-full">
             <Input
               placeholder="Search hotels..."
-              onFocus={() => navigate("/division")}
+              // onFocus={() => navigate("/division")}
               value={searchQuery}
               onChange={handleSearchChange}
+              onFocus={() => setIsSearchOverlay(true)}
               prefix={<IoSearch className="text-gray-400" />}
               // suffix={
               //   <button onClick={() => setVisibleRight(true)}>
@@ -190,6 +194,37 @@ const Header = ({ onSearch, onFilterChange }) => {
               // }
               className="rounded-full"
             />
+             {isSearchOverlay && (
+        <div className="fixed inset-0 z-50 bg-white p-4 overflow-y-auto">
+          <div className="flex justify-between items-center mb-4">
+            <Input
+              autoFocus
+              placeholder="Search hotels..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              prefix={<IoSearch className="text-gray-400" />}
+              className="w-full rounded-full"
+            />
+            <button
+              onClick={() => setIsSearchOverlay(false)}
+              className="ml-2 text-2xl text-gray-600"
+            >
+              ✖
+            </button>
+          </div>
+
+        
+          {/* <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-2">Hotels</h2>
+           
+          </div> */}
+
+          {/* Division Suggestions */}
+          <div>
+        <Division/>
+          </div>
+        </div>
+      )}
           </div>
         </div>
 
