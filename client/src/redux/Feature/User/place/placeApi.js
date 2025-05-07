@@ -26,13 +26,6 @@ const placeApi = baseApi.injectEndpoints({
       providesTags: ['district'],
     }),
 
-    // Area endpoints
-    getAreas: builder.query({
-      query: () => ({
-        url: "/area",
-      }),
-      providesTags: ['area'],
-    }),
 
     getAreasByDistrict: builder.query({
       query: (districtId) => ({
@@ -48,6 +41,5 @@ export const {
   useGetDivisionsQuery,
   useGetDistrictsQuery,
   useGetDistrictsByDivisionQuery,
-  useGetAreasQuery,
   useGetAreasByDistrictQuery
 } = placeApi;
