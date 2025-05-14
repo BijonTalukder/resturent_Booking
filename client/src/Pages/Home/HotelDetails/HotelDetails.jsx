@@ -295,7 +295,7 @@ const HotelDetails = () => {
       {/* Fixed Bottom Checkout Bar */}
       {selectedRooms.length > 0 && (
         //<Affix offsetBottom={0}>
-          <div className="">
+          <div className="flex justify-center">
             <div className="flex justify-between items-center">
               {/* <div>
                 <Text strong className="block">{selectedRooms.length} {selectedRooms.length === 1 ? 'room' : 'rooms'}</Text>
