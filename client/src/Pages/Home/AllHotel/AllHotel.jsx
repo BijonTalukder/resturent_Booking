@@ -47,7 +47,7 @@ const AllHotel = () => {
 
       {/* Show "No hotels found" message */}
       {noHotelsFound && (
-        <div className="text-center text-[13px] md:text-xl font-bold text-red-500 mt-10">
+        <div className="text-center text-[13px] md:text-xl font-bold text-red-500">
           No hotel found for the given criteria.
         </div>
       )}

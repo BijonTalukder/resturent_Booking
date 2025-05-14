@@ -23,26 +23,21 @@ const hotelApi = baseApi.injectEndpoints({
       providesTags: ['hotels']
     }),
 
-    // Get Hotels with search, pagination, and filtering
+    // Get Hotels with search, and filtering
     getHotelsBySearch: builder.query({
       query: ({ 
         name = '',
         divisionId = '',
         cityId = ''
-        // page, 
-        // limit, 
-        // priceMin, 
-        // priceMax, 
+      
       }) => ({
         url: "/hotel",
         params: {
           name,
           divisionId,
           cityId,
-          // page,
-          // limit,
-          // priceMin,
-          // priceMax,
+
+         
         },
       }),
       providesTags: ['hotels']

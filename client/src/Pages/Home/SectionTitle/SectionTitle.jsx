@@ -4,7 +4,7 @@ const SectionTitle = ({ title, subTitle }) => {
     return (
         <div>
             {
-                <div className="my-5 flex  justify-start items-center">
+                <div className="my-2 flex justify-start items-center">
                     <div className="flex items-center gap-2">
 {/* 
                         <span><BsSignIntersectionFill className="text-xl text-[#24354C]" /></span> */}
