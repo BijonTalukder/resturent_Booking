@@ -11,9 +11,16 @@ const Area = () => {
 
   useEffect(() => {
     if (areasData) {
-      setAreas(areasData.data); // Assuming API returns { data: [...] }
+      setAreas(areasData.data);
     }
   }, [areasData]);
+
+  if (areasData?.data?.length === 0) return (
+    <div className="flex justify-center items-center min-h-screen">
+      <div>No areas found</div>
+    </div>
+  );
+
 
   if (isLoading) return (
     <div className="flex justify-center items-center min-h-screen">

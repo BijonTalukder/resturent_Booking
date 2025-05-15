@@ -47,14 +47,14 @@ const AllHotel = () => {
 
       {/* Show "No hotels found" message */}
       {noHotelsFound && (
-        <div className="text-center text-[13px] md:text-xl font-bold text-red-500 mt-10">
+        <div className="text-center text-[13px] md:text-xl font-bold text-red-500">
           No hotel found for the given criteria.
         </div>
       )}
       
       <div className="lg:max-w-[98%] grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto">
         {!isLoading && !showSkeleton && data?.data?.map((hotel, index) => (
-          <Link to={`/hotel-details/${hotel?.id}`}>
+          <Link to={`/hotel-details/${hotel?.id}`} key={index}>
           <div key={index} className="flex flex-col rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white">
             <div className="relative h-[110px] object-cover md:h-[300px]">
               <img

@@ -13,7 +13,6 @@ import { IoArrowBack } from "react-icons/io5";
 import image from "../../assets/icon.png";
 import Adjustment from "../Adjustment/Adjustment";
 import { useState, useEffect } from "react";
-import HomeDivision from "../../Pages/Home/Home-Division/HomeDivision";
 import Division from "../../Pages/Division/Division";
 
 const Header = ({ onSearch, onFilterChange }) => {
@@ -30,7 +29,6 @@ const Header = ({ onSearch, onFilterChange }) => {
   const isArea = location?.pathname?.startsWith("/area");
   const [isSearchOverlay, setIsSearchOverlay] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleRight, setVisibleRight] = useState(false);
   const [divisionId, setDivisionId] = useState("");
@@ -38,7 +36,7 @@ const Header = ({ onSearch, onFilterChange }) => {
 
   // Load recent searches from localStorage on component mount
   useEffect(() => {
-    const savedSearches = localStorage.getItem('recentSearches');
+    const savedSearches = localStorage.getItem("recentSearches");
     if (savedSearches) {
       setRecentSearches(JSON.parse(savedSearches));
     }
@@ -47,10 +45,13 @@ const Header = ({ onSearch, onFilterChange }) => {
   // Save searches to localStorage
   const saveSearch = (query) => {
     if (!query.trim()) return;
-    
-    const updatedSearches = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+
+    const updatedSearches = [
+      query,
+      ...recentSearches.filter((s) => s !== query),
+    ].slice(0, 5);
     setRecentSearches(updatedSearches);
-    localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+    localStorage.setItem("recentSearches", JSON.stringify(updatedSearches));
   };
 
   const handleLogout = () => {
@@ -60,10 +61,8 @@ const Header = ({ onSearch, onFilterChange }) => {
   };
 
   const handleSearchChange = (e) => {
+    onSearch(e.target.value);
     setSearchQuery(e.target.value);
-    if (e.target.value.trim()) {
-      onSearch(e.target.value);
-    }
   };
 
   const handleSearchSubmit = () => {
@@ -127,7 +126,12 @@ const Header = ({ onSearch, onFilterChange }) => {
     <>
       <div
         className={`py-3 px-4 lg:px-10 mb-3 bg-[#3498db] shadow-sm border-b border-gray-200 ${
-          isNotificationPage || isAdminLogin || isDetails || isDivision || isDistrict || isArea
+          isNotificationPage ||
+          isAdminLogin ||
+          isDetails ||
+          isDivision ||
+          isDistrict ||
+          isArea
             ? "hidden"
             : ""
         }`}
@@ -166,7 +170,6 @@ const Header = ({ onSearch, onFilterChange }) => {
                 placeholder="Search hotels..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                onPressEnter={handleSearchSubmit}
                 prefix={<IoSearch className="text-gray-400" />}
                 className="rounded-full"
                 suffix={
@@ -179,7 +182,7 @@ const Header = ({ onSearch, onFilterChange }) => {
                 }
               />
             </div>
-          </div> 
+          </div>
 
           {/* Right Side - Auth/Links */}
           <div>
@@ -215,7 +218,7 @@ const Header = ({ onSearch, onFilterChange }) => {
               onFocus={() => setIsSearchOverlay(true)}
               prefix={<IoSearch className="text-gray-400" />}
               className="rounded-full"
-              readOnly
+              
             />
           </div>
         </div>
@@ -254,8 +257,11 @@ const Header = ({ onSearch, onFilterChange }) => {
                 className="rounded-full w-full"
                 suffix={
                   searchQuery ? (
-                    <button 
-                      onClick={() => setSearchQuery("")}
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        onSearch("");
+                      }}
                       className="text-gray-400"
                     >
                       ✖
@@ -267,20 +273,29 @@ const Header = ({ onSearch, onFilterChange }) => {
                 onClick={() => setVisibleRight(true)}
                 className="p-2 bg-gray-100 rounded-full"
               >
-                <HiOutlineAdjustmentsHorizontal className="text-gray-600" size={20} />
+                <HiOutlineAdjustmentsHorizontal
+                  className="text-gray-600"
+                  size={20}
+                />
               </button>
             </div>
           </div>
-          
+
           {/* Search Content */}
           <div className="flex-1 overflow-y-auto">
             {/* Recent Searches */}
             {recentSearches.length > 0 && (
               <div className="p-4 border-b">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Recent Searches</h3>
+                <div className="flex justify-between items-center">
+                  <h3 className="text-sm font-medium text-gray-500 mb-2">
+                  Recent Searches
+                 </h3>
+                 
+
+                </div>
                 <div className="space-y-2">
                   {recentSearches.map((search, index) => (
-                    <div 
+                    <div
                       key={index}
                       className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
                       onClick={() => {
@@ -296,11 +311,13 @@ const Header = ({ onSearch, onFilterChange }) => {
                 </div>
               </div>
             )}
-            
+
             {/* Popular Divisions */}
             <div className="p-4">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Browse by Division</h3>
-              <Division />
+              <h3 className="text-sm font-medium text-gray-500 mb-2">
+                Browse by Division
+              </h3>
+              <Division  onDivisionClick={() => setIsSearchOverlay(false)}/>
             </div>
           </div>
         </div>

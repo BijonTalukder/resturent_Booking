@@ -10,7 +10,7 @@ class HotelService {
     }
     async getAllHotels({ name, divisionId, cityId,minPrice,maxPrice }) {
 
-        console.log(minPrice);
+   
         
 
         let whereCondition = {
@@ -80,7 +80,7 @@ class HotelService {
 
     async getHotelByArea(areaId){
 
-        console.log(areaId,"---------")
+       
         const hotel = await this.prisma.hotel.findMany({
             where: { areaId: areaId },
         });

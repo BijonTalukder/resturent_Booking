@@ -40,6 +40,7 @@ const Checkout = () => {
 
     const bookingPayload = {
       roomIds: selectedRooms.map((room) => room.id),
+      
       userId: user?.id,
       checkIn: checkInDate,
       checkOut: checkOutDate,

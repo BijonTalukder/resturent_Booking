@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const MainLayout = () => {
   const location = useLocation();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [divisionId, setDivisionId] = useState('');
   const [cityId, setCityId] = useState('');
 
