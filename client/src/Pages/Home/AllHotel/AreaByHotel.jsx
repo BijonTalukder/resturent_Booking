@@ -42,7 +42,7 @@ const {areaId} = useParams()
       
       <div className="lg:max-w-[98%] grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto">
         {!isLoading && !showSkeleton && data?.data?.map((hotel, index) => (
-          <Link to={`/hotel-details/${hotel?.id}`}>
+          <Link to={`/hotel-details/${hotel?.id}`} key={index}>
           <div key={index} className="flex flex-col rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white">
             <div className="relative h-[110px] object-cover md:h-[300px]">
               <img

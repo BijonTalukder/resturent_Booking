@@ -3,7 +3,7 @@ import { LeftCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useGetDivisionsQuery } from "../../redux/Feature/User/place/placeApi";
 
-const Division = () => {
+const Division = ({onDivisionClick}) => {
   const [divisions, setDivisions] = useState([]);
   const { data: divisionsData, isLoading, isError } = useGetDivisionsQuery();
   const navigate = useNavigate(); // Initialize navigate
@@ -35,7 +35,11 @@ const Division = () => {
             {divisions.map((division, idx) => (
               <li
                 key={idx}
-                onClick={() => navigate(`/district/${division?.serialId}`)}
+                 onClick={() => {
+                  navigate(`/district/${division?.serialId}`);
+                  onDivisionClick && onDivisionClick();
+                }}
+               
                 className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200 mb-3"
               >
                 {division.name}

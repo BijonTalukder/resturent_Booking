@@ -218,7 +218,7 @@ const Header = ({ onSearch, onFilterChange }) => {
               onFocus={() => setIsSearchOverlay(true)}
               prefix={<IoSearch className="text-gray-400" />}
               className="rounded-full"
-              readOnly
+              
             />
           </div>
         </div>
@@ -317,7 +317,7 @@ const Header = ({ onSearch, onFilterChange }) => {
               <h3 className="text-sm font-medium text-gray-500 mb-2">
                 Browse by Division
               </h3>
-              <Division />
+              <Division  onDivisionClick={() => setIsSearchOverlay(false)}/>
             </div>
           </div>
         </div>
