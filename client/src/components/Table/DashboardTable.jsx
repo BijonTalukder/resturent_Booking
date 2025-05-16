@@ -10,7 +10,7 @@ const DashboardTable = ({columns, data, loading }) => {
  return (
 
     <Table
-   className="overflow-x-scroll scrollbar-0"
+   className="scrollbar-0 "
     columns={columns}
     dataSource={data}
     pagination={true}

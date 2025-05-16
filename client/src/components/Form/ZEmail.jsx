@@ -18,7 +18,7 @@ const ZEmail = ({ name, label, value , readOnly }) => {
       name={name}
       control={control}
       rules={{
-        required: "Email is required",
+        // required: "Email is required",
         pattern: {
           value: emailRegex,
           message: "Invalid email format",

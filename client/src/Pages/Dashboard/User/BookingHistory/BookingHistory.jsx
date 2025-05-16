@@ -144,7 +144,7 @@ const BookingReceipt = ({ booking }) => (
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Room Details</Text>
-        {booking.rooms.map((room, index) => (
+        {booking?.bookingItem?.map((room, index) => (
           <View key={index} style={styles.roomRow}>
             <View style={styles.row}>
               <Text style={styles.label}>Room {index + 1}:</Text>
@@ -219,7 +219,7 @@ const BookingHistory = () => {
     paymentStatus: booking?.paymentStatus,
     status: booking?.status,
     transactionId: booking?.transactionId,
-    rooms: booking?.rooms,
+    bookingItem: booking?.bookingItem,
     createdAt: moment(booking?.createdAt).format('Do MMMM YYYY, h:mm:ss a')
   }));
 
@@ -230,59 +230,59 @@ const BookingHistory = () => {
 
   const columns = [
     {
-      title: "Serial",
-      dataIndex: "key",
-      key: "key",
+      title: "Booking Id",
+      dataIndex: "id",
+      key: "id",
     },
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
-    },
-    {
-      title: "Total Price",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
-      render: (totalPrice) => <Tag color="cyan">{totalPrice} Tk</Tag>,
-    },
-    {
-      title: "Payment Status",
-      dataIndex: "paymentStatus",
-      key: "paymentStatus",
-      render: (status) => (
-        <Tag color={status === "paid" ? "green" : "red"}>{status}</Tag>
-      ),
-    },
-    {
-      title: "Booking Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag
-          color={
-            status === "pending"
-              ? "blue"
-              : status === "confirmed"
-              ? "green"
-              : status === "cancelled"
-              ? "red"
-              : "default"
-          }
-        >
-          {status}
-        </Tag>
-      ),
-    },
+    // {
+    //   title: "Name",
+    //   dataIndex: "name",
+    //   key: "name",
+    // },
+    // {
+    //   title: "Email",
+    //   dataIndex: "email",
+    //   key: "email",
+    // },
+    // {
+    //   title: "Phone",
+    //   dataIndex: "phone",
+    //   key: "phone",
+    // },
+    // {
+    //   title: "Price",
+    //   dataIndex: "totalPrice",
+    //   key: "totalPrice",
+    //   render: (totalPrice) => <Tag color="cyan">{totalPrice} Tk</Tag>,
+    // },
+    // {
+    //   title: "Payment",
+    //   dataIndex: "paymentStatus",
+    //   key: "paymentStatus",
+    //   render: (status) => (
+    //     <Tag color={status === "paid" ? "green" : "red"}>{status}</Tag>
+    //   ),
+    // },
+    // {
+    //   title: "Booking Status",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   render: (status) => (
+    //     <Tag
+    //       color={
+    //         status === "pending"
+    //           ? "blue"
+    //           : status === "confirmed"
+    //           ? "green"
+    //           : status === "cancelled"
+    //           ? "red"
+    //           : "default"
+    //       }
+    //     >
+    //       {status}
+    //     </Tag>
+    //   ),
+    // },
     {
       title: "Actions",
       key: "action",
