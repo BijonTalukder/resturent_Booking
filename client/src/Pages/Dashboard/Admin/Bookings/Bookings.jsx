@@ -28,7 +28,7 @@ const Bookings = () => {
     name: booking?.name,
     email: booking?.email,
     phone: booking?.phone,
-    rooms: booking?.rooms,
+    bookingItem: booking?.bookingItem,
     userId: booking?.userId,
     totalPrice: booking?.totalPrice,
     transactionId: booking?.transactionId,

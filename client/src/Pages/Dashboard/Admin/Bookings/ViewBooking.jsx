@@ -1,11 +1,12 @@
-import React from "react";
-import { Card, Row, Col, Typography, Steps, Divider, Table, Tag } from "antd";
-
+import React, { forwardRef } from "react";
+import { Card, Row, Col, Typography, Steps, Divider, Table, Tag, Button } from "antd";
+import moment from "moment";
+import { AiOutlineFilePdf } from "react-icons/ai";
 
 const { Title, Text } = Typography;
 const { Step } = Steps;
 
-const ViewBooking = ({ selectedBooking }) => {
+const ViewBooking = forwardRef(({ selectedBooking, onPrint }, ref) => {
   if (!selectedBooking) {
     return <div>Loading...</div>;
   }
@@ -36,8 +37,8 @@ const ViewBooking = ({ selectedBooking }) => {
     },
     {
       title: "Type",
-      dataIndex: "type",
-      key: "type",
+      dataIndex: "roomType",
+      key: "roomType",
     },
     {
       title: "Price",
@@ -45,36 +46,48 @@ const ViewBooking = ({ selectedBooking }) => {
       key: "price",
       render: (price) => `$${price}`,
     },
+
     {
-      title: "Capacity",
-      dataIndex: "capacity",
-      key: "capacity",
-      render: (capacity) => `${capacity} person${capacity > 1 ? 's' : ''}`,
+      title: "Room Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
     },
+    {
+      title: "Adults",
+      dataIndex: "adults",
+      key: "adults",
+    },
+    {
+      title: "Children",
+      dataIndex: "children",
+      key: "children",
+    },
+
+    
     {
       title: "Amenities",
       dataIndex: "amenities",
       key: "amenities",
       render: (amenities) => (
-      <div className="flex flex-wrap max-w-[200px] mx-auto items-center justify-center gap-3" >
-                {amenities.map((amenity, index) => (
-                  <Tag key={index} color="blue">
-                    {amenity}
-                  </Tag>
-                ))}
-              </div>
+        <div className="flex flex-wrap max-w-[200px] mx-auto items-center justify-center gap-3" >
+          {amenities.map((amenity, index) => (
+            <Tag key={index} color="blue">
+              {amenity}
+            </Tag>
+          ))}
+        </div>
       ),
     },
   ];
 
   // Table data for rooms
-  const roomData = selectedBooking.rooms.map((room, index) => ({
+  const roomData = selectedBooking?.bookingItem?.map((room, index) => ({
     key: index,
     ...room,
   }));
 
   return (
-    <div style={{ padding: "" }}>
+    <div ref={ref} className="py-5 px-3">
 
         {/* Booking Header */}
         <div className="text-center">
@@ -138,14 +151,14 @@ const ViewBooking = ({ selectedBooking }) => {
 </Row>
 
         {/* Booking Progress */}
-        <Divider />
-        <div className="">
+        {/* <Divider /> */}
+        {/* <div className="">
           <Steps direction="vertical" current={currentStepIndex} style={{ marginTop: "24px" }}>
             {steps.map((step, index) => (
               <Step key={index} title={step.title} description={step.description} />
             ))}
           </Steps>
-        </div>
+        </div> */}
 
         {/* Room Details */}
         <Divider />
@@ -159,16 +172,16 @@ const ViewBooking = ({ selectedBooking }) => {
           bordered
           scroll={{ x: 800 }}
           responsive={true}
-          summary={() => (
-            <Table.Summary.Row>
-              <Table.Summary.Cell colSpan={4} align="right">
-                <Text strong>Total Price</Text>
-              </Table.Summary.Cell>
-              <Table.Summary.Cell>
-                <Text strong>${selectedBooking.totalPrice}</Text>
-              </Table.Summary.Cell>
-            </Table.Summary.Row>
-          )}
+          // summary={() => (
+          //   <Table.Summary.Row>
+          //     <Table.Summary.Cell colSpan={4} align="right">
+          //       <Text strong>Total Price</Text>
+          //     </Table.Summary.Cell>
+          //     <Table.Summary.Cell>
+          //       <Text strong>${selectedBooking.totalPrice}</Text>
+          //     </Table.Summary.Cell>
+          //   </Table.Summary.Row>
+          // )}
         />
 
         {/* Booking Summary */}
@@ -181,7 +194,7 @@ const ViewBooking = ({ selectedBooking }) => {
                 <Text>Number of Rooms</Text>
               </Col>
               <Col span={12}>
-                <Text>{selectedBooking.rooms.length}</Text>
+                <Text>{selectedBooking?.bookingItem?.length}</Text>
               </Col>
             </Row>
             {/* <Row>
@@ -190,7 +203,7 @@ const ViewBooking = ({ selectedBooking }) => {
               </Col>
               <Col span={12}>
                 <Text>
-                  {moment(selectedBooking.checkOut).diff(moment(selectedBooking.checkIn), 'days')} nights
+               {moment(selectedBooking.checkOut).diff(moment(selectedBooking.checkIn), 'days')} nights
                 </Text>
               </Col>
             </Row> */}
@@ -207,6 +220,6 @@ const ViewBooking = ({ selectedBooking }) => {
 
     </div>
   );
-};
+});
 
 export default ViewBooking;

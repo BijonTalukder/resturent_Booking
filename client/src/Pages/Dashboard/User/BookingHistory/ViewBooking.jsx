@@ -37,8 +37,8 @@ const ViewBooking = forwardRef(({ selectedBooking, onPrint }, ref) => {
     },
     {
       title: "Type",
-      dataIndex: "type",
-      key: "type",
+      dataIndex: "roomType",
+      key: "roomType",
     },
     {
       title: "Price",
@@ -46,12 +46,24 @@ const ViewBooking = forwardRef(({ selectedBooking, onPrint }, ref) => {
       key: "price",
       render: (price) => `$${price}`,
     },
+
     {
-      title: "Capacity",
-      dataIndex: "capacity",
-      key: "capacity",
-      render: (capacity) => `${capacity} person${capacity > 1 ? 's' : ''}`,
+      title: "Room Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
     },
+    {
+      title: "Adults",
+      dataIndex: "adults",
+      key: "adults",
+    },
+    {
+      title: "Children",
+      dataIndex: "children",
+      key: "children",
+    },
+
+    
     {
       title: "Amenities",
       dataIndex: "amenities",
@@ -69,7 +81,7 @@ const ViewBooking = forwardRef(({ selectedBooking, onPrint }, ref) => {
   ];
 
   // Table data for rooms
-  const roomData = selectedBooking.rooms.map((room, index) => ({
+  const roomData = selectedBooking?.bookingItem?.map((room, index) => ({
     key: index,
     ...room,
   }));
@@ -182,7 +194,7 @@ const ViewBooking = forwardRef(({ selectedBooking, onPrint }, ref) => {
                 <Text>Number of Rooms</Text>
               </Col>
               <Col span={12}>
-                <Text>{selectedBooking.rooms.length}</Text>
+                <Text>{selectedBooking?.bookingItem?.length}</Text>
               </Col>
             </Row>
             {/* <Row>
