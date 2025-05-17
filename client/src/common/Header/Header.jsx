@@ -199,6 +199,10 @@ const Header = ({ onSearch, onFilterChange }) => {
                   <Link to="/login" className={getActiveClass("/login")}>
                     <span className="">Login</span>
                   </Link>{" "}
+
+
+
+                  
                   /
                   <Link to="/register" className={getActiveClass("/register")}>
                     <span className="">Register</span>
