@@ -788,7 +788,9 @@ const HotelDetails = () => {
               </Button>
             </div>
           </div>
+          </div>
         )}
+      
       </Drawer>
     </div>
   );
