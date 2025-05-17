@@ -41,7 +41,9 @@ import {
   ShareAltOutlined,
   PlusOutlined,
   MinusOutlined,
-  CheckCircleFilled
+  CheckCircleFilled,
+  WhatsAppOutlined,
+  MessageOutlined
 } from "@ant-design/icons";
 
 const { Title, Text, Paragraph } = Typography;
@@ -72,6 +74,7 @@ const HotelDetails = () => {
   const [roomQuantities, setRoomQuantities] = useState({});
   const [adultCounts, setAdultCounts] = useState({});
   const [childCounts, setChildCounts] = useState({});
+  const [showAmenities, setShowAmenities] = useState(false);
   const [activeTab, setActiveTab] = useState("rooms");
 
   const hotel = hotelData?.data;
@@ -267,7 +270,53 @@ const HotelDetails = () => {
           <EnvironmentOutlined />
           <Text className="ml-1">{hotel?.location}</Text>
         </div>
+        
+        {/* Amenities Button */}
+        <Button 
+          type="default" 
+          className="mt-3" 
+          onClick={() => setShowAmenities(true)}
+        >
+          View Amenities
+        </Button>
       </div>
+      
+      {/* Amenities Drawer */}
+      <Drawer
+        title="Hotel Amenities"
+        placement="bottom"
+        height={400}
+        onClose={() => setShowAmenities(false)}
+        open={showAmenities}
+        bodyStyle={{ padding: "16px" }}
+      >
+        <SliderAminities amenities={hotel?.amenities || []} />
+        
+        {/* Hotel Description */}
+        <Divider orientation="left">About This Hotel</Divider>
+        <Paragraph>{hotel?.description}</Paragraph>
+        
+        {/* Policies */}
+        <Collapse
+          bordered={false}
+          className="mt-4"
+          expandIcon={({ isActive }) => (
+            <DownOutlined rotate={isActive ? 180 : 0} />
+          )}
+        >
+          <Panel
+            header={<span className="font-medium">Hotel Policies</span>}
+            key="1"
+          >
+            <Paragraph>
+              • Check-in: 2:00 PM - 12:00 AM<br />
+              • Check-out: Until 12:00 PM<br />
+              • Cancellation: Free cancellation up to 24 hours before check-in<br />
+              • Pets: Not allowed
+            </Paragraph>
+          </Panel>
+        </Collapse>
+      </Drawer>
 
       {/* Date Selection */}
       <Card className="mx-4 mb-4 shadow-sm" onClick={() => setDatePickerVisible(true)}>
@@ -302,7 +351,6 @@ const HotelDetails = () => {
           className="px-2"
         >
           <TabPane tab="Rooms" key="rooms" />
-          <TabPane tab="Details" key="details" />
           <TabPane tab="Map" key="map" />
         </Tabs>
       </div>
@@ -521,53 +569,6 @@ const HotelDetails = () => {
           </div>
         )}
 
-        {activeTab === "details" && (
-          <div className="mb-4">
-            {/* Amenities */}
-            <div className="mb-4">
-              <Title level={4} style={{ marginBottom: "12px" }}>
-                Amenities
-              </Title>
-              <SliderAminities amenities={hotel?.amenities || []} />
-            </div>
-
-            {/* Description */}
-            <Title level={4} style={{ marginBottom: "12px" }}>
-              About This Hotel
-            </Title>
-            <Paragraph>{hotel?.description}</Paragraph>
-            
-            {/* Policies */}
-            <Collapse
-              bordered={false}
-              className="mb-4 shadow-sm"
-              expandIcon={({ isActive }) => (
-                <DownOutlined rotate={isActive ? 180 : 0} />
-              )}
-            >
-              <Panel
-                header={<span className="font-medium">Hotel Policies</span>}
-                key="1"
-              >
-                <Paragraph>
-                  • Check-in: 2:00 PM - 12:00 AM<br />
-                  • Check-out: Until 12:00 PM<br />
-                  • Cancellation: Free cancellation up to 24 hours before check-in<br />
-                  • Pets: Not allowed
-                </Paragraph>
-              </Panel>
-              <Panel
-                header={<span className="font-medium">Payment Options</span>}
-                key="2"
-              >
-                <Paragraph>
-                  We accept credit cards, debit cards, and mobile payments.
-                </Paragraph>
-              </Panel>
-            </Collapse>
-          </div>
-        )}
-
         {activeTab === "map" && (
           <div className="mb-4">
             <Title level={4} style={{ marginBottom: "12px" }}>
@@ -700,36 +701,54 @@ const HotelDetails = () => {
               <Text strong className="text-xl">{currentRoom.price} Tk</Text>
             </div>
 
-            <Card className="mb-4">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Text type="secondary">Room Type</Text>
-                  <div className="font-medium">{currentRoom.type}</div>
-                </div>
-                <div>
-                  <Text type="secondary">Capacity</Text>
-                  <div className="font-medium">{currentRoom.capacity} Adults, {currentRoom.child} Children</div>
-                </div>
-                <div>
-                  <Text type="secondary">Bed Type</Text>
-                  <div className="font-medium">
-                    {currentRoom.amenities?.includes("King Bed") 
-                      ? "King Bed" 
-                      : currentRoom.amenities?.includes("Queen Bed") 
-                        ? "Queen Bed" 
-                        : "Standard Beds"}
+            <div className="mb-4">
+              <Card className="mb-4">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Text type="secondary">Room Type</Text>
+                    <div className="font-medium">{currentRoom.type}</div>
+                  </div>
+                  <div>
+                    <Text type="secondary">Capacity</Text>
+                    <div className="font-medium">{currentRoom.capacity} Adults, {currentRoom.child} Children</div>
                   </div>
                 </div>
-                <div>
-                  <Text type="secondary">Room Size</Text>
-                  <div className="font-medium">
-                    {currentRoom.amenities?.includes("300 sq ft") 
-                      ? "300 sq ft" 
-                      : "Standard"}
-                  </div>
-                </div>
+              </Card>
+
+              {/* Contact Options */}
+              <Title level={5}>Need Help?</Title>
+              <div className="flex gap-3 mb-4">
+                <a 
+                  href="https://wa.me/123456789" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex-1"
+                >
+                  <Button 
+                    type="primary" 
+                    icon={<WhatsAppOutlined />} 
+                    className="bg-green-500 hover:bg-green-600"
+                    block
+                  >
+                    WhatsApp
+                  </Button>
+                </a>
+                <a 
+                  href="http://m.me/hotelname" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex-1"
+                >
+                  <Button 
+                    type="primary" 
+                    icon={<MessageOutlined />} 
+                    className="bg-blue-500 hover:bg-blue-600"
+                    block
+                  >
+                    Messenger
+                  </Button>
+                </a>
               </div>
-            </Card>
 
             {currentRoom.amenities && currentRoom.amenities.length > 0 && (
               <>
