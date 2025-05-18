@@ -24,7 +24,7 @@ const Navbar = ({
           </div>
           {/* profile */}
           <div>
-            <Dropdown></Dropdown>
+            <Dropdown/>
           </div>
         </div>
       </div>
