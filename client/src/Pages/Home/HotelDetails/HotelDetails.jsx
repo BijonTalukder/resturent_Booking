@@ -621,6 +621,11 @@ const HotelDetails = () => {
         </Affix>
       )}
 
+{/* /////sdfsdfds */}
+
+
+
+
       {/* Date Picker Drawer */}
       <Drawer
         title="Select Stay Dates"
