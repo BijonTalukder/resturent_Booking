@@ -218,7 +218,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
 
 
   const totalPrice = selectedRooms.reduce(
-    (sum, room) => sum + room.price * nights * (room.quantity || 1),
+    (sum, room) => sum + room.price * nights * room.quantity,
     0
   );
 
@@ -612,30 +612,36 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
       </div>
 
       {/* Fixed Bottom Checkout Bar */}
-      {selectedRooms.length > 0 && (
-        <Affix offsetBottom={0}>
-          <div className="bg-white shadow-md border-t p-3 flex justify-between items-center w-full">
-            <div className="flex flex-col">
-              <Text strong className="text-lg">
-                {totalPrice} Tk
-              </Text>
-              <Text className="text-xs text-gray-500">
-                {selectedRooms.length}{" "}
-                {selectedRooms.length === 1 ? "room" : "rooms"}, {nights}{" "}
-                {nights === 1 ? "night" : "nights"}
-              </Text>
-            </div>
-            <Button
-              type="primary"
-              size="large"
-              onClick={handleCheckout}
-              className="h-12"
-            >
-              Checkout
-            </Button>
-          </div>
-        </Affix>
-      )}
+   {selectedRooms.length > 0 && (
+  <Affix offsetBottom={0}>
+    <div className="bg-white shadow-md border-t p-3 flex justify-between items-center w-full">
+      <div className="flex flex-col">
+        <Text strong className="text-lg">
+          {totalPrice} Tk
+        </Text>
+        <Text className="text-xs text-gray-500">
+          {selectedRooms.length} {selectedRooms.length === 1 ? "room" : "rooms"}, {nights} {nights === 1 ? "night" : "nights"}
+        </Text>
+        <Text className="text-xs text-gray-500">
+          {selectedRooms.map((room) => (
+            <span key={room.id}>
+              {room.type}: {room.quantity} {room.quantity === 1 ? "quantity" : "quantity"}
+              <br /> {/* Optional: Add line break between rooms */}
+            </span>
+          ))}
+        </Text>
+      </div>
+      <Button
+        type="primary"
+        size="large"
+        onClick={handleCheckout}
+        className="h-12"
+      >
+        Checkout
+      </Button>
+    </div>
+  </Affix>
+)}
 
       {/* Date Picker Drawer */}
       <Drawer
