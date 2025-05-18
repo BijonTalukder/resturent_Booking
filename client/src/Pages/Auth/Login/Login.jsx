@@ -48,7 +48,7 @@ const Login = () => {
 
     if (loginData?.success) {
       dispatch(setUser({ token: loginData.token, user: loginData.user }));
-      if (loginData?.user?.role && loginData?.user?.role === "user") {
+      if (loginData?.user?.role && loginData?.user?.role === "user" && loginData?.user?.role !== "admin") {
         navigate(location?.state?.from || "/");
       } 
       // else if (loginData?.user?.role === "admin") {
