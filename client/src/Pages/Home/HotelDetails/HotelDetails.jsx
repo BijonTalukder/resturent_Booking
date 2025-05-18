@@ -11,6 +11,9 @@ import {
   Space,
   Divider,
   Collapse,
+  Affix,
+  Tabs,
+  Tooltip
 } from "antd";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -34,10 +37,18 @@ import {
   DownOutlined,
   BellOutlined,
   DollarOutlined,
+  HeartOutlined,
+  ShareAltOutlined,
+  PlusOutlined,
+  MinusOutlined,
+  CheckCircleFilled,
+  WhatsAppOutlined,
+  MessageOutlined
 } from "@ant-design/icons";
 
 const { Title, Text, Paragraph } = Typography;
 const { Panel } = Collapse;
+const { TabPane } = Tabs;
 
 const HotelDetails = () => {
   const { id } = useParams();
@@ -63,6 +74,8 @@ const HotelDetails = () => {
   const [roomQuantities, setRoomQuantities] = useState({});
   const [adultCounts, setAdultCounts] = useState({});
   const [childCounts, setChildCounts] = useState({});
+  const [showAmenities, setShowAmenities] = useState(false);
+  const [activeTab, setActiveTab] = useState("rooms");
 
   const hotel = hotelData?.data;
   const rooms = roomsData?.data || [];
@@ -73,7 +86,6 @@ const HotelDetails = () => {
 
   const isSelected = (roomId) =>
     selectedRooms.some((room) => room.id === roomId);
-
 
   useEffect(() => {
     if (rooms.length > 0) {
@@ -93,41 +105,41 @@ const HotelDetails = () => {
     }
   }, [rooms]);
 
-    const formatToUTC = (date) =>
+  const formatToUTC = (date) =>
     new Date(
       Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
     ).toISOString();
 
- const handleRoomToggle = async (room) => {
-  try {
-    const res = await checkRoomAvailability({
-      roomId: room.id,
-      checkIn: formatToUTC(checkInDate),
-      checkOut: formatToUTC(checkOutDate),
-      quantity: roomQuantities[room.id] || 1
-    }).unwrap();
+  const handleRoomToggle = async (room) => {
+    try {
+      const res = await checkRoomAvailability({
+        roomId: room.id,
+        checkIn: formatToUTC(checkInDate),
+        checkOut: formatToUTC(checkOutDate),
+        quantity: roomQuantities[room.id] || 1
+      }).unwrap();
 
-    if (res?.data?.available) {
-      if (isSelected(room.id)) {
-        setSelectedRooms((prev) => prev.filter((r) => r.id !== room.id));
-        message.info(`${room.type} room deselected.`);
+      if (res?.data?.available) {
+        if (isSelected(room.id)) {
+          setSelectedRooms((prev) => prev.filter((r) => r.id !== room.id));
+          message.info(`${room.type} room deselected.`);
+        } else {
+          const selectedRoomWithDetails = {
+            ...room,
+            quantity: roomQuantities[room.id] || 1,
+            adults: adultCounts[room.id] || 1,
+            children: childCounts[room.id] || 0
+          };
+          setSelectedRooms((prev) => [...prev, selectedRoomWithDetails]);
+          message.success(`${room.type} room selected.`);
+        }
       } else {
-        const selectedRoomWithDetails = {
-          ...room,
-          quantity: roomQuantities[room.id] || 1,
-          adults: adultCounts[room.id] || 1,
-          children: childCounts[room.id] || 0
-        };
-        setSelectedRooms((prev) => [...prev, selectedRoomWithDetails]);
-        message.success(`${room.type} room selected.`);
+        message.warning("Room not available for selected dates.");
       }
-    } else {
-      message.warning("Room not available for selected dates.");
+    } catch (err) {
+      message.error("Error checking availability. Please try again.");
     }
-  } catch (err) {
-    message.error("Error checking availability. Please try again.");
-  }
-};
+  };
 
   const handleDateChange = (date, isCheckIn = true) => {
     const newDate = startOfDay(date);
@@ -145,61 +157,108 @@ const HotelDetails = () => {
     }
   };
 
-  const handleQuantityChange = (roomId, value) => {
-    setRoomQuantities((prev) => ({
+  // Recalculate needed guest capacity and adjust quantities/guests
+  const recalculateRoomCapacity = (roomId) => {
+    const room = rooms.find(r => r.id === roomId);
+    if (!room) return;
+    
+    const currentAdults = adultCounts[roomId] || 1;
+    const currentChildren = childCounts[roomId] || 0;
+    const currentQuantity = roomQuantities[roomId] || 1;
+    
+    const totalGuests = currentAdults + currentChildren;
+    const maxGuestsPerRoom = room.capacity + room.child;
+    
+    // Calculate needed quantity based on current guests
+    const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
+    
+    // If current quantity is more than needed, we don't adjust
+    if (neededQuantity <= currentQuantity) {
+      return;
+    }
+    
+    // If we need more rooms, adjust quantity
+    setRoomQuantities(prev => ({
       ...prev,
-      [roomId]: Math.max(1, value),
+      [roomId]: neededQuantity
     }));
   };
 
-const handleAdultCountChange = (roomId, value) => {
-  const room = rooms.find(r => r.id === roomId);
-  const currentAdults = adultCounts[roomId] || 1;
-  const currentChildren = childCounts[roomId] || 0;
-  const currentQuantity = roomQuantities[roomId] || 1;
-  
-  // Calculate if we need to increase quantity
-  const totalGuests = value + currentChildren;
-  const maxGuestsPerRoom = room.capacity + room.child;
-  const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
-  
-  setAdultCounts(prev => ({
-    ...prev,
-    [roomId]: Math.max(1, value)
-  }));
-
-  if (neededQuantity > currentQuantity) {
+  const handleQuantityChange = (roomId, value) => {
+    const newQuantity = Math.max(1, value);
+    const room = rooms.find(r => r.id === roomId);
+    if (!room) return;
+    
+    const maxGuestsPerRoom = room.capacity + room.child;
+    const currentAdults = adultCounts[roomId] || 1;
+    const currentChildren = childCounts[roomId] || 0;
+    
+    // If reducing rooms, ensure we adjust guests if needed
+    if (newQuantity < (roomQuantities[roomId] || 1)) {
+      const maxGuests = newQuantity * maxGuestsPerRoom;
+      const totalCurrentGuests = currentAdults + currentChildren;
+      
+      if (totalCurrentGuests > maxGuests) {
+        // Try to preserve adults first, then reduce children if needed
+        let newAdults = currentAdults;
+        let newChildren = currentChildren;
+        
+        if (currentAdults > maxGuests) {
+          // Need to reduce adults
+          newAdults = maxGuests;
+          newChildren = 0;
+        } else {
+          // Reduce children to fit
+          newChildren = Math.max(0, maxGuests - currentAdults);
+        }
+        
+        setAdultCounts(prev => ({
+          ...prev,
+          [roomId]: newAdults
+        }));
+        
+        setChildCounts(prev => ({
+          ...prev,
+          [roomId]: newChildren
+        }));
+      }
+    }
+    
     setRoomQuantities(prev => ({
       ...prev,
-      [roomId]: neededQuantity
+      [roomId]: newQuantity
     }));
-  }
-};
+  };
 
-const handleChildCountChange = (roomId, value) => {
-  const room = rooms.find(r => r.id === roomId);
-  const currentAdults = adultCounts[roomId] || 1;
-  const currentChildren = childCounts[roomId] || 0;
-  const currentQuantity = roomQuantities[roomId] || 1;
-  
-  // Calculate if we need to increase quantity
-  const totalGuests = currentAdults + value;
-  const maxGuestsPerRoom = room.capacity + room.child;
-  const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
-  
-  setChildCounts(prev => ({
-    ...prev,
-    [roomId]: Math.max(0, value)
-  }));
-
-  if (neededQuantity > currentQuantity) {
-    setRoomQuantities(prev => ({
+  const handleAdultCountChange = (roomId, value) => {
+    const room = rooms.find(r => r.id === roomId);
+    if (!room) return;
+    
+    const newAdultCount = Math.max(1, value);
+    
+    setAdultCounts(prev => ({
       ...prev,
-      [roomId]: neededQuantity
+      [roomId]: newAdultCount
     }));
-  }
-};
+    
+    // After setting new adult count, recalculate capacity needs
+    setTimeout(() => recalculateRoomCapacity(roomId), 0);
+  };
 
+  const handleChildCountChange = (roomId, value) => {
+    const room = rooms.find(r => r.id === roomId);
+    if (!room) return;
+    
+    const newChildCount = Math.max(0, value);
+    
+    setChildCounts(prev => ({
+      ...prev,
+      [roomId]: newChildCount
+    }));
+    
+    // After setting new child count, recalculate capacity needs
+    setTimeout(() => recalculateRoomCapacity(roomId), 0);
+  };
 
   const totalPrice = selectedRooms.reduce(
     (sum, room) => sum + room.price * nights * (room.quantity || 1),
@@ -228,21 +287,23 @@ const handleChildCountChange = (roomId, value) => {
   if (hotelLoading || roomsLoading) return <Skeleton />;
   if (hotelError) return <div>Error loading hotel details.</div>;
 
-  console.log(selectedRooms)
-
   return (
     <div className="pb-24">
-      {/* Back Button */}
-      <div className="sticky top-0 z-10 bg-white p-4 shadow-sm">
+      {/* Top Bar - Fixed */}
+      <div className="sticky top-0 z-20 bg-white p-4 shadow-sm flex justify-between items-center">
         <Link to="/">
           <Button
             type="text"
             icon={<LeftCircleFilled />}
-            style={{ fontSize: "16px" }}
+            className="flex items-center"
           >
-            Back
+            <span className="ml-1">Back</span>
           </Button>
         </Link>
+        <div className="flex gap-2">
+          <Button type="text" icon={<HeartOutlined />} />
+          <Button type="text" icon={<ShareAltOutlined />} />
+        </div>
       </div>
 
       {/* Main Gallery */}
@@ -253,18 +314,67 @@ const handleChildCountChange = (roomId, value) => {
         <Title level={3} style={{ margin: "0 0 4px 0" }}>
           {hotel?.name}
         </Title>
-        <div className="flex items-center text-gray-600 mt-5 mb-5">
+        <div className="flex items-center text-gray-600 mt-2">
           <EnvironmentOutlined />
           <Text className="ml-1">{hotel?.location}</Text>
         </div>
+        
+        {/* Amenities Button */}
+        {/* <Button 
+          type="default" 
+          className="mt-3" 
+          onClick={() => setShowAmenities(true)}
+        >
+          View Amenities
+        </Button> */}
       </div>
+      
+      {/* Amenities Drawer */}
+   
+        <SliderAminities amenities={hotel?.amenities || []} />
+
+
+
+
+       <div className="mt-4">
+          <Title level={5}>Need Help?</Title>
+          <div className="flex gap-3 mb-4">
+            <a 
+              href="https://wa.me/123456789" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex-1"
+            >
+              <Button 
+                type="primary" 
+                icon={<WhatsAppOutlined />} 
+                className="bg-green-500 hover:bg-green-600"
+                block
+              >
+                WhatsApp
+              </Button>
+            </a>
+            <a 
+              href="http://m.me/hotelname" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex-1"
+            >
+              <Button 
+                type="primary" 
+                icon={<MessageOutlined />} 
+                className="bg-blue-500 hover:bg-blue-600"
+                block
+              >
+                Messenger
+              </Button>
+            </a>
+          </div>
+        </div>
 
       {/* Date Selection */}
-      <Card className="mx-4 mb-4 shadow-sm">
-        <div
-          className="flex  justify-between items-center"
-          onClick={() => setDatePickerVisible(true)}
-        >
+      <Card className="mx-4 mb-4 shadow-sm" onClick={() => setDatePickerVisible(true)}>
+        <div className="flex justify-between items-center">
           <div>
             <div className="flex items-center mb-1">
               <CalendarOutlined className="mr-2 text-blue-600" />
@@ -279,298 +389,300 @@ const handleChildCountChange = (roomId, value) => {
               </Tag>
             </div>
           </div>
-          <Button type="default" shape="round" size="small">
+          <Button type="primary" shape="round" size="small">
             Change
           </Button>
         </div>
       </Card>
 
-      {/* Amenities */}
-      <div className="px-4 mb-4">
-        <Title level={4} style={{ marginBottom: "12px" }}>
-          Amenities
-        </Title>
-        <SliderAminities amenities={hotel?.amenities || []} />
+      {/* Navigation Tabs */}
+      <div className="sticky top-16 z-10 bg-white border-b">
+        <Tabs 
+          activeKey={activeTab} 
+          onChange={setActiveTab} 
+          centered
+          size="large"
+          className="px-2"
+        >
+          <TabPane tab="Rooms" key="rooms" />
+          <TabPane tab="Map" key="map" />
+        </Tabs>
       </div>
 
-      {/* Description */}
-      <Collapse
-        bordered={false}
-        className="mx-4 mb-4 shadow-sm"
-        expandIcon={({ isActive }) => (
-          <DownOutlined rotate={isActive ? 180 : 0} />
-        )}
-      >
-        <Panel
-          header={<span className="font-medium">Hotel Description</span>}
-          key="1"
-        >
-          <Paragraph>{hotel?.description}</Paragraph>
-        </Panel>
-      </Collapse>
-
-      {/* Map Button */}
-      {hotel?.latitude && hotel?.longitude && (
-        <div className="mx-4 mb-4">
-          <Button
-            onClick={() => setShowMap(!showMap)}
-            icon={<EnvironmentOutlined />}
-            block
-            style={{ height: "40px" }}
-          >
-            {showMap ? "Hide Map" : "View on Map"}
-          </Button>
-        </div>
-      )}
-
-      {/* Map */}
-      {showMap && hotel?.latitude && hotel?.longitude && (
-        <Card className="mx-4 mb-4 shadow-sm">
-          <iframe
-            width="100%"
-            height="200"
-            frameBorder="0"
-            src={`https://www.google.com/maps?q=${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
-            allowFullScreen
-          />
-        </Card>
-      )}
-
-      {/* Room List */}
-      <div className="px-4 mb-4">
-        <Title level={4}>Available Rooms</Title>
-        <List
-          itemLayout="horizontal"
-          dataSource={rooms}
-          renderItem={(room) => (
-            <List.Item className="p-0 mb-4">
-              <Card
-                className={`w-full ${
-                  isSelected(room.id)
-                    ? "border-2 border-blue-500"
-                    : "border border-gray-200"
-                }`}
-                bodyStyle={{ padding: "12px" }}
-                hoverable
-              >
-                <div className="flex flex-col">
-                  {/* Room Image & Basic Info */}
-                  <div className="relative mb-2">
-                    <img
-                      alt={room.type}
-                      src={
-                        room.images?.[0] ||
-                        "https://via.placeholder.com/300x200"
-                      }
-                      className="w-full h-40 object-cover rounded"
-                    />
-                    {isSelected(room.id) && (
-                      <Badge
-                        count="Selected"
-                        style={{ backgroundColor: "#1890ff" }}
-                        className="absolute top-2 right-2"
-                      />
-                    )}
-                  </div>
-
-                  {/* Room Info */}
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <Title level={5} style={{ margin: 0 }}>
-                        {room.type}
-                      </Title>
-                      <Text strong className="text-lg">
-                        {room.price} Tk
-                      </Text>
-                    </div>
-
-                    <div className="flex justify-between mb-3">
-                      <Text type="secondary">
-                        <UserOutlined className="mr-1" />
-                        {room.capacity} adults, {room.child} children
-                      </Text>
-                      <div>
-                        <span className="text-xs font-bold">Room Available: </span>
-                        {room?.roomQty}
+      {/* Content based on active tab */}
+      <div className="px-4">
+        {activeTab === "rooms" && (
+          <div className="mb-4">
+            <List
+              itemLayout="horizontal"
+              dataSource={rooms}
+              renderItem={(room) => (
+                <List.Item className="p-0 mb-4">
+                  <Card
+                    className={`w-full ${
+                      isSelected(room.id)
+                        ? "border-2 border-blue-500"
+                        : "border border-gray-200"
+                    }`}
+                    bodyStyle={{ padding: "12px" }}
+                    hoverable
+                  >
+                    <div className="flex flex-col">
+                      {/* Room Image & Basic Info */}
+                      <div className="relative mb-2">
+                        <img
+                          alt={room.type}
+                          src={
+                            room.images?.[0] ||
+                            "https://via.placeholder.com/300x200"
+                          }
+                          className="w-full h-40 object-cover rounded"
+                        />
+                        {isSelected(room.id) && (
+                          <Badge
+                            count={
+                              <CheckCircleFilled 
+                                style={{ 
+                                  fontSize: '22px', 
+                                  color: '#1890ff' 
+                                }} 
+                              />
+                            }
+                            className="absolute top-2 right-2"
+                          />
+                        )}
                       </div>
 
-                    </div>
+                      {/* Room Info */}
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <Title level={5} style={{ margin: 0 }}>
+                            {room.type}
+                          </Title>
+                          <Text strong className="text-lg">
+                            {room.price} Tk
+                          </Text>
+                        </div>
 
-                  </div>
+                        <div className="flex justify-between mb-2">
+                          <Text type="secondary">
+                            <UserOutlined className="mr-1" />
+                            {room.capacity} adults, {room.child} children
+                          </Text>
+                          <div>
+                            <span className="text-xs font-medium">Available: </span>
+                            <span className="text-xs font-bold">{room?.roomQty}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center flex-wrap gap-2 mb-3">
+                          {room.amenities?.slice(0, 3).map((amenity, index) => (
+                            <Tag key={index} color="cyan" className="text-xs">
+                              {amenity}
+                            </Tag>
+                          ))}
+                          {room.amenities?.length > 3 && (
+                            <Tag color="default" className="text-xs">
+                              +{room.amenities.length - 3} more
+                            </Tag>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Counter Controls */}
+                      <div className="grid grid-cols-3 gap-2 mb-3">
+                        {/* Quantity */}
+                        <div className="flex flex-col">
+                          <Text strong className="text-xs mb-1">Rooms</Text>
+                          <div className="flex items-center justify-between border rounded p-1">
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<MinusOutlined />}
+                              className="flex items-center justify-center !h-7 !min-w-0"
+                              onClick={() =>
+                                handleQuantityChange(
+                                  room.id,
+                                  (roomQuantities[room.id] || 1) - 1
+                                )
+                              }
+                              disabled={(roomQuantities[room.id] || 1) <= 1}
+                            />
+                            <span className="text-xs font-medium">
+                              {roomQuantities[room.id] || 1}
+                            </span>
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<PlusOutlined />}
+                              className="flex items-center justify-center !h-7 !min-w-0"
+                              onClick={() =>
+                                handleQuantityChange(
+                                  room.id,
+                                  (roomQuantities[room.id] || 1) + 1
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+
+                        {/* Adults */}
+                        <div className="flex flex-col">
+                          <Text strong className="text-xs mb-1">Adults</Text>
+                          <div className="flex items-center justify-between border rounded p-1">
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<MinusOutlined />}
+                              className="flex items-center justify-center !h-7 !min-w-0"
+                              onClick={() =>
+                                handleAdultCountChange(
+                                  room.id,
+                                  (adultCounts[room.id] || 1) - 1
+                                )
+                              }
+                              disabled={(adultCounts[room.id] || 1) <= 1}
+                            />
+                            <span className="text-xs font-medium">
+                              {adultCounts[room.id] || 1}
+                            </span>
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<PlusOutlined />}
+                              className="flex items-center justify-center !h-7 !min-w-0"
+                              onClick={() =>
+                                handleAdultCountChange(
+                                  room.id,
+                                  (adultCounts[room.id] || 1) + 1
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+
+                        {/* Children */}
+                        <div className="flex flex-col">
+                          <Text strong className="text-xs mb-1">Children</Text>
+                          <div className="flex items-center justify-between border rounded p-1">
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<MinusOutlined />}
+                              className="flex items-center justify-center !h-7 !min-w-0"
+                              onClick={() =>
+                                handleChildCountChange(
+                                  room.id,
+                                  (childCounts[room.id] || 0) - 1
+                                )
+                              }
+                              disabled={(childCounts[room.id] || 0) <= 0}
+                            />
+                            <span className="text-xs font-medium">
+                              {childCounts[room.id] || 0}
+                            </span>
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<PlusOutlined />}
+                              className="flex items-center justify-center !h-7 !min-w-0"
+                              onClick={() =>
+                                handleChildCountChange(
+                                  room.id,
+                                  (childCounts[room.id] || 0) + 1
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex justify-between gap-2">
+                        <Button 
+                          onClick={() => openRoomDetails(room)}
+                          type="default"
+                          className="flex-1"
+                        >
+                          Details
+                        </Button>
+                        <Button
+                          type={isSelected(room.id) ? "default" : "primary"}
+                          onClick={() => handleRoomToggle(room)}
+                          disabled={!room.isAvailable}
+                          className="flex-1"
+                        >
+                          {isSelected(room.id) ? "Deselect" : "Select"}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                </List.Item>
+              )}
+            />
+          </div>
+        )}
+
+        {activeTab === "map" && (
+          <div className="mb-4">
+            <Title level={4} style={{ marginBottom: "12px" }}>
+              Location
+            </Title>
+            {hotel?.latitude && hotel?.longitude ? (
+              <Card className="mb-4 shadow-sm">
+                <iframe
+                  title="Hotel Location"
+                  width="100%"
+                  height="300"
+                  frameBorder="0"
+                  style={{ borderRadius: "8px" }}
+                  src={`https://www.google.com/maps?q=${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
+                  allowFullScreen
+                />
+                <div className="mt-3">
+                  <Text strong>Address:</Text>
+                  <Paragraph className="mb-0 mt-1">
+                    {hotel.location}
+                  </Paragraph>
                 </div>
-                <div className="flex items-center flex-wrap mt-3 gap-4 mb-3">
-                  {/* Quantity Selector */}
-                  <div className="flex items-center">
-                    <Text strong className="text-xs mr-1 whitespace-nowrap">
-                      Qty:
-                    </Text>
-                    <div className="flex items-center border rounded">
-                      <Button
-                        type="text"
-                        size="small"
-                        className="!px-2 !h-6 !min-w-0"
-                        onClick={() =>
-                          handleQuantityChange(
-                            room.id,
-                            (roomQuantities[room.id] || 1) - 1
-                          )
-                        }
-                        disabled={(roomQuantities[room.id] || 1) <= 1}
-                      >
-                        -
-                      </Button>
-                      <span className="text-xs w-6 text-center">
-                        {roomQuantities[room.id] || 1}
-                      </span>
-                      <Button
-                        type="text"
-                        size="small"
-                        className="!px-2 !h-6 !min-w-0"
-                        onClick={() =>
-                          handleQuantityChange(
-                            room.id,
-                            (roomQuantities[room.id] || 1) + 1
-                          )
-                        }
-                      >
-                        +
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Adults Selector */}
-                  <div className="flex items-center">
-                    <Text strong className="text-xs mr-1 whitespace-nowrap">
-                      Adults:
-                    </Text>
-                    <div className="flex items-center border rounded">
-                      <Button
-                        type="text"
-                        size="small"
-                        className="!px-2 !h-6 !min-w-0"
-                        onClick={() =>
-                          handleAdultCountChange(
-                            room.id,
-                            (adultCounts[room.id] || 1) - 1
-                          )
-                        }
-                        disabled={(adultCounts[room.id] || 1) <= 1}
-                      >
-                        -
-                      </Button>
-                      <span className="text-xs w-6 text-center">
-                        {adultCounts[room.id] || 1}
-                      </span>
-                      <Button
-                        type="text"
-                        size="small"
-                        className="!px-2 !h-6 !min-w-0"
-                        onClick={() =>
-                          handleAdultCountChange(
-                            room.id,
-                            (adultCounts[room.id] || 1) + 1
-                          )
-                        }
-                        // disabled={(adultCounts[room.id] || 1) >= room.capacity}
-                      >
-                        +
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Children Selector */}
-                  <div className="flex items-center">
-                    <Text strong className="text-xs mr-1 whitespace-nowrap">
-                      Children:
-                    </Text>
-                    <div className="flex items-center border rounded">
-                      <Button
-                        type="text"
-                        size="small"
-                        className="!px-2 !h-6 !min-w-0"
-                        onClick={() =>
-                          handleChildCountChange(
-                            room.id,
-                            (childCounts[room.id] || 0) - 1
-                          )
-                        }
-                        disabled={(childCounts[room.id] || 0) <= 0}
-                      >
-                        -
-                      </Button>
-                      <span className="text-xs w-6 text-center">
-                        {childCounts[room.id] || 0}
-                      </span>
-                      <Button
-                        type="text"
-                        size="small"
-                        className="!px-2 !h-6 !min-w-0"
-                        onClick={() =>
-                          handleChildCountChange(
-                            room.id,
-                            (childCounts[room.id] || 0) + 1
-                          )
-                        }
-                      >
-                        +
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                                    {/* Action Buttons */}
-                    <div className="flex justify-between">
-                      <Button 
-                        onClick={() => openRoomDetails(room)}
-                        type="default"
-                        icon={<InfoCircleOutlined />}
-                      >
-                        Details
-                      </Button>
-                      <Button
-                        type={isSelected(room.id) ? "default" : "link"}
-                        onClick={() => handleRoomToggle(room)}
-                        disabled={!room.isAvailable}
-                      >
-                        {room.isAvailable 
-                          ? (isSelected(room.id) ? "Deselect" : "Select Room") 
-                          : "Unavailable"}
-                      </Button>
-                    </div>
               </Card>
-            </List.Item>
-          )}
-        />
+            ) : (
+              <Text>Location information not available</Text>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Fixed Bottom Checkout Bar */}
       {selectedRooms.length > 0 && (
-        //<Affix offsetBottom={0}>
-        <div className="flex justify-center">
-          <div className="flex justify-between items-center">
-            {/* <div>
-                <Text strong className="block">{selectedRooms.length} {selectedRooms.length === 1 ? 'room' : 'rooms'}</Text>
-            </div> */}
+        <Affix offsetBottom={0}>
+          <div className="bg-white shadow-md border-t p-3 flex justify-between items-center w-full">
+            <div className="flex flex-col">
+              <Text strong className="text-lg">{totalPrice} Tk</Text>
+              <Text className="text-xs text-gray-500">
+                {selectedRooms.length} {selectedRooms.length === 1 ? 'room' : 'rooms'}, {nights} {nights === 1 ? 'night' : 'nights'}
+              </Text>
+            </div>
             <Button
-              // type="primary"
+              type="primary"
               size="large"
               onClick={handleCheckout}
-              disabled={selectedRooms.length === 0}
-              className="bg-green-500 hover:bg-green-600 text-white"
+              className="h-12"
             >
-              Proceed to Checkout ({totalPrice} Tk)
+              Checkout
             </Button>
           </div>
-        </div>
-        // </Affix>
+        </Affix>
       )}
 
       {/* Date Picker Drawer */}
       <Drawer
         title="Select Stay Dates"
         placement="bottom"
-        height={380}
+        height={400}
         onClose={() => setDatePickerVisible(false)}
         open={datePickerVisible}
+        bodyStyle={{ padding: "16px" }}
       >
         <div className="px-2">
           <Space direction="vertical" size="large" className="w-full">
@@ -583,7 +695,7 @@ const handleChildCountChange = (roomId, value) => {
                 onChange={(date) => handleDateChange(date, true)}
                 minDate={startOfDay(new Date())}
                 dateFormat="MMM d, yyyy"
-                className="w-full p-3 border rounded"
+                className="w-full p-3 border rounded-lg"
                 placeholderText="Select check-in date"
               />
             </div>
@@ -596,21 +708,22 @@ const handleChildCountChange = (roomId, value) => {
                 onChange={(date) => handleDateChange(date, false)}
                 minDate={addDays(checkInDate, 1)}
                 dateFormat="MMM d, yyyy"
-                className="w-full p-3 border rounded"
+                className="w-full p-3 border rounded-lg"
                 placeholderText="Select check-out date"
               />
             </div>
-            <div className="text-center">
-              <Text>
+            <div className="text-center mt-2">
+              <Tag color="blue" style={{ padding: '4px 8px' }}>
                 <BellOutlined className="mr-1" />
                 {nights} {nights === 1 ? "night" : "nights"} stay
-              </Text>
+              </Tag>
             </div>
             <Button
               type="primary"
               block
               size="large"
               onClick={() => setDatePickerVisible(false)}
+              className="h-12 mt-2"
             >
               Confirm Dates
             </Button>
@@ -622,10 +735,10 @@ const handleChildCountChange = (roomId, value) => {
       <Drawer
         title={currentRoom?.type || "Room Details"}
         placement="bottom"
-        height="70%"
+        height="80%"
         onClose={() => setRoomDetailsVisible(false)}
         open={roomDetailsVisible && currentRoom}
-        className=""
+        bodyStyle={{ padding: "16px" }}
       >
         {currentRoom && (
           <div>
@@ -634,23 +747,62 @@ const handleChildCountChange = (roomId, value) => {
                 currentRoom.images?.[0] || "https://via.placeholder.com/300x200"
               }
               alt={currentRoom.type}
-              className="w-full h-48 object-cover rounded mb-4"
+              className="w-full h-48 object-cover rounded-lg mb-4"
             />
 
-            <div className="mb-4">
-              <div className="flex justify-between mb-2">
-                <Text strong>Price per night:</Text>
-                <Text>{currentRoom.price} Tk</Text>
-              </div>
-              <div className="flex justify-between mb-2">
-                <Text strong>Capacity:</Text>
-                <Text>
-                  {currentRoom.capacity} adults, {currentRoom.child} children
-                </Text>
-              </div>
+            <div className="flex justify-between items-center mb-4">
+              <Title level={4} style={{ margin: 0 }}>Price Details</Title>
+              <Text strong className="text-xl">{currentRoom.price} Tk</Text>
             </div>
 
-            <Divider />
+            <div className="mb-4">
+              <Card className="mb-4">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Text type="secondary">Room Type</Text>
+                    <div className="font-medium">{currentRoom.type}</div>
+                  </div>
+                  <div>
+                    <Text type="secondary">Capacity</Text>
+                    <div className="font-medium">{currentRoom.capacity} Adults, {currentRoom.child} Children</div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Contact Options */}
+              <Title level={5}>Need Help?</Title>
+              <div className="flex gap-3 mb-4">
+                <a 
+                  href="https://wa.me/123456789" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex-1"
+                >
+                  <Button 
+                    type="primary" 
+                    icon={<WhatsAppOutlined />} 
+                    className="bg-green-500 hover:bg-green-600"
+                    block
+                  >
+                    WhatsApp
+                  </Button>
+                </a>
+                <a 
+                  href="http://m.me/hotelname" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex-1"
+                >
+                  <Button 
+                    type="primary" 
+                    icon={<MessageOutlined />} 
+                    className="bg-blue-500 hover:bg-blue-600"
+                    block
+                  >
+                    Messenger
+                  </Button>
+                </a>
+              </div>
 
             {currentRoom.amenities && currentRoom.amenities.length > 0 && (
               <>
@@ -672,7 +824,7 @@ const handleChildCountChange = (roomId, value) => {
               </>
             )}
 
-            <div className="mt-4">
+            <div className="mt-6">
               <Button
                 type={isSelected(currentRoom.id) ? "default" : "primary"}
                 onClick={() => {
@@ -681,15 +833,15 @@ const handleChildCountChange = (roomId, value) => {
                 }}
                 block
                 size="large"
+                className="h-12"
                 disabled={!currentRoom.isAvailable}
               >
-                {currentRoom.isAvailable
-                  ? isSelected(currentRoom.id)
-                    ? "Deselect Room"
-                    : "Select Room"
-                  : "Room Unavailable"}
+                {isSelected(currentRoom.id)
+                  ? "Deselect Room"
+                  : "Select This Room"}
               </Button>
             </div>
+          </div>
           </div>
         )}
       </Drawer>
