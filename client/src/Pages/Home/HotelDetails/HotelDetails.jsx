@@ -74,7 +74,6 @@ const HotelDetails = () => {
   const [roomQuantities, setRoomQuantities] = useState({});
   const [adultCounts, setAdultCounts] = useState({});
   const [childCounts, setChildCounts] = useState({});
-  const [showAmenities, setShowAmenities] = useState(false);
   const [activeTab, setActiveTab] = useState("rooms");
 
   const hotel = hotelData?.data;
@@ -319,31 +318,54 @@ const HotelDetails = () => {
           <Text className="ml-1">{hotel?.location}</Text>
         </div>
         
-        {/* Amenities Button */}
-        <Button 
-          type="default" 
-          className="mt-3" 
-          onClick={() => setShowAmenities(true)}
-        >
-          View Amenities
-        </Button>
-      </div>
-      
-      {/* Amenities Drawer */}
-      <Drawer
-        title="Hotel Amenities"
-        placement="bottom"
-        height={400}
-        onClose={() => setShowAmenities(false)}
-        open={showAmenities}
-        bodyStyle={{ padding: "16px" }}
-      >
-        <SliderAminities amenities={hotel?.amenities || []} />
-        
         {/* Hotel Description */}
-        <Divider orientation="left">About This Hotel</Divider>
-        <Paragraph>{hotel?.description}</Paragraph>
-      </Drawer>
+        <div className="mt-3">
+          <Paragraph>{hotel?.description}</Paragraph>
+        </div>
+        
+        {/* Amenities displayed directly instead of in drawer */}
+        <div className="mt-4">
+          <Title level={5}>Hotel Amenities</Title>
+          <SliderAminities amenities={hotel?.amenities || []} />
+        </div>
+        
+        {/* Contact Options - Moved from room details to hotel info */}
+        <div className="mt-4">
+          <Title level={5}>Need Help?</Title>
+          <div className="flex gap-3 mb-4">
+            <a 
+              href="https://wa.me/123456789" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex-1"
+            >
+              <Button 
+                type="primary" 
+                icon={<WhatsAppOutlined />} 
+                className="bg-green-500 hover:bg-green-600"
+                block
+              >
+                WhatsApp
+              </Button>
+            </a>
+            <a 
+              href="http://m.me/hotelname" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex-1"
+            >
+              <Button 
+                type="primary" 
+                icon={<MessageOutlined />} 
+                className="bg-blue-500 hover:bg-blue-600"
+                block
+              >
+                Messenger
+              </Button>
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* Date Selection */}
       <Card className="mx-4 mb-4 shadow-sm" onClick={() => setDatePickerVisible(true)}>
@@ -741,41 +763,6 @@ const HotelDetails = () => {
                   </div>
                 </div>
               </Card>
-
-              {/* Contact Options */}
-              <Title level={5}>Need Help?</Title>
-              <div className="flex gap-3 mb-4">
-                <a 
-                  href="https://wa.me/123456789" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex-1"
-                >
-                  <Button 
-                    type="primary" 
-                    icon={<WhatsAppOutlined />} 
-                    className="bg-green-500 hover:bg-green-600"
-                    block
-                  >
-                    WhatsApp
-                  </Button>
-                </a>
-                <a 
-                  href="http://m.me/hotelname" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex-1"
-                >
-                  <Button 
-                    type="primary" 
-                    icon={<MessageOutlined />} 
-                    className="bg-blue-500 hover:bg-blue-600"
-                    block
-                  >
-                    Messenger
-                  </Button>
-                </a>
-              </div>
 
             {currentRoom.amenities && currentRoom.amenities.length > 0 && (
               <>
