@@ -157,59 +157,107 @@ const HotelDetails = () => {
     }
   };
 
-  const handleQuantityChange = (roomId, value) => {
-    setRoomQuantities((prev) => ({
+  // Recalculate needed guest capacity and adjust quantities/guests
+  const recalculateRoomCapacity = (roomId) => {
+    const room = rooms.find(r => r.id === roomId);
+    if (!room) return;
+    
+    const currentAdults = adultCounts[roomId] || 1;
+    const currentChildren = childCounts[roomId] || 0;
+    const currentQuantity = roomQuantities[roomId] || 1;
+    
+    const totalGuests = currentAdults + currentChildren;
+    const maxGuestsPerRoom = room.capacity + room.child;
+    
+    // Calculate needed quantity based on current guests
+    const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
+    
+    // If current quantity is more than needed, we don't adjust
+    if (neededQuantity <= currentQuantity) {
+      return;
+    }
+    
+    // If we need more rooms, adjust quantity
+    setRoomQuantities(prev => ({
       ...prev,
-      [roomId]: Math.max(1, value),
+      [roomId]: neededQuantity
+    }));
+  };
+
+  const handleQuantityChange = (roomId, value) => {
+    const newQuantity = Math.max(1, value);
+    const room = rooms.find(r => r.id === roomId);
+    if (!room) return;
+    
+    const maxGuestsPerRoom = room.capacity + room.child;
+    const currentAdults = adultCounts[roomId] || 1;
+    const currentChildren = childCounts[roomId] || 0;
+    
+    // If reducing rooms, ensure we adjust guests if needed
+    if (newQuantity < (roomQuantities[roomId] || 1)) {
+      const maxGuests = newQuantity * maxGuestsPerRoom;
+      const totalCurrentGuests = currentAdults + currentChildren;
+      
+      if (totalCurrentGuests > maxGuests) {
+        // Try to preserve adults first, then reduce children if needed
+        let newAdults = currentAdults;
+        let newChildren = currentChildren;
+        
+        if (currentAdults > maxGuests) {
+          // Need to reduce adults
+          newAdults = maxGuests;
+          newChildren = 0;
+        } else {
+          // Reduce children to fit
+          newChildren = Math.max(0, maxGuests - currentAdults);
+        }
+        
+        setAdultCounts(prev => ({
+          ...prev,
+          [roomId]: newAdults
+        }));
+        
+        setChildCounts(prev => ({
+          ...prev,
+          [roomId]: newChildren
+        }));
+      }
+    }
+    
+    setRoomQuantities(prev => ({
+      ...prev,
+      [roomId]: newQuantity
     }));
   };
 
   const handleAdultCountChange = (roomId, value) => {
     const room = rooms.find(r => r.id === roomId);
-    const currentAdults = adultCounts[roomId] || 1;
-    const currentChildren = childCounts[roomId] || 0;
-    const currentQuantity = roomQuantities[roomId] || 1;
+    if (!room) return;
     
-    // Calculate if we need to increase quantity
-    const totalGuests = value + currentChildren;
-    const maxGuestsPerRoom = room.capacity + room.child;
-    const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
+    const newAdultCount = Math.max(1, value);
     
     setAdultCounts(prev => ({
       ...prev,
-      [roomId]: Math.max(1, value)
+      [roomId]: newAdultCount
     }));
-
-    if (neededQuantity > currentQuantity) {
-      setRoomQuantities(prev => ({
-        ...prev,
-        [roomId]: neededQuantity
-      }));
-    }
+    
+    // After setting new adult count, recalculate capacity needs
+    setTimeout(() => recalculateRoomCapacity(roomId), 0);
   };
 
   const handleChildCountChange = (roomId, value) => {
     const room = rooms.find(r => r.id === roomId);
-    const currentAdults = adultCounts[roomId] || 1;
-    const currentChildren = childCounts[roomId] || 0;
-    const currentQuantity = roomQuantities[roomId] || 1;
+    if (!room) return;
     
-    // Calculate if we need to increase quantity
-    const totalGuests = currentAdults + value;
-    const maxGuestsPerRoom = room.capacity + room.child;
-    const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
+    const newChildCount = Math.max(0, value);
     
     setChildCounts(prev => ({
       ...prev,
-      [roomId]: Math.max(0, value)
+      [roomId]: newChildCount
     }));
-
-    if (neededQuantity > currentQuantity) {
-      setRoomQuantities(prev => ({
-        ...prev,
-        [roomId]: neededQuantity
-      }));
-    }
+    
+    // After setting new child count, recalculate capacity needs
+    setTimeout(() => recalculateRoomCapacity(roomId), 0);
   };
 
   const totalPrice = selectedRooms.reduce(
@@ -295,27 +343,6 @@ const HotelDetails = () => {
         {/* Hotel Description */}
         <Divider orientation="left">About This Hotel</Divider>
         <Paragraph>{hotel?.description}</Paragraph>
-        
-        {/* Policies */}
-        <Collapse
-          bordered={false}
-          className="mt-4"
-          expandIcon={({ isActive }) => (
-            <DownOutlined rotate={isActive ? 180 : 0} />
-          )}
-        >
-          <Panel
-            header={<span className="font-medium">Hotel Policies</span>}
-            key="1"
-          >
-            <Paragraph>
-              • Check-in: 2:00 PM - 12:00 AM<br />
-              • Check-out: Until 12:00 PM<br />
-              • Cancellation: Free cancellation up to 24 hours before check-in<br />
-              • Pets: Not allowed
-            </Paragraph>
-          </Panel>
-        </Collapse>
       </Drawer>
 
       {/* Date Selection */}
@@ -621,11 +648,6 @@ const HotelDetails = () => {
         </Affix>
       )}
 
-{/* /////sdfsdfds */}
-
-
-
-
       {/* Date Picker Drawer */}
       <Drawer
         title="Select Stay Dates"
@@ -795,7 +817,6 @@ const HotelDetails = () => {
           </div>
           </div>
         )}
-      
       </Drawer>
     </div>
   );
