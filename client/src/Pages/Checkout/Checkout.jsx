@@ -163,17 +163,17 @@ const Checkout = () => {
                 </div>
 
                 <div className="border-t pt-4 space-y-2 text-sm">
-                  <div className="flex justify-between  text-base">
-                    <span className="font-bold">Per Night</span>
+                    <p className="font-bold text-base">Rooms:</p>
+                  <div className="flex justify-center  text-base">
                     <span>{selectedRooms.map((room, index) => {
                       return <div key={index}>
-                        <p>Room-{room.type} : {room.price} Tk</p>
+                        <p>{room.type} - {room.price} Tk (x {room.quantity}) : {room.price * room.quantity} Tk</p>
                         <p></p>
                       </div>
                     })}</span>
                   </div>
                   <div className="flex justify-between font-bold text-base">
-                    <span>Total Price</span>
+                    <span>Total Price:</span>
                     <span>${totalPrice?.toFixed(2)}</span>
                   </div>
                 </div>
