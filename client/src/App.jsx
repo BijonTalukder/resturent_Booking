@@ -3,7 +3,6 @@ import { RouterProvider } from "react-router-dom";
 import "./App.css";
 import { routes } from "./Routes/routes";
 import { Toaster } from "sonner";
-import LoadingPage from "./components/LoadingPage";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import image from "./assets/icon.png";

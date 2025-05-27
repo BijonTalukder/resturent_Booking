@@ -17,8 +17,6 @@ import authSlice from "../Feature/auth/authSlice";
 import bookingReducer from "../Booking/bookingSlice"; 
 
 
-
-
 // Persist reducers
 const persistedAuthReducer = persistReducer({ key: "auth", storage }, authSlice);
 const persistedBookingReducer = persistReducer({ key: "booking", storage }, bookingReducer);
