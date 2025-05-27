@@ -229,6 +229,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
         checkInDate: formatToUTC(checkInDate),
         checkOutDate: formatToUTC(checkOutDate),
         totalPrice,
+        nights
       })
     );
     navigate("/checkout");
