@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { adminRoutes } from "../../Routes/Admin.Routes";
 import { sidebarGenerator } from "../../utils/sidebarGenerator";

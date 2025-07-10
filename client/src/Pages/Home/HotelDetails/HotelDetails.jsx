@@ -67,14 +67,12 @@ const HotelDetails = () => {
   const [checkOutDate, setCheckOutDate] = useState(
     addDays(startOfDay(new Date()), 1)
   );
-  const [showMap, setShowMap] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [roomDetailsVisible, setRoomDetailsVisible] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const [roomQuantities, setRoomQuantities] = useState({});
   const [adultCounts, setAdultCounts] = useState({});
   const [childCounts, setChildCounts] = useState({});
-  const [showAmenities, setShowAmenities] = useState(false);
   const [activeTab, setActiveTab] = useState("rooms");
 
   const hotel = hotelData?.data;
@@ -229,6 +227,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
         checkInDate: formatToUTC(checkInDate),
         checkOutDate: formatToUTC(checkOutDate),
         totalPrice,
+        nights
       })
     );
     navigate("/checkout");
@@ -346,14 +345,14 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
               </Tag>
             </div>
           </div>
-          <Button type="primary" shape="round" size="small">
+          <Button className="text-black" type="primary" shape="round" size="small">
             Change
           </Button>
         </div>
       </Card>
 
       {/* Navigation Tabs */}
-      <div className="sticky top-16 z-10 bg-white border-b">
+      <div className="sticky top-16 z-10 bg-white">
         <Tabs
           activeKey={activeTab}
           onChange={setActiveTab}
@@ -367,24 +366,33 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
       </div>
 
       {/* Content based on active tab */}
-      <div className="px-4">
+      <div className="px-4 mt-5">
+
         {activeTab === "rooms" && (
-          <div className="mb-4">
+          <div className="">
             <List
-              itemLayout="horizontal"
+              grid={{
+        gutter: 16,
+        xs: 1,
+        sm: 2,
+        md: 2,
+        lg: 3,
+        xl: 4,
+        xxl: 4,
+      }}
               dataSource={rooms}
               renderItem={(room) => (
-                <List.Item className="p-0 mb-4">
+                <List.Item className="!h-full">
                   <Card
-                    className={`w-full ${
+                    className={`w-full h-full ${
                       isSelected(room.id)
                         ? "border-2 border-blue-500"
                         : "border border-gray-200"
                     }`}
-                    bodyStyle={{ padding: "12px" }}
+                    bodyStyle={{ padding: "12px", display: 'flex', flexDirection: 'column', flex: 1 }} 
                     hoverable
                   >
-                    <div className="flex flex-col">
+                    <div className="flex flex-col flex-1">
                       {/* Room Image & Basic Info */}
                       <div className="relative mb-2">
                         <img
@@ -436,8 +444,8 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                           </div>
                         </div>
 
-                        <div className="flex items-center flex-wrap gap-2 mb-3">
-                          {room.amenities?.slice(0, 3).map((amenity, index) => (
+                        <div className="flex items-center flex-wrap lg:flex-nowrap gap-y-2 mb-3">
+                          {room.amenities?.slice(0, 2).map((amenity, index) => (
                             <Tag key={index} color="cyan" className="text-xs">
                               {amenity}
                             </Tag>
@@ -570,7 +578,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                           type={isSelected(room.id) ? "default" : "primary"}
                           onClick={() => handleRoomToggle(room)}
                           disabled={!room.isAvailable}
-                          className="flex-1"
+                          className="flex-1 text-black"
                         >
                           {isSelected(room.id) ? "Deselect" : "Select"}
                         </Button>
@@ -635,7 +643,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
         type="primary"
         size="large"
         onClick={handleCheckout}
-        className="h-12"
+        className="h-12 text-black"
       >
         Checkout
       </Button>

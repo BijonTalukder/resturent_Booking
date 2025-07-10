@@ -14,12 +14,12 @@ import { useDeleteBookingMutation, useGetBookingsQuery } from "../../../../redux
 import ViewBooking from "./ViewBooking";
 
 const Bookings = () => {
+  const [selectedBooking, setSelectedBooking] = useState({});
   const dispatch = useAppDispatch();
   const { isEditModalOpen, isViewModalOpen, isDeleteModalOpen } = useAppSelector((state) => state.modal);
   const { data, isLoading } = useGetBookingsQuery();
   const [deleteBooking, { isLoading: deleteLoading, isError, isSuccess, data: deletedData, error: deleteError }] = useDeleteBookingMutation();
 
-  const [selectedBooking, setSelectedBooking] = useState({});
   const [filterStatus, setFilterStatus] = useState("all");
 
   const bookingData = data?.data?.map((booking, index) => ({

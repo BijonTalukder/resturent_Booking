@@ -4,7 +4,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import { useGetSlidersQuery } from "../../../redux/Feature/Admin/slider/sliderApi";
 import { Spin } from "antd";
 import Skeleton from "../../../components/Skeleton/Skeleton";
-import SectionTitle from "../SectionTitle/SectionTitle";
+import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 
 
 const BannerSlider = () => {
@@ -17,7 +17,7 @@ const BannerSlider = () => {
     } else {
       const timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 2000);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [isFetching , sliderIsLoading]);

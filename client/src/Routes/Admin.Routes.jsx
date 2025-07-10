@@ -1,14 +1,11 @@
-import { MdContacts, MdNotificationImportant, MdOutlineShoppingCartCheckout } from "react-icons/md";
+import { MdNotificationImportant } from "react-icons/md";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { TfiLayoutSlider } from "react-icons/tfi";
 import DashboardStatistics from "../Pages/Dashboard/Admin/DashboardStatistics/DashboardStatistics";
 import { AiFillBoxPlot } from "react-icons/ai";
-import { BiSolidPurchaseTag } from "react-icons/bi";
 import Sliders from "../Pages/Dashboard/Admin/Slider/Sliders";
 import { CiShop } from "react-icons/ci";
-import { FaUser, FaUsers } from "react-icons/fa";
-import Subscription from "../Pages/Dashboard/Admin/Subscription/Subscription";
-import Contact from "../Pages/Dashboard/Admin/Contact/Contact";
+import { FaUsers } from "react-icons/fa";
 import Users from "../Pages/Dashboard/Admin/Customers/Users";
 import AddUser from "../Pages/Dashboard/Admin/Customers/AddUser/AddUser";
 import EditAdminProfile from "../Pages/Dashboard/Admin/Profile/EditAdminProfile";
@@ -20,6 +17,7 @@ import EditRoom from "../Pages/Dashboard/Admin/Room/EditRoom";
 import Bookings from "../Pages/Dashboard/Admin/Bookings/Bookings";
 import AddNotification from "../Pages/Dashboard/Admin/AddNotification/AddNotification";
 import Area from "../Pages/Dashboard/Admin/Area/Area";
+import EditSlider from "../Pages/Dashboard/Admin/Slider/EditSlider";
 
 
 export const adminRoutes = [
@@ -31,31 +29,13 @@ export const adminRoutes = [
     permissionName: "view dashboard",
   },
   {
-    path: "/admin/profile",
+    path: "profile",
     element: <EditAdminProfile/>,
   },
   {
     label: "Hotel Management",
     icon: <AiFillBoxPlot size={20} />,
     children: [
-      // {
-      //   path: "categories",
-      //   label: "Category",
-      //   element: <Category></Category>,
-      //   permissionName: "view category",
-      // },
-      // {
-      //   path: "brands",
-      //   label: "Brands",
-      //   element: <Brand></Brand>,
-      //   permissionName: "view brand",
-      // },
-      // {
-      //   path: "attributes",
-      //   label: "Attribute",
-      //   element: <Attribute></Attribute>,
-      //   permissionName: "view attribute",
-      // },
       {
         path: "areas",
         label: "Areas",
@@ -118,11 +98,4 @@ export const adminRoutes = [
     element: <AddUser/>,
   
   },
-  // {
-  //   path: "contacts",
-  //   label: "Contacts",
-  //   element: <Contact/>,
-  //   icon: <MdContacts  size={20}/>,
-  //   permissionName: "view contact",
-  // },
 ];

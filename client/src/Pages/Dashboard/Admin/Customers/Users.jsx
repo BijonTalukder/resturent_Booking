@@ -14,9 +14,9 @@ import { toast } from "sonner";
 
 const Users = () => {
   const dispatch = useAppDispatch();
-  const { data, error, isLoading: userIsLoading } = useGetUsersQuery();
   const { isAddModalOpen, isEditModalOpen } = useAppSelector((state) => state.modal);
   const [selectedUser, setSelectedUser] = useState({});
+  const { data, error, isLoading: userIsLoading } = useGetUsersQuery();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteUser, { isLoading: dUIsLoading, isSuccess, isError, error: uError }] = useDeleteUserMutation();
   const [roleFilter, setRoleFilter] = useState("all"); // State for role filter
