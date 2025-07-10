@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useOutletContext, useParams } from "react-router-dom";
-import SectionTitle from "../SectionTitle/SectionTitle";
+import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import ProductsSkeleton from "../../../components/Skeleton/ProductsSkeleton";
 import { IoLocationOutline } from "react-icons/io5";
 import Image1 from "../../../../public/image.png";
@@ -17,7 +17,7 @@ const {areaId} = useParams()
     } else {
       const timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 1000);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [isFetching , isLoading]);

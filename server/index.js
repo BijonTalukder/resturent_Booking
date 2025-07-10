@@ -14,7 +14,7 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://hotel-booking-eight-omega.vercel.app",
+    "https://behb-hotel-booking.vercel.app",
     "https://behb-hotel-booking.netlify.app"
   ],
   credentials: true,
