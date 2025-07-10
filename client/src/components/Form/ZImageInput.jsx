@@ -1,5 +1,5 @@
 import { Button, Form, Upload } from "antd";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { UploadOutlined } from "@ant-design/icons";
 import { useAppSelector } from "../../redux/Hook/Hook";
@@ -11,14 +11,12 @@ const ZImageInput = ({
   onRemove,
   onChange
 }) => {
-
   const [imageList, setImageList] = useState([]);
   const { control, resetField } = useFormContext();
   const { isAddModalOpen, isEditModalOpen, isVariantModalOpen } = useAppSelector(
     (state) => state.modal
   );
-
-
+  const initialRender = useRef(true);
 
   // Update imageList when defaultValue changes
   useEffect(() => {
@@ -32,63 +30,45 @@ const ZImageInput = ({
         },
       ]);
     } else {
-      setImageList([]); // Clear imageList if defaultValue is empty
+      setImageList([]);
     }
   }, [defaultValue]);
 
-    // Reset imageList when modal is closed
-    useEffect(() => {
-    if (!isAddModalOpen || !isEditModalOpen || !isVariantModalOpen) {
+  // Only reset when modal actually closes (not on initial render)
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+
+    if (!isAddModalOpen && !isEditModalOpen && !isVariantModalOpen) {
       setImageList([]);
       resetField(name);
     }
   }, [isAddModalOpen, isEditModalOpen, isVariantModalOpen]);
 
-
-
-  // Handle file change
   const handleChange = (info) => {
     const file = info.file;
 
     if (info.fileList.length > 0) {
-      const newFileList = [
-        {
-          uid: file.uid,
-          name: file.name,
-          status: "done",
-          url: URL.createObjectURL(file),
-        },
-      ];
+      const newFileList = [{
+        uid: file.uid,
+        name: file.name,
+        status: "done",
+        url: URL.createObjectURL(file),
+      }];
       setImageList(newFileList);
-      if (onChange) {
-        onChange(file);
-      }
-    } 
-    else 
-    {
+      onChange?.(file);
+    } else {
       setImageList([]);
-
-      if (onChange) {
-        onChange(null);
-      }
-
-
+      onChange?.(null);
     }
   };
 
-  // Handle file removal
   const handleRemove = () => {
     setImageList([]);
-
-    // Call parent onRemove handler if provided
-    if (onRemove) {
-      onRemove();
-    }
-
-    // Call parent onChange handler if provided
-    if (onChange) {
-      onChange(null);
-    }
+    onRemove?.();
+    onChange?.(null);
   };
 
   return (
@@ -110,25 +90,21 @@ const ZImageInput = ({
               window.open(url, "_blank");
             }}
             beforeUpload={(file) => {
-              const newFileList = [
-                {
-                  uid: file.uid,
-                  name: file.name,
-                  status: "done",
-                  url: URL.createObjectURL(file),
-                },
-              ];
+              const newFileList = [{
+                uid: file.uid,
+                name: file.name,
+                status: "done",
+                url: URL.createObjectURL(file),
+              }];
               setImageList(newFileList);
               onChange(file);
-
-
-              return false; // Prevent automatic upload
+              return false;
             }}
             onRemove={handleRemove}
             maxCount={1}
             onChange={handleChange}
             showUploadList={{
-              showRemoveIcon: false,
+              showRemoveIcon: true,
               showPreviewIcon: true,
             }}
           >

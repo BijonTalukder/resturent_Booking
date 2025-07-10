@@ -369,7 +369,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
       <div className="px-4 mt-5">
 
         {activeTab === "rooms" && (
-          <div className=" mb-4">
+          <div className="">
             <List
               grid={{
         gutter: 16,
@@ -382,14 +382,14 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
       }}
               dataSource={rooms}
               renderItem={(room) => (
-                <List.Item className="">
+                <List.Item className="!h-full">
                   <Card
-                    className={`w-full ${
+                    className={`w-full h-full ${
                       isSelected(room.id)
                         ? "border-2 border-blue-500"
                         : "border border-gray-200"
                     }`}
-                    bodyStyle={{ padding: "12px" }}
+                    bodyStyle={{ padding: "12px", display: 'flex', flexDirection: 'column', flex: 1 }} 
                     hoverable
                   >
                     <div className="flex flex-col flex-1">
@@ -444,8 +444,8 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                           </div>
                         </div>
 
-                        <div className="flex items-center flex-wrap lg:flex-nowrap mb-3">
-                          {room.amenities?.slice(0, 3).map((amenity, index) => (
+                        <div className="flex items-center flex-wrap lg:flex-nowrap gap-y-2 mb-3">
+                          {room.amenities?.slice(0, 2).map((amenity, index) => (
                             <Tag key={index} color="cyan" className="text-xs">
                               {amenity}
                             </Tag>
@@ -643,7 +643,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
         type="primary"
         size="large"
         onClick={handleCheckout}
-        className="h-12"
+        className="h-12 text-black"
       >
         Checkout
       </Button>

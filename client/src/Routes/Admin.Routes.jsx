@@ -17,6 +17,7 @@ import EditRoom from "../Pages/Dashboard/Admin/Room/EditRoom";
 import Bookings from "../Pages/Dashboard/Admin/Bookings/Bookings";
 import AddNotification from "../Pages/Dashboard/Admin/AddNotification/AddNotification";
 import Area from "../Pages/Dashboard/Admin/Area/Area";
+import EditSlider from "../Pages/Dashboard/Admin/Slider/EditSlider";
 
 
 export const adminRoutes = [
