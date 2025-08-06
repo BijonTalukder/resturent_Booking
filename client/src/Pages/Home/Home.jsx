@@ -15,7 +15,7 @@ const Home = () => {
   return (
     <div className="">
       {/* Server is Down By Developer */}
-       <Division/>
+       {/* <Division/> */}
        <BannerSlider />
        <AllHotel/>
 
