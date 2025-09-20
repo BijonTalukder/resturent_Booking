@@ -40,9 +40,7 @@ const Header = ({ onSearch, onFilterChange }) => {
   const [cityId, setCityId] = useState("");
   const [unreadCount, setUnreadCount] = useState(0);
   const {
-    data: notifications,
-    refetch,
-    isFetching,
+    data: notifications
   } = useGetUserNotificationsQuery(user?.id);
   useEffect(() => {
     if (notifications) {

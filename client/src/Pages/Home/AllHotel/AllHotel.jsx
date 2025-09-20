@@ -19,10 +19,9 @@ const AllHotel = () => {
     if (isFetching || isLoading) {
       setShowSkeleton(true);
     } else {
-      const timer = setTimeout(() => {
-        setShowSkeleton(false);
-      }, 500);
-      return () => clearTimeout(timer);
+       setShowSkeleton(false);
+
+      
     }
   }, [isFetching , isLoading]);
 

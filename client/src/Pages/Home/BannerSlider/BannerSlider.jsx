@@ -15,10 +15,7 @@ const BannerSlider = () => {
     if (isFetching || sliderIsLoading) {
       setShowSkeleton(true);
     } else {
-      const timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 500);
-      return () => clearTimeout(timer);
     }
   }, [isFetching , sliderIsLoading]);
   
