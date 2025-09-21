@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Button, Dropdown, Menu, Input, Space } from "antd";
+import { Button, Dropdown, Menu, Input, Badge } from "antd";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "../../redux/Hook/Hook";
 import {
@@ -14,6 +14,11 @@ import image from "../../assets/icon.png";
 import Adjustment from "../Adjustment/Adjustment";
 import { useState, useEffect } from "react";
 import Division from "../../Pages/Division/Division";
+import { useGetUserNotificationsQuery } from "../../redux/Feature/Admin/notification/notificationApi";
+import {
+  BellIcon,
+  BellIcon as BellIconOutline,
+} from "@heroicons/react/24/outline";
 
 const Header = ({ onSearch, onFilterChange }) => {
   const dispatch = useAppDispatch();
@@ -33,7 +38,15 @@ const Header = ({ onSearch, onFilterChange }) => {
   const [visibleRight, setVisibleRight] = useState(false);
   const [divisionId, setDivisionId] = useState("");
   const [cityId, setCityId] = useState("");
-
+  const [unreadCount, setUnreadCount] = useState(0);
+  const {
+    data: notifications
+  } = useGetUserNotificationsQuery(user?.id);
+  useEffect(() => {
+    if (notifications) {
+      setUnreadCount(notifications?.data?.filter((n) => !n.isRead).length);
+    }
+  }, [notifications]);
   // Load recent searches from localStorage on component mount
   useEffect(() => {
     const savedSearches = localStorage.getItem("recentSearches");
@@ -87,26 +100,24 @@ const Header = ({ onSearch, onFilterChange }) => {
   const userMenu = (
     <Menu>
       <Menu.Item
-        key="dashboard"
+        key="booking-history"
         className={getActiveClass(
-          token && user?.role === "admin" ? "/admin/home" : "/order-history"
+          token && user?.role === "user" ? "/user/user-booking" : ""
         )}
         onClick={() =>
-          navigate(
-            token && user?.role === "admin" ? "/admin/home" : "/order-history"
-          )
+          navigate(token && user?.role === "user" ? "/user/user-booking" : "")
         }
       >
-        {token && user?.role === "admin" ? "Dashboard" : "Order History"}
+        {token && user?.role === "user" ? "Booking History" : ""}
       </Menu.Item>
 
       <Menu.Item
         key="profile"
         className={getActiveClass(
-          token && user?.role === "user" ? "/edit-profile" : ""
+          token && user?.role === "user" ? "/user/user-profile" : ""
         )}
         onClick={() =>
-          navigate(token && user?.role === "user" ? "/edit-profile" : "")
+          navigate(token && user?.role === "user" ? "/user/user-profile" : "")
         }
       >
         {token && user?.role === "user" ? "Edit Profile" : ""}
@@ -125,13 +136,15 @@ const Header = ({ onSearch, onFilterChange }) => {
   return (
     <>
       <div
-        className={`py-3 px-4 lg:px-10 mb-3 bg-[#3498db] shadow-sm border-b border-gray-200 ${
+        className={`py-3 lg:py-1 px-4 lg:px-5 mb-3 bg-[#3498db] shadow-sm border-b border-gray-200 ${
           isNotificationPage ||
           isAdminLogin ||
           isDetails ||
           isDivision ||
           isDistrict ||
-          isArea
+          isArea ||
+          location?.pathname === "/login" ||
+          location?.pathname === "/register"
             ? "hidden"
             : ""
         }`}
@@ -139,23 +152,12 @@ const Header = ({ onSearch, onFilterChange }) => {
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           {/* Left Side - Logo/User */}
           <div className="flex justify-between items-center gap-x-1">
-            <div className="hidden lg:block">
-              <Link to={"/"}>
-                <img
-                  className="w-8 h-8 rounded-full"
-                  src={`https://ui-avatars.com/api/?name=${
-                    user?.name?.charAt(0) || "A"
-                  }`}
-                  alt="user photo"
-                />
-              </Link>
-            </div>
             <Link to={"/"}>
-              <div className="block lg:hidden ">
-                <img src={image} className="w-20 h-20 object-contain" alt="" />
+              <div className="">
+                <img src={image} className="w-20 h-20  object-contain" alt="" />
               </div>
             </Link>
-            <div>
+            <div className="lg:hidden">
               <p className="text-[12px] font-bold text-white">
                 {user?.name || "Hello Guest"}
               </p>
@@ -180,29 +182,47 @@ const Header = ({ onSearch, onFilterChange }) => {
                     <HiOutlineAdjustmentsHorizontal className="text-xl" />
                   </button>
                 }
+                onFocus={() => setIsSearchOverlay(true)}
               />
             </div>
           </div>
 
           {/* Right Side - Auth/Links */}
-          <div>
-            {token ? (
-              <Button
-                onClick={handleLogout}
-                className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-red-500 bg-white hover:bg-gray-100 transition-all duration-300 text-[12px] md:text-base"
+          <div className="flex items-center gap-5">
+            <div className="hidden lg:block mt-3">
+             <Link to={"/notification"}>
+               <Badge
+                count={unreadCount}
+                overflowCount={9}
+                className="cursor-pointer"
               >
-                Log out
-              </Button>
+                <BellIcon className="text-xl w-6 h-6 text-white" />
+              </Badge>
+             </Link>
+            </div>
+            {token ? (
+              <div className="flex items-center gap-2">
+                <div className="items-center gap-2 hidden lg:flex">
+                  <Dropdown overlay={userMenu} trigger={["click"]}>
+                    <Button className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-secondary">
+                      {user?.name}
+                      <IoChevronDownCircleOutline className="h-4 w-4 transition-transform" />
+                    </Button>
+                  </Dropdown>
+                </div>
+                <Button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-red-500 bg-white hover:bg-gray-100 transition-all duration-300 text-[12px] md:text-base lg:hidden"
+                >
+                  Log out
+                </Button>
+              </div>
             ) : (
               <div className="text-[#ecf0f1] flex items-center gap-2">
                 <div className="flex gap-1 text-[12px] md:text-base">
                   <Link to="/login" className={getActiveClass("/login")}>
                     <span className="">Login</span>
                   </Link>{" "}
-
-
-
-                  
                   /
                   <Link to="/register" className={getActiveClass("/register")}>
                     <span className="">Register</span>
@@ -222,7 +242,6 @@ const Header = ({ onSearch, onFilterChange }) => {
               onFocus={() => setIsSearchOverlay(true)}
               prefix={<IoSearch className="text-gray-400" />}
               className="rounded-full"
-              
             />
           </div>
         </div>
@@ -292,10 +311,8 @@ const Header = ({ onSearch, onFilterChange }) => {
               <div className="p-4 border-b">
                 <div className="flex justify-between items-center">
                   <h3 className="text-sm font-medium text-gray-500 mb-2">
-                  Recent Searches
-                 </h3>
-                 
-
+                    Recent Searches
+                  </h3>
                 </div>
                 <div className="space-y-2">
                   {recentSearches.map((search, index) => (
@@ -321,7 +338,7 @@ const Header = ({ onSearch, onFilterChange }) => {
               <h3 className="text-sm font-medium text-gray-500 mb-2">
                 Browse by Division
               </h3>
-              <Division  onDivisionClick={() => setIsSearchOverlay(false)}/>
+              <Division onDivisionClick={() => setIsSearchOverlay(false)} />
             </div>
           </div>
         </div>

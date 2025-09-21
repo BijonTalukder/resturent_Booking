@@ -60,13 +60,13 @@ const Notification = () => {
   };
 
   return (
-    <div className="overflow-hidden">
+    <div className="py-[60px] lg:py-0">
       <div className="py-4 border-b border-gray-200 flex justify-between items-center fixed top-0 left-0 right-0 bg-white z-40">
         <h3 className="font-semibold text-lg ms-3">Notifications</h3>
       </div>
 
       <List
-        className="max-h-96 lg:max-h-full lg:mb-10 pt-10 lg:pb-5 mt-6 overflow-y-scroll"
+        className="min-h-[145vh] lg:min-h-full lg:pt-10  lg:mt-6 overflow-y-scroll lg:overflow-y-hidden"
         loading={isFetching}
         dataSource={notifications?.data || []}
         renderItem={(item) => (

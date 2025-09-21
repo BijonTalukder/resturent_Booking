@@ -1,3 +1,5 @@
+const { node } = require("prop-types");
+
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -17,4 +19,5 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  node : true
 }

@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
-    <div className="flex max-w-[1600px] mx-auto">
+    <div className="flex">
       <div className="hidden  lg:block">
         <DashboardSidebarTwo></DashboardSidebarTwo>
       </div>
