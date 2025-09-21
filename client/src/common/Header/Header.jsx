@@ -12,13 +12,14 @@ import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import { IoArrowBack } from "react-icons/io5";
 import image from "../../assets/icon.png";
 import Adjustment from "../Adjustment/Adjustment";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Division from "../../Pages/Division/Division";
 import { useGetUserNotificationsQuery } from "../../redux/Feature/Admin/notification/notificationApi";
 import {
   BellIcon,
   BellIcon as BellIconOutline,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/outline"; 
+import DesktopSearch from "./DesktopSearch";
 
 const Header = ({ onSearch, onFilterChange }) => {
   const dispatch = useAppDispatch();
@@ -39,14 +40,17 @@ const Header = ({ onSearch, onFilterChange }) => {
   const [divisionId, setDivisionId] = useState("");
   const [cityId, setCityId] = useState("");
   const [unreadCount, setUnreadCount] = useState(0);
+  const searchInputRef = useRef(null);
   const {
     data: notifications
   } = useGetUserNotificationsQuery(user?.id);
+  
   useEffect(() => {
     if (notifications) {
       setUnreadCount(notifications?.data?.filter((n) => !n.isRead).length);
     }
   }, [notifications]);
+
   // Load recent searches from localStorage on component mount
   useEffect(() => {
     const savedSearches = localStorage.getItem("recentSearches");
@@ -133,6 +137,9 @@ const Header = ({ onSearch, onFilterChange }) => {
     </Menu>
   );
 
+  // Desktop search overlay component
+ 
+
   return (
     <>
       <div
@@ -169,9 +176,11 @@ const Header = ({ onSearch, onFilterChange }) => {
           <div className="flex-1 mx-4 hidden md:block">
             <div className="relative w-full max-w-md mx-auto">
               <Input
+                ref={searchInputRef}
                 placeholder="Search hotels..."
                 value={searchQuery}
                 onChange={handleSearchChange}
+                onFocus={() => setIsSearchOverlay(true)}
                 prefix={<IoSearch className="text-gray-400" />}
                 className="rounded-full"
                 suffix={
@@ -182,7 +191,6 @@ const Header = ({ onSearch, onFilterChange }) => {
                     <HiOutlineAdjustmentsHorizontal className="text-xl" />
                   </button>
                 }
-                onFocus={() => setIsSearchOverlay(true)}
               />
             </div>
           </div>
@@ -258,9 +266,19 @@ const Header = ({ onSearch, onFilterChange }) => {
         />
       </div>
 
-      {/* Improved Mobile Search Overlay */}
+      {/* Desktop Search Overlay - Only shows recent searches */}
       {isSearchOverlay && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col h-full">
+        <DesktopSearch
+          recentSearches={recentSearches}
+          setSearchQuery={setSearchQuery}
+          onSearch={onSearch}
+          setIsSearchOverlay={setIsSearchOverlay}
+        />
+      )}
+
+      {/* Mobile Search Overlay - Keeps existing functionality */}
+      {isSearchOverlay && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col h-full md:hidden">
           {/* Search Header */}
           <div className="sticky top-0 bg-white p-4 border-b shadow-sm z-10">
             <div className="flex items-center gap-2">

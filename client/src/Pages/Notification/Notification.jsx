@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Badge, Dropdown, List, Avatar, Button, message } from "antd";
+import { List, Avatar, Button, message } from "antd";
 import { BellOutlined, CheckOutlined } from "@ant-design/icons";
 import {
   useGetUserNotificationsQuery,
   useMarkNotificationAsReadMutation,
 } from "../../redux/Feature/Admin/notification/notificationApi";
 import { useCurrentUser } from "../../redux/Feature/auth/authSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { useAppSelector } from "../../redux/Hook/Hook";
 

@@ -54,7 +54,7 @@ const BannerSlider = () => {
         showPlayButton={false} 
         showNav={true} 
         infinite={true} 
-        // lazyLoad={true} 
+        lazyLoad={true} 
 
       />
         </>
