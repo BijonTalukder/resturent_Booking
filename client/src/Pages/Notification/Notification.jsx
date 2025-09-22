@@ -87,8 +87,11 @@ const Notification = () => {
 
               <div className="flex-1">
                 <h4 className="font-medium">{item.title}</h4>
-                <p className="text-gray-600">
+                <p className="text-gray-600 lg:hidden">
                   {item.message?.length > 20 ? `${item.message.slice(0, 20)}...` : item.message}
+                </p>
+                               <p className="text-gray-600 lg:block hidden">
+                  {item.message}
                 </p>
                 <div className="block text-xs text-gray-400">
                   {moment(item.createdAt).fromNow()}

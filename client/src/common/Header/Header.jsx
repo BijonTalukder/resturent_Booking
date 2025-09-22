@@ -221,8 +221,8 @@ const Header = ({ onSearch, onFilterChange }) => {
           </div>
 
           {/* Right Side - Auth/Links */}
-          <div className="flex items-center gap-5">
-            <div className="hidden lg:block mt-3">
+          <div className="flex items-center gap-4">
+            <div className="hidden lg:block mt-2">
              <Link to={"/notification"}>
                <Badge
                 count={unreadCount}
