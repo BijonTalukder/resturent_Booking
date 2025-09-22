@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Button, Dropdown, Menu, Input, Badge } from "antd";
+import { Button, Dropdown, Menu, Input, Badge, AutoComplete } from "antd";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "../../redux/Hook/Hook";
 import {
@@ -19,7 +19,6 @@ import {
   BellIcon,
   BellIcon as BellIconOutline,
 } from "@heroicons/react/24/outline"; 
-import DesktopSearch from "./DesktopSearch";
 
 const Header = ({ onSearch, onFilterChange }) => {
   const dispatch = useAppDispatch();
@@ -40,7 +39,6 @@ const Header = ({ onSearch, onFilterChange }) => {
   const [divisionId, setDivisionId] = useState("");
   const [cityId, setCityId] = useState("");
   const [unreadCount, setUnreadCount] = useState(0);
-  const searchInputRef = useRef(null);
   const {
     data: notifications
   } = useGetUserNotificationsQuery(user?.id);
@@ -77,16 +75,22 @@ const Header = ({ onSearch, onFilterChange }) => {
     navigate("/login");
   };
 
-  const handleSearchChange = (e) => {
-    onSearch(e.target.value);
-    setSearchQuery(e.target.value);
+  const handleSearchChange = (value) => {
+    onSearch(value);
+    setSearchQuery(value);
+  };
+
+   const handleMobileSearchChange = (e) => {
+    const value = e.target.value;
+    onSearch(value);
+    setSearchQuery(value);
   };
 
   const handleSearchSubmit = () => {
     if (searchQuery.trim()) {
       saveSearch(searchQuery);
       onSearch(searchQuery);
-      setIsSearchOverlay(false);
+      setIsSearchOverlay(false)
     }
   };
 
@@ -137,8 +141,16 @@ const Header = ({ onSearch, onFilterChange }) => {
     </Menu>
   );
 
-  // Desktop search overlay component
- 
+  // Prepare autocomplete options from recent searches
+  const autoCompleteOptions = recentSearches.map(search => ({
+    value: search,
+    label: (
+      <div key={search} className="flex items-center">
+        <IoSearch className="text-gray-400 mr-2" size={14} />
+        <span>{search}</span>
+      </div>
+    )
+  }));
 
   return (
     <>
@@ -172,26 +184,39 @@ const Header = ({ onSearch, onFilterChange }) => {
             </div>
           </div>
 
-          {/* Center - Search Bar */}
-          <div className="flex-1 mx-4 hidden md:block">
-            <div className="relative w-full max-w-md mx-auto">
-              <Input
-                ref={searchInputRef}
-                placeholder="Search hotels..."
+          {/* Center - Search Bar with AutoComplete */}
+          <div className="flex-1 mx-4 hidden lg:block">
+            <div className="relative w-full max-w-md mx-auto flex items-center gap-2">
+              <AutoComplete
                 value={searchQuery}
                 onChange={handleSearchChange}
-                onFocus={() => setIsSearchOverlay(true)}
-                prefix={<IoSearch className="text-gray-400" />}
-                className="rounded-full"
-                suffix={
-                  <button
-                    onClick={() => setVisibleRight(true)}
-                    className="text-gray-500"
-                  >
-                    <HiOutlineAdjustmentsHorizontal className="text-xl" />
-                  </button>
+                onSelect={(value) => {
+                  setSearchQuery(value);
+                  onSearch(value);
+                }}
+                options={autoCompleteOptions}
+                placeholder="Search hotels..."
+                className="w-full"
+                filterOption={(inputValue, option) =>
+                  option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                 }
-              />
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearchSubmit();
+                  }
+                }}
+                allowClear
+                prefix={<IoSearch className="text-gray-400" />}
+/>
+              <button
+                onClick={() => setVisibleRight(true)}
+                className="p-2 bg-gray-100 rounded-full"
+              >
+                <HiOutlineAdjustmentsHorizontal
+                  className="text-gray-600"
+                  size={15}
+                />
+              </button>
             </div>
           </div>
 
@@ -242,7 +267,7 @@ const Header = ({ onSearch, onFilterChange }) => {
         </div>
 
         {/* Mobile Search Bar */}
-        <div className="mt-2 md:hidden">
+        <div className="mt-2 lg:hidden">
           <div className="relative w-full">
             <Input
               placeholder="Search hotels..."
@@ -266,19 +291,9 @@ const Header = ({ onSearch, onFilterChange }) => {
         />
       </div>
 
-      {/* Desktop Search Overlay - Only shows recent searches */}
-      {isSearchOverlay && (
-        <DesktopSearch
-          recentSearches={recentSearches}
-          setSearchQuery={setSearchQuery}
-          onSearch={onSearch}
-          setIsSearchOverlay={setIsSearchOverlay}
-        />
-      )}
-
       {/* Mobile Search Overlay - Keeps existing functionality */}
       {isSearchOverlay && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col h-full md:hidden">
+        <div className="fixed inset-0 z-50 bg-white flex flex-col h-full lg:hidden">
           {/* Search Header */}
           <div className="sticky top-0 bg-white p-4 border-b shadow-sm z-10">
             <div className="flex items-center gap-2">
@@ -292,7 +307,7 @@ const Header = ({ onSearch, onFilterChange }) => {
                 autoFocus
                 placeholder="Search hotels..."
                 value={searchQuery}
-                onChange={handleSearchChange}
+                onChange={handleMobileSearchChange}
                 onPressEnter={handleSearchSubmit}
                 prefix={<IoSearch className="text-gray-400" />}
                 className="rounded-full w-full"
