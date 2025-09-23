@@ -157,9 +157,7 @@ const Checkout = () => {
                 <div className="text-sm">
                   <p><span className="font-bold">Check-in :</span> {moment(checkInDate).format("Do MMM YYYY ,  h:mm a")}</p>
                   <p><span className="font-bold">Check-out :</span> {moment(checkOutDate).format("Do MMM YYYY ,  h:mm a")}</p>
-                  <p>
-                    <strong>Rooms:</strong> {selectedRooms?.length}
-                  </p>
+                 
                 </div>
 
                 <div className="border-t pt-4 space-y-2 text-sm">

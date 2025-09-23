@@ -155,27 +155,26 @@ const HotelDetails = () => {
     }
   };
 
-const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
-  const room = rooms.find((r) => r.id === roomId);
-  if (!room) return;
+  const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
+    const room = rooms.find((r) => r.id === roomId);
+    if (!room) return;
 
-  const currentAdults = customAdults ?? adultCounts[roomId] ?? 0;
-  const currentChildren = customChildren ?? childCounts[roomId] ?? 0;
-  const currentQuantity = roomQuantities[roomId] ?? 1;
+    const currentAdults = customAdults ?? adultCounts[roomId] ?? 0;
+    const currentChildren = customChildren ?? childCounts[roomId] ?? 0;
+    const currentQuantity = roomQuantities[roomId] ?? 1;
 
-  const totalGuests = currentAdults + currentChildren;
-  const maxGuestsPerRoom = room.capacity + room.child;
+    const totalGuests = currentAdults + currentChildren;
+    const maxGuestsPerRoom = room.capacity + room.child;
 
-  const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
+    const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
 
-  if (neededQuantity <= currentQuantity) return;
+    if (neededQuantity <= currentQuantity) return;
 
-  setRoomQuantities((prev) => ({
-    ...prev,
-    [roomId]: neededQuantity,
-  }));
-};
-
+    setRoomQuantities((prev) => ({
+      ...prev,
+      [roomId]: neededQuantity,
+    }));
+  };
 
   const handleQuantityChange = (roomId, value) => {
     setRoomQuantities((prev) => ({
@@ -200,20 +199,19 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
   };
 
   const handleChildCountChange = (roomId, value) => {
-  const room = rooms.find((r) => r.id === roomId);
-  if (!room) return;
+    const room = rooms.find((r) => r.id === roomId);
+    if (!room) return;
 
-  const newChildCount = Math.max(0, value);
-  const currentAdults = adultCounts[roomId] ?? 0;
+    const newChildCount = Math.max(0, value);
+    const currentAdults = adultCounts[roomId] ?? 0;
 
-  setChildCounts((prev) => ({
-    ...prev,
-    [roomId]: newChildCount,
-  }));
+    setChildCounts((prev) => ({
+      ...prev,
+      [roomId]: newChildCount,
+    }));
 
-  recalculateRoomCapacity(roomId, currentAdults, newChildCount);
-};
-
+    recalculateRoomCapacity(roomId, currentAdults, newChildCount);
+  };
 
   const totalPrice = selectedRooms.reduce(
     (sum, room) => sum + room.price * nights * room.quantity,
@@ -227,7 +225,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
         checkInDate: formatToUTC(checkInDate),
         checkOutDate: formatToUTC(checkOutDate),
         totalPrice,
-        nights
+        nights,
       })
     );
     navigate("/checkout");
@@ -345,7 +343,12 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
               </Tag>
             </div>
           </div>
-          <Button className="text-black" type="primary" shape="round" size="small">
+          <Button
+            className="text-white"
+            type="primary"
+            shape="round"
+            size="small"
+          >
             Change
           </Button>
         </div>
@@ -367,19 +370,18 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
 
       {/* Content based on active tab */}
       <div className="px-4 mt-5">
-
         {activeTab === "rooms" && (
           <div className="">
             <List
               grid={{
-        gutter: 16,
-        xs: 1,
-        sm: 2,
-        md: 2,
-        lg: 3,
-        xl: 4,
-        xxl: 4,
-      }}
+                gutter: 16,
+                xs: 1,
+                sm: 2,
+                md: 2,
+                lg: 3,
+                xl: 4,
+                xxl: 4,
+              }}
               dataSource={rooms}
               renderItem={(room) => (
                 <List.Item className="!h-full">
@@ -389,7 +391,12 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                         ? "border-2 border-blue-500"
                         : "border border-gray-200"
                     }`}
-                    bodyStyle={{ padding: "12px", display: 'flex', flexDirection: 'column', flex: 1 }} 
+                    bodyStyle={{
+                      padding: "12px",
+                      display: "flex",
+                      flexDirection: "column",
+                      flex: 1,
+                    }}
                     hoverable
                   >
                     <div className="flex flex-col flex-1">
@@ -477,7 +484,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                                   (roomQuantities[room.id] || 1) - 1
                                 )
                               }
-                              disabled={(roomQuantities[room.id] || 1) <= 1}
+                              disabled={(roomQuantities[room.id] || 1) <= 1 || isSelected(room.id)}
                             />
                             <span className="text-xs font-medium">
                               {roomQuantities[room.id] || 1}
@@ -493,6 +500,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                                   (roomQuantities[room.id] || 1) + 1
                                 )
                               }
+                              disabled={(roomQuantities[room.id] || 1) >= room?.roomQty || isSelected(room.id)}
                             />
                           </div>
                         </div>
@@ -512,7 +520,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                                 const current = adultCounts[room.id] ?? 0;
                                 handleAdultCountChange(room.id, current - 1);
                               }}
-                              disabled={(adultCounts[room.id] ?? 0) <= 0}
+                              disabled={(adultCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
                             />
 
                             <span className="text-xs font-medium">
@@ -528,41 +536,45 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                                 const current = adultCounts[room.id] ?? 0;
                                 handleAdultCountChange(room.id, current + 1);
                               }}
+                              disabled={isSelected(room.id)}
                             />
                           </div>
                         </div>
 
                         {/* Children */}
-                       <div className="flex flex-col">
-  <Text strong className="text-xs mb-1">Children</Text>
-  <div className="flex items-center justify-between border rounded p-1">
-    <Button
-      type="text"
-      size="small"
-      icon={<MinusOutlined />}
-      className="flex items-center justify-center !h-7 !min-w-0"
-      onClick={() => {
-        const current = childCounts[room.id] ?? 0;
-        handleChildCountChange(room.id, current - 1);
-      }}
-      disabled={(childCounts[room.id] ?? 0) <= 0}
-    />
-    <span className="text-xs font-medium">
-      {childCounts[room.id] ?? 0}
-    </span>
-    <Button
-      type="text"
-      size="small"
-      icon={<PlusOutlined />}
-      className="flex items-center justify-center !h-7 !min-w-0"
-      onClick={() => {
-        const current = childCounts[room.id] ?? 0;
-        handleChildCountChange(room.id, current + 1);
-      }}
-    />
-  </div>
-</div>
+                        <div className="flex flex-col">
+                          <Text strong className="text-xs mb-1">
+                            Children
+                          </Text>
+                          <div className="flex items-center justify-between border rounded p-1">
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<MinusOutlined />}
+                              className="flex items-center justify-center !h-7 !min-w-0"
+                              onClick={() => {
+                                const current = childCounts[room.id] ?? 0;
+                                handleChildCountChange(room.id, current - 1);
+                              }}
+                              disabled={(childCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
+                            />
+                            <span className="text-xs font-medium">
+                              {childCounts[room.id] ?? 0}
+                            </span>
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<PlusOutlined />}
+                              className="flex items-center justify-center !h-7 !min-w-0"
+                              onClick={() => {
+                                const current = childCounts[room.id] ?? 0;
+                                handleChildCountChange(room.id, current + 1);
+                              }}
+                              disabled={isSelected(room.id)}
 
+                            />
+                          </div>
+                        </div>
                       </div>
 
                       {/* Action Buttons */}
@@ -575,7 +587,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                           Details
                         </Button>
                         <Button
-                          type={isSelected(room.id) ? "default" : "primary"}
+                          // type={isSelected(room.id) ? "default" : "primary"}
                           onClick={() => handleRoomToggle(room)}
                           disabled={!room.isAvailable}
                           className="flex-1 text-black"
@@ -620,36 +632,38 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
       </div>
 
       {/* Fixed Bottom Checkout Bar */}
-   {selectedRooms.length > 0 && (
-  <Affix offsetBottom={0}>
-    <div className="bg-white shadow-md border-t p-3 flex justify-between items-center w-full">
-      <div className="flex flex-col">
-        <Text strong className="text-lg">
-          {totalPrice} Tk
-        </Text>
-        <Text className="text-xs text-gray-500">
-          {selectedRooms.length} {selectedRooms.length === 1 ? "room" : "rooms"}, {nights} {nights === 1 ? "night" : "nights"}
-        </Text>
-        <Text className="text-xs text-gray-500">
-          {selectedRooms.map((room) => (
-            <span key={room.id}>
-              {room.type}: {room.quantity} {room.quantity === 1 ? "quantity" : "quantity"}
-              <br /> {/* Optional: Add line break between rooms */}
-            </span>
-          ))}
-        </Text>
-      </div>
-      <Button
-        type="primary"
-        size="large"
-        onClick={handleCheckout}
-        className="h-12 text-black"
-      >
-        Checkout
-      </Button>
-    </div>
-  </Affix>
-)}
+      {selectedRooms.length > 0 && (
+        <Affix offsetBottom={0}>
+          <div className="bg-white shadow-md border-t p-3 flex justify-between items-center w-full">
+            <div className="flex flex-col">
+              <Text strong className="text-lg">
+                {totalPrice} Tk
+              </Text>
+              <Text className="text-xs text-gray-500">
+                {nights}{" "}
+                {nights === 1 ? "night" : "nights"}
+              </Text>
+              <Text className="text-xs text-gray-500">
+                {selectedRooms.map((room) => (
+                  <span key={room.id}>
+                    {room.type}: {room.quantity}{" "}
+                    {room.quantity === 1 ? "quantity" : "quantities"}
+                    <br /> {/* Optional: Add line break between rooms */}
+                  </span>
+                ))}
+              </Text>
+            </div>
+            <Button
+              type="primary"
+              size="large"
+              onClick={handleCheckout}
+              className="h-12 text-black"
+            >
+              Checkout
+            </Button>
+          </div>
+        </Affix>
+      )}
 
       {/* Date Picker Drawer */}
       <Drawer
@@ -816,7 +830,7 @@ const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
                   }}
                   block
                   size="large"
-                  className="h-12"
+                  className="h-12 !bg-white"
                   disabled={!currentRoom.isAvailable}
                 >
                   {isSelected(currentRoom.id)
