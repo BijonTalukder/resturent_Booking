@@ -14,7 +14,6 @@ import ProtectedRoutes from "./UserProtectedRoutes/ProtectedRoutes";
 import Success from "../Pages/Success/Success";
 import PaymentError from "../Pages/Error/PaymentError";
 import Verify from "../Pages/Verify/Verify";
-import OrderTrack from "../Pages/Track-Order/OrderTrack";
 import HotelDetails from "../Pages/Home/HotelDetails/HotelDetails";
 import { CustomerRoutes } from "./Customer.Routes";
 import CustomerDashboardLayout from "../Layouts/Dashboard/CustomerDashboardLayout";
@@ -116,10 +115,6 @@ export const routes = createBrowserRouter([
       {
         path: "/verify/:token",
         element: <Verify/>,
-      },
-      {
-        path: "/order-track",
-        element: <OrderTrack/>,
       },
       {
         path:"/privacy-policy",

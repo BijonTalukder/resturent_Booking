@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -9,11 +9,8 @@ import {
   Badge,
   Drawer,
   Space,
-  Divider,
-  Collapse,
   Affix,
   Tabs,
-  Tooltip,
 } from "antd";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -31,12 +28,8 @@ import {
   LeftCircleFilled,
   EnvironmentOutlined,
   CalendarOutlined,
-  InfoCircleOutlined,
   UserOutlined,
-  HomeOutlined,
-  DownOutlined,
   BellOutlined,
-  DollarOutlined,
   HeartOutlined,
   ShareAltOutlined,
   PlusOutlined,
@@ -47,7 +40,6 @@ import {
 } from "@ant-design/icons";
 
 const { Title, Text, Paragraph } = Typography;
-const { Panel } = Collapse;
 const { TabPane } = Tabs;
 
 const HotelDetails = () => {
@@ -61,7 +53,7 @@ const HotelDetails = () => {
   } = useGetHotelByIdQuery(id);
   const { data: roomsData, isLoading: roomsLoading } =
     useGetRoomsByHotelIdQuery(id);
-  const [checkRoomAvailability] = useCheckRoomAvailabilityBookingMutation();
+  const [checkRoomAvailability ] = useCheckRoomAvailabilityBookingMutation();
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [checkInDate, setCheckInDate] = useState(startOfDay(new Date()));
   const [checkOutDate, setCheckOutDate] = useState(
@@ -71,6 +63,7 @@ const HotelDetails = () => {
   const [roomDetailsVisible, setRoomDetailsVisible] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const [roomQuantities, setRoomQuantities] = useState({});
+  // console.log(roomQuantities)
   const [adultCounts, setAdultCounts] = useState({});
   const [childCounts, setChildCounts] = useState({});
   const [activeTab, setActiveTab] = useState("rooms");
@@ -158,7 +151,7 @@ const HotelDetails = () => {
   const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
     const room = rooms.find((r) => r.id === roomId);
     if (!room) return;
-
+    console.log(room)
     const currentAdults = customAdults ?? adultCounts[roomId] ?? 0;
     const currentChildren = customChildren ?? childCounts[roomId] ?? 0;
     const currentQuantity = roomQuantities[roomId] ?? 1;
@@ -536,7 +529,7 @@ const HotelDetails = () => {
                                 const current = adultCounts[room.id] ?? 0;
                                 handleAdultCountChange(room.id, current + 1);
                               }}
-                              disabled={isSelected(room.id)}
+                              disabled={(room?.capacity + room?.child) * room?.roomQty <= (adultCounts[room.id] + childCounts[room.id] )  || isSelected(room.id)}
                             />
                           </div>
                         </div>
@@ -570,7 +563,9 @@ const HotelDetails = () => {
                                 const current = childCounts[room.id] ?? 0;
                                 handleChildCountChange(room.id, current + 1);
                               }}
-                              disabled={isSelected(room.id)}
+                             disabled={(room?.capacity + room?.child) * room?.roomQty <= (adultCounts[room.id] + childCounts[room.id] )   || isSelected(room.id)}
+
+                        
 
                             />
                           </div>
