@@ -37,6 +37,9 @@ import {
   CheckCircleFilled,
   WhatsAppOutlined,
   MessageOutlined,
+  HomeOutlined,
+  ShoppingCartOutlined,
+  SafetyCertificateOutlined,
 } from "@ant-design/icons";
 
 const { Title, Text, Paragraph } = Typography;
@@ -63,7 +66,6 @@ const HotelDetails = () => {
   const [roomDetailsVisible, setRoomDetailsVisible] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const [roomQuantities, setRoomQuantities] = useState({});
-  // console.log(roomQuantities)
   const [adultCounts, setAdultCounts] = useState({});
   const [childCounts, setChildCounts] = useState({});
   const [activeTab, setActiveTab] = useState("rooms");
@@ -161,12 +163,12 @@ const HotelDetails = () => {
 
     const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
 
-    if (neededQuantity <= currentQuantity) return;
-
+     if (neededQuantity !== currentQuantity) {
     setRoomQuantities((prev) => ({
       ...prev,
       [roomId]: neededQuantity,
     }));
+  }
   };
 
   const handleQuantityChange = (roomId, value) => {
@@ -235,6 +237,7 @@ const HotelDetails = () => {
   if (hotelError) return <div>Error loading hotel details.</div>;
 
   return (
+    <>
     <div className="pb-24">
       {/* Top Bar - Fixed */}
       <div className="sticky top-0 z-20 bg-white p-4 shadow-sm flex justify-between items-center">
@@ -362,8 +365,9 @@ const HotelDetails = () => {
       </div>
 
       {/* Content based on active tab */}
-      <div className="px-4 mt-5">
-        {activeTab === "rooms" && (
+      <div className="mt-5 flex flex-col lg:flex-row items-center gap-4">
+      <div className="lg:w-[70%] w-full">
+          {activeTab === "rooms" && (
           <div className="">
             <List
               grid={{
@@ -372,8 +376,8 @@ const HotelDetails = () => {
                 sm: 2,
                 md: 2,
                 lg: 3,
-                xl: 4,
-                xxl: 4,
+                xl: 3,
+                xxl: 3,
               }}
               dataSource={rooms}
               renderItem={(room) => (
@@ -626,39 +630,88 @@ const HotelDetails = () => {
         )}
       </div>
 
-      {/* Fixed Bottom Checkout Bar */}
-      {selectedRooms.length > 0 && (
-        <Affix offsetBottom={0}>
-          <div className="bg-white shadow-md border-t p-3 flex justify-between items-center w-full">
-            <div className="flex flex-col">
-              <Text strong className="text-lg">
-                {totalPrice} Tk
-              </Text>
-              <Text className="text-xs text-gray-500">
-                {nights}{" "}
-                {nights === 1 ? "night" : "nights"}
-              </Text>
-              <Text className="text-xs text-gray-500">
-                {selectedRooms.map((room) => (
-                  <span key={room.id}>
-                    {room.type}: {room.quantity}{" "}
-                    {room.quantity === 1 ? "quantity" : "quantities"}
-                    <br /> {/* Optional: Add line break between rooms */}
-                  </span>
-                ))}
-              </Text>
+      <div className="lg:w-[30%] w-full">
+    
+      {selectedRooms.length > 0 ? (
+        <Affix >
+<div className="bg-gradient-to-br from-white to-blue-50 shadow-lg border border-gray-100 p-6 rounded-xl w-full">
+  <div className="text-center mb-6">
+    <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+      Booking Summary
+    </h1>
+    <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-2 rounded-full"></div>
+  </div>
+
+  <div className="space-y-4 mb-6">
+    {/* Total Price */}
+    <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+      <span className="text-gray-600 font-medium">Total Amount</span>
+      <span className="text-2xl font-bold text-blue-600">{totalPrice} Tk/-</span>
+    </div>
+
+    {/* Stay Duration */}
+    <div className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+      <CalendarOutlined className="text-blue-500" />
+      <span className="text-gray-700 font-medium">
+        {nights} {nights === 1 ? "Night" : "Nights"} Stay
+      </span>
+    </div>
+
+    {/* Room Breakdown */}
+    <div className="bg-white rounded-lg border border-gray-100 p-4">
+      <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+        <HomeOutlined className="text-green-500" />
+        Selected Rooms
+      </h3>
+      <div className="space-y-2">
+        {selectedRooms.map((room) => (
+          <div key={room.id} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-b-0">
+            <div>
+              <span className="font-medium text-gray-800">{room.type}</span>
+              <span className="text-xs text-gray-500 ml-2">
+                ({room.adults} adults, {room.children} children)
+              </span>
             </div>
-            <Button
-              type="primary"
-              size="large"
-              onClick={handleCheckout}
-              className="h-12 text-black"
-            >
-              Checkout
-            </Button>
+            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-sm font-semibold">
+              {room.quantity} {room.quantity === 1 ? "room" : "rooms"}
+            </span>
           </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* Checkout Button */}
+  <Button
+    type="primary"
+    size="large"
+    onClick={handleCheckout}
+    className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-none shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+    icon={<ShoppingCartOutlined />}
+  >
+    <span className="text-white font-semibold text-lg">Proceed to Checkout</span>
+  </Button>
+
+  {/* Additional Info */}
+  <div className="mt-4 text-center">
+    <Text type="secondary" className="text-xs flex items-center justify-center gap-1">
+      <SafetyCertificateOutlined className="text-green-500" />
+      Secure booking • Free cancellation • Best price guaranteed
+    </Text>
+  </div>
+</div>
         </Affix>
-      )}
+      ) : (
+        <div className="bg-white shadow-md border-t p-3 flex flex-col justify-center items-center w-full gap-2 rounded-lg">
+          <Text className="text-gray-500 font-bold text-lg">No rooms selected</Text>
+        </div>
+      )
+      }
+      </div>
+
+      </div>
+
+
 
       {/* Date Picker Drawer */}
       <Drawer
@@ -838,6 +891,9 @@ const HotelDetails = () => {
         )}
       </Drawer>
     </div>
+    
+    </>
+
   );
 };
 
