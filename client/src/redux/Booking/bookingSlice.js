@@ -12,17 +12,19 @@ const bookingSlice = createSlice({
   initialState,
   reducers: {
     setBookingDetails: (state, action) => {
-      const { selectedRooms, checkInDate, checkOutDate, totalPrice } = action.payload;
+      const { selectedRooms, checkInDate, checkOutDate, totalPrice , nights } = action.payload;
       state.selectedRooms = selectedRooms;
       state.checkInDate = checkInDate;
       state.checkOutDate = checkOutDate;
       state.totalPrice = totalPrice;
+      state.nights = nights;
     },
     clearBooking: (state) => {
       state.selectedRooms = [];
       state.checkInDate = null;
       state.checkOutDate = null;
       state.totalPrice = 0;
+      state.nights = 0;
     }
   },
 });

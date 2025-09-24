@@ -19,7 +19,7 @@ const MainLayout = () => {
         }}
       />
 
-      <div className={`w-[95%] lg:max-w-[1400px] mx-auto ${["/cancel", "/success", "/checkout"].includes(location.pathname) ? "w-full" : ""}`}>
+      <div className={`w-[95%] lg:max-w-[1480px] mx-auto ${["/cancel", "/success", "/checkout"].includes(location.pathname) ? "w-full" : ""}`}>
         <Outlet context={{ searchQuery, divisionId, cityId }} />
       </div>
 
