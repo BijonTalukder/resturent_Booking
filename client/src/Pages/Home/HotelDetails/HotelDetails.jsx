@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -9,11 +9,8 @@ import {
   Badge,
   Drawer,
   Space,
-  Divider,
-  Collapse,
   Affix,
   Tabs,
-  Tooltip,
 } from "antd";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -31,12 +28,8 @@ import {
   LeftCircleFilled,
   EnvironmentOutlined,
   CalendarOutlined,
-  InfoCircleOutlined,
   UserOutlined,
-  HomeOutlined,
-  DownOutlined,
   BellOutlined,
-  DollarOutlined,
   HeartOutlined,
   ShareAltOutlined,
   PlusOutlined,
@@ -44,10 +37,15 @@ import {
   CheckCircleFilled,
   WhatsAppOutlined,
   MessageOutlined,
+  HomeOutlined,
+  ShoppingCartOutlined,
+  SafetyCertificateOutlined,
+  EyeOutlined,
+  CloseOutlined,
+  CheckOutlined,
 } from "@ant-design/icons";
 
 const { Title, Text, Paragraph } = Typography;
-const { Panel } = Collapse;
 const { TabPane } = Tabs;
 
 const HotelDetails = () => {
@@ -61,7 +59,7 @@ const HotelDetails = () => {
   } = useGetHotelByIdQuery(id);
   const { data: roomsData, isLoading: roomsLoading } =
     useGetRoomsByHotelIdQuery(id);
-  const [checkRoomAvailability] = useCheckRoomAvailabilityBookingMutation();
+  const [checkRoomAvailability ] = useCheckRoomAvailabilityBookingMutation();
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [checkInDate, setCheckInDate] = useState(startOfDay(new Date()));
   const [checkOutDate, setCheckOutDate] = useState(
@@ -158,7 +156,7 @@ const HotelDetails = () => {
   const recalculateRoomCapacity = (roomId, customAdults, customChildren) => {
     const room = rooms.find((r) => r.id === roomId);
     if (!room) return;
-
+    console.log(room)
     const currentAdults = customAdults ?? adultCounts[roomId] ?? 0;
     const currentChildren = customChildren ?? childCounts[roomId] ?? 0;
     const currentQuantity = roomQuantities[roomId] ?? 1;
@@ -168,12 +166,12 @@ const HotelDetails = () => {
 
     const neededQuantity = Math.ceil(totalGuests / maxGuestsPerRoom);
 
-    if (neededQuantity <= currentQuantity) return;
-
+     if (neededQuantity !== currentQuantity) {
     setRoomQuantities((prev) => ({
       ...prev,
       [roomId]: neededQuantity,
     }));
+  }
   };
 
   const handleQuantityChange = (roomId, value) => {
@@ -242,6 +240,7 @@ const HotelDetails = () => {
   if (hotelError) return <div>Error loading hotel details.</div>;
 
   return (
+    <>
     <div className="pb-24">
       {/* Top Bar - Fixed */}
       <div className="sticky top-0 z-20 bg-white p-4 shadow-sm flex justify-between items-center">
@@ -272,15 +271,6 @@ const HotelDetails = () => {
           <EnvironmentOutlined />
           <Text className="ml-1">{hotel?.location}</Text>
         </div>
-
-        {/* Amenities Button */}
-        {/* <Button 
-          type="default" 
-          className="mt-3" 
-          onClick={() => setShowAmenities(true)}
-        >
-          View Amenities
-        </Button> */}
       </div>
 
       {/* Amenities Drawer */}
@@ -369,238 +359,241 @@ const HotelDetails = () => {
       </div>
 
       {/* Content based on active tab */}
-      <div className="px-4 mt-5">
-        {activeTab === "rooms" && (
-          <div className="">
-            <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 2,
-                lg: 3,
-                xl: 4,
-                xxl: 4,
-              }}
-              dataSource={rooms}
-              renderItem={(room) => (
-                <List.Item className="!h-full">
-                  <Card
-                    className={`w-full h-full ${
-                      isSelected(room.id)
-                        ? "border-2 border-blue-500"
-                        : "border border-gray-200"
-                    }`}
-                    bodyStyle={{
-                      padding: "12px",
-                      display: "flex",
-                      flexDirection: "column",
-                      flex: 1,
-                    }}
-                    hoverable
-                  >
-                    <div className="flex flex-col flex-1">
-                      {/* Room Image & Basic Info */}
-                      <div className="relative mb-2">
-                        <img
-                          alt={room.type}
-                          src={
-                            room.images?.[0] ||
-                            "https://via.placeholder.com/300x200"
-                          }
-                          className="w-full h-40 object-cover rounded"
-                        />
-                        {isSelected(room.id) && (
-                          <Badge
-                            count={
-                              <CheckCircleFilled
-                                style={{
-                                  fontSize: "22px",
-                                  color: "#1890ff",
-                                }}
-                              />
-                            }
-                            className="absolute top-2 right-2"
-                          />
-                        )}
-                      </div>
+      <div className="mt-5 flex flex-col lg:flex-row  gap-4">
+      <div className="!lg:w-[75%] w-full">
+          {activeTab === "rooms" && (
+<div className="">
+  <List
+    grid={{
 
-                      {/* Room Info */}
-                      <div>
-                        <div className="flex justify-between items-center mb-2">
-                          <Title level={5} style={{ margin: 0 }}>
-                            {room.type}
-                          </Title>
-                          <Text strong className="text-lg">
-                            {room.price} Tk
-                          </Text>
-                        </div>
-
-                        <div className="flex justify-between mb-2">
-                          <Text type="secondary">
-                            <UserOutlined className="mr-1" />
-                            {room.capacity} adults, {room.child} children
-                          </Text>
-                          <div>
-                            <span className="text-xs font-medium">
-                              Available:{" "}
-                            </span>
-                            <span className="text-xs font-bold">
-                              {room?.roomQty}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center flex-wrap lg:flex-nowrap gap-y-2 mb-3">
-                          {room.amenities?.slice(0, 2).map((amenity, index) => (
-                            <Tag key={index} color="cyan" className="text-xs">
-                              {amenity}
-                            </Tag>
-                          ))}
-                          {room.amenities?.length > 3 && (
-                            <Tag color="default" className="text-xs">
-                              +{room.amenities.length - 3} more
-                            </Tag>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Counter Controls */}
-                      <div className="grid grid-cols-3 gap-2 mb-3">
-                        {/* Quantity */}
-                        <div className="flex flex-col">
-                          <Text strong className="text-xs mb-1">
-                            Rooms
-                          </Text>
-                          <div className="flex items-center justify-between border rounded p-1">
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<MinusOutlined />}
-                              className="flex items-center justify-center !h-7 !min-w-0"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  room.id,
-                                  (roomQuantities[room.id] || 1) - 1
-                                )
-                              }
-                              disabled={(roomQuantities[room.id] || 1) <= 1 || isSelected(room.id)}
-                            />
-                            <span className="text-xs font-medium">
-                              {roomQuantities[room.id] || 1}
-                            </span>
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<PlusOutlined />}
-                              className="flex items-center justify-center !h-7 !min-w-0"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  room.id,
-                                  (roomQuantities[room.id] || 1) + 1
-                                )
-                              }
-                              disabled={(roomQuantities[room.id] || 1) >= room?.roomQty || isSelected(room.id)}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Adults */}
-                        <div className="flex flex-col">
-                          <Text strong className="text-xs mb-1">
-                            Adults
-                          </Text>
-                          <div className="flex items-center justify-between border rounded p-1">
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<MinusOutlined />}
-                              className="flex items-center justify-center !h-7 !min-w-0"
-                              onClick={() => {
-                                const current = adultCounts[room.id] ?? 0;
-                                handleAdultCountChange(room.id, current - 1);
-                              }}
-                              disabled={(adultCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
-                            />
-
-                            <span className="text-xs font-medium">
-                              {adultCounts[room.id] ?? 0}
-                            </span>
-
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<PlusOutlined />}
-                              className="flex items-center justify-center !h-7 !min-w-0"
-                              onClick={() => {
-                                const current = adultCounts[room.id] ?? 0;
-                                handleAdultCountChange(room.id, current + 1);
-                              }}
-                              disabled={isSelected(room.id)}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Children */}
-                        <div className="flex flex-col">
-                          <Text strong className="text-xs mb-1">
-                            Children
-                          </Text>
-                          <div className="flex items-center justify-between border rounded p-1">
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<MinusOutlined />}
-                              className="flex items-center justify-center !h-7 !min-w-0"
-                              onClick={() => {
-                                const current = childCounts[room.id] ?? 0;
-                                handleChildCountChange(room.id, current - 1);
-                              }}
-                              disabled={(childCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
-                            />
-                            <span className="text-xs font-medium">
-                              {childCounts[room.id] ?? 0}
-                            </span>
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<PlusOutlined />}
-                              className="flex items-center justify-center !h-7 !min-w-0"
-                              onClick={() => {
-                                const current = childCounts[room.id] ?? 0;
-                                handleChildCountChange(room.id, current + 1);
-                              }}
-                              disabled={isSelected(room.id)}
-
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex justify-between gap-2">
-                        <Button
-                          onClick={() => openRoomDetails(room)}
-                          type="default"
-                          className="flex-1"
-                        >
-                          Details
-                        </Button>
-                        <Button
-                          // type={isSelected(room.id) ? "default" : "primary"}
-                          onClick={() => handleRoomToggle(room)}
-                          disabled={!room.isAvailable}
-                          className="flex-1 text-black"
-                        >
-                          {isSelected(room.id) ? "Deselect" : "Select"}
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                </List.Item>
+      xs: 1,
+      sm: 1,
+      md: 1,
+      lg: 1,
+      xl: 1,
+      xxl: 1,
+    }}
+    dataSource={rooms}
+    renderItem={(room) => (
+      <List.Item className="!h-full">
+        <Card
+          className={`w-full h-full transition-all duration-300 ${
+            isSelected(room.id)
+              ? "border-2 border-blue-500 shadow-lg shadow-blue-100"
+              : "border border-gray-200 hover:shadow-md hover:border-gray-300"
+          }`}
+          bodyStyle={{ padding: "20px" }}
+          hoverable
+        >
+          <div className="flex gap-3">
+            {/* Room Image */}
+            <div className="flex-shrink-0 relative">
+              <img
+                alt={room.type}
+                src={room.images?.[0] || "https://via.placeholder.com/300x200"}
+                className="w-64 h-48 object-cover rounded-xl shadow-md"
+              />
+              {isSelected(room.id) && (
+                <div className="absolute top-3 right-3">
+                  <Badge
+                    count={
+                      <CheckCircleFilled style={{ fontSize: "24px", color: "#1890ff" }} />
+                    }
+                  />
+                </div>
               )}
-            />
+              {!room.isAvailable && (
+                <div className="absolute inset-0 bg-gray-800 bg-opacity-60 rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">Not Available</span>
+                </div>
+              )}
+            </div>
+
+            {/* Room Content */}
+            <div className="flex-1 flex flex-col">
+              {/* Header Section */}
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <Title level={4} style={{ margin: 0, color: "#1f2937" }} className="flex items-center gap-2">
+                    {room.type}
+                    {room.isAvailable && (
+                      <Tag color="green" className="text-xs">
+                        Available
+                      </Tag>
+                    )}
+                  </Title>
+                  <Text type="secondary" className="flex items-center gap-1 mt-1">
+                    <UserOutlined />
+                    Capacity: {room.capacity} adults, {room.child} children
+                  </Text>
+                </div>
+                <div className="text-right">
+                  <Text strong className="text-2xl text-blue-600">
+                    {room.price} Tk
+                  </Text>
+                  <div className="text-xs text-gray-500 mt-1">
+                    <span className="font-medium">Available: </span>
+                    <span className="font-bold">{room?.roomQty} rooms</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Amenities */}
+              <div className="mb-4">
+                <Text strong className="text-gray-700 mb-2 block">
+                  Amenities:
+                </Text>
+                <div className="flex flex-wrap gap-2">
+                  {room.amenities?.slice(0, 4).map((amenity, index) => (
+                    <Tag 
+                      key={index} 
+                      color="blue" 
+                      className="text-xs px-3 py-1 rounded-full border-0"
+                    >
+                      {amenity}
+                    </Tag>
+                  ))}
+                  {room.amenities?.length > 4 && (
+                    <Tag color="default" className="text-xs px-3 py-1 rounded-full">
+                      +{room.amenities.length - 4} more
+                    </Tag>
+                  )}
+                </div>
+              </div>
+
+              {/* Controls Section */}
+              <div className="flex items-end  justify-between mt-auto">
+                {/* Counter Controls */}
+                <div className="flex gap-6">
+                  {/* Quantity */}
+                  <div className="flex flex-col">
+                    <Text strong className="text-sm mb-2 text-gray-700">
+                      Rooms
+                    </Text>
+                    <div className="flex items-center border rounded-lg bg-gray-50">
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<MinusOutlined />}
+                        className="flex items-center justify-center !h-8 !w-8"
+                        onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) - 1)}
+                        disabled={(roomQuantities[room.id] || 1) <= 1 || isSelected(room.id)}
+                      />
+                      <span className="w-12 text-center font-semibold text-gray-800">
+                        {roomQuantities[room.id] || 1}
+                      </span>
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<PlusOutlined />}
+                        className="flex items-center justify-center !h-8 !w-8"
+                        onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) + 1)}
+                        disabled={(roomQuantities[room.id] || 1) >= room?.roomQty || isSelected(room.id)}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Adults */}
+                  <div className="flex flex-col">
+                    <Text strong className="text-sm mb-2 text-gray-700">
+                      Adults
+                    </Text>
+                    <div className="flex items-center border rounded-lg bg-gray-50">
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<MinusOutlined />}
+                        className="flex items-center justify-center !h-8 !w-8"
+                        onClick={() => {
+                          const current = adultCounts[room.id] ?? 0;
+                          handleAdultCountChange(room.id, current - 1);
+                        }}
+                        disabled={(adultCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
+                      />
+                      <span className="w-12 text-center font-semibold text-gray-800">
+                        {adultCounts[room.id] ?? 0}
+                      </span>
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<PlusOutlined />}
+                        className="flex items-center justify-center !h-8 !w-8"
+                        onClick={() => {
+                          const current = adultCounts[room.id] ?? 0;
+                          handleAdultCountChange(room.id, current + 1);
+                        }}
+                        disabled={(room?.capacity + room?.child) * room?.roomQty <= (adultCounts[room.id] + childCounts[room.id]) || isSelected(room.id)}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Children */}
+                  <div className="flex flex-col">
+                    <Text strong className="text-sm mb-2 text-gray-700">
+                      Children
+                    </Text>
+                    <div className="flex items-center border rounded-lg bg-gray-50">
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<MinusOutlined />}
+                        className="flex items-center justify-center !h-8 !w-8"
+                        onClick={() => {
+                          const current = childCounts[room.id] ?? 0;
+                          handleChildCountChange(room.id, current - 1);
+                        }}
+                        disabled={(childCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
+                      />
+                      <span className="w-12 text-center font-semibold text-gray-800">
+                        {childCounts[room.id] ?? 0}
+                      </span>
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<PlusOutlined />}
+                        className="flex items-center justify-center !h-8 !w-8"
+                        onClick={() => {
+                          const current = childCounts[room.id] ?? 0;
+                          handleChildCountChange(room.id, current + 1);
+                        }}
+                        disabled={(room?.capacity + room?.child) * room?.roomQty <= (adultCounts[room.id] + childCounts[room.id]) || isSelected(room.id)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => openRoomDetails(room)}
+                    type="default"
+                    icon={<EyeOutlined />}
+                    className="flex items-center gap-2 px-6 h-10 border-gray-300"
+                  >
+                    View Details
+                  </Button>
+                  <Button
+                    onClick={() => handleRoomToggle(room)}
+                    disabled={!room.isAvailable}
+                    type={isSelected(room.id) ? "default" : "primary"}
+                    icon={isSelected(room.id) ? <CloseOutlined /> : <CheckOutlined />}
+                    className={`flex items-center gap-2 px-6 h-10 ${
+                      isSelected(room.id) 
+                        ? "border-red-300 text-red-600 hover:text-red-700" 
+                        : "bg-blue-600 hover:bg-blue-700"
+                    }`}
+                  >
+                    {isSelected(room.id) ? "Deselect" : "Select Room"}
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
+        </Card>
+      </List.Item>
+    )}
+  />
+</div>
         )}
 
         {activeTab === "map" && (
@@ -631,39 +624,88 @@ const HotelDetails = () => {
         )}
       </div>
 
-      {/* Fixed Bottom Checkout Bar */}
-      {selectedRooms.length > 0 && (
-        <Affix offsetBottom={0}>
-          <div className="bg-white shadow-md border-t p-3 flex justify-between items-center w-full">
-            <div className="flex flex-col">
-              <Text strong className="text-lg">
-                {totalPrice} Tk
-              </Text>
-              <Text className="text-xs text-gray-500">
-                {nights}{" "}
-                {nights === 1 ? "night" : "nights"}
-              </Text>
-              <Text className="text-xs text-gray-500">
-                {selectedRooms.map((room) => (
-                  <span key={room.id}>
-                    {room.type}: {room.quantity}{" "}
-                    {room.quantity === 1 ? "quantity" : "quantities"}
-                    <br /> {/* Optional: Add line break between rooms */}
-                  </span>
-                ))}
-              </Text>
+      <div className="lg:w-[35%] w-full">
+    
+      {selectedRooms.length > 0 ? (
+        <Affix offsetTop={130}>
+<div className="bg-gradient-to-br from-white to-blue-50 shadow-lg border border-gray-100 px-2 py-2 lg:p-6 rounded-xl w-full">
+  <div className="text-center mb-6">
+    <h1 className="text-base lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+      Booking Summary
+    </h1>
+    <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-2 rounded-full"></div>
+  </div>
+
+  <div className="space-y-4 mb-6">
+    {/* Total Price */}
+    <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100">
+      <span className="text-gray-600 font-medium">Total Amount</span>
+      <span className="text-base lg:text-2xl font-bold text-blue-600">{totalPrice} Tk/-</span>
+    </div>
+
+    {/* Stay Duration */}
+    <div className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+      <CalendarOutlined className="text-blue-500" />
+      <span className="text-gray-700 font-medium">
+        {nights} {nights === 1 ? "Night" : "Nights"} Stay
+      </span>
+    </div>
+
+    {/* Room Breakdown */}
+    <div className="bg-white rounded-lg border border-gray-100 p-4">
+      <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+        <HomeOutlined className="text-green-500" />
+        Selected Rooms
+      </h3>
+      <div className="space-y-2">
+        {selectedRooms.map((room) => (
+          <div key={room.id} className="flex justify-between items-center py-2 border-b border-gray-50 last:border-b-0">
+            <div>
+              <span className="font-medium text-gray-800">{room.type}</span>
+              <span className="text-xs text-gray-500 ml-2">
+                ({room.adults} adults, {room.children} children)
+              </span>
             </div>
-            <Button
-              type="primary"
-              size="large"
-              onClick={handleCheckout}
-              className="h-12 text-black"
-            >
-              Checkout
-            </Button>
+            <span className="bg-blue-100 text-blue-700 px-2 lg:px-2 py-1 rounded-full text-sm font-semibold">
+              {room.quantity} {room.quantity === 1 ? "room" : "rooms"}
+            </span>
           </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* Checkout Button */}
+  <Button
+    type="primary"
+    size="large"
+    onClick={handleCheckout}
+    className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-none shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+    icon={<ShoppingCartOutlined />}
+  >
+    <span className="text-white font-semibold text-lg">Proceed to Checkout</span>
+  </Button>
+
+  {/* Additional Info */}
+  <div className="mt-4 text-center">
+    <Text type="secondary" className="text-xs flex items-center justify-center gap-1">
+      <SafetyCertificateOutlined className="text-green-500" />
+      Secure booking • Free cancellation • Best price guaranteed
+    </Text>
+  </div>
+</div>
         </Affix>
-      )}
+      ) : (
+        <div className="bg-white shadow-md border-t p-3 flex flex-col justify-center items-center w-full gap-2 rounded-lg">
+          <Text className="text-gray-500 font-bold text-lg">No rooms selected</Text>
+        </div>
+      )
+      }
+      </div>
+
+      </div>
+
+
 
       {/* Date Picker Drawer */}
       <Drawer
@@ -843,6 +885,9 @@ const HotelDetails = () => {
         )}
       </Drawer>
     </div>
+    
+    </>
+
   );
 };
 

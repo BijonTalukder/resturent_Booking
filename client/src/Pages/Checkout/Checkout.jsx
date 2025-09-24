@@ -21,8 +21,9 @@ const Checkout = () => {
     checkInDate,
     checkOutDate,
     totalPrice,
+    nights
   } = useAppSelector((state) => state.booking);
-  console.log(selectedRooms)
+  console.log(nights)
 
   const [createBooking, { isLoading, isSuccess, isError, error, data }] =
     useCreateBookingMutation();
@@ -172,7 +173,7 @@ const Checkout = () => {
                   </div>
                   <div className="flex justify-between font-bold text-base">
                     <span>Total Price:</span>
-                    <span>${totalPrice?.toFixed(2)}</span>
+                    <span>{totalPrice?.toFixed(2)} tk/-</span>
                   </div>
                 </div>
               </div>
