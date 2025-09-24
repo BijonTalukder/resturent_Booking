@@ -91,7 +91,7 @@ const HotelDetails = () => {
 
       rooms.forEach((room) => {
         initialQuantities[room.id] = 1;
-        initialAdultCounts[room.id] = 0;
+        initialAdultCounts[room.id] = 1;
         initialChildCounts[room.id] = 0;
       });
 
@@ -385,13 +385,13 @@ const HotelDetails = () => {
           bodyStyle={{ padding: "20px" }}
           hoverable
         >
-          <div className="flex gap-3">
+          <div className="flex flex-col lg:flex-row gap-3">
             {/* Room Image */}
             <div className="flex-shrink-0 relative">
               <img
                 alt={room.type}
                 src={room.images?.[0] || "https://via.placeholder.com/300x200"}
-                className="w-64 h-48 object-cover rounded-xl shadow-md"
+                className="w-full h-full lg:w-64 lg:h-48 object-cover rounded-xl shadow-md"
               />
               {isSelected(room.id) && (
                 <div className="absolute top-3 right-3">
@@ -462,131 +462,139 @@ const HotelDetails = () => {
               </div>
 
               {/* Controls Section */}
-              <div className="flex items-end  justify-between mt-auto">
-                {/* Counter Controls */}
-                <div className="flex gap-6">
-                  {/* Quantity */}
-                  <div className="flex flex-col">
-                    <Text strong className="text-sm mb-2 text-gray-700">
-                      Rooms
-                    </Text>
-                    <div className="flex items-center border rounded-lg bg-gray-50">
-                      <Button
-                        type="text"
-                        size="small"
-                        icon={<MinusOutlined />}
-                        className="flex items-center justify-center !h-8 !w-8"
-                        onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) - 1)}
-                        disabled={(roomQuantities[room.id] || 1) <= 1 || isSelected(room.id)}
-                      />
-                      <span className="w-12 text-center font-semibold text-gray-800">
-                        {roomQuantities[room.id] || 1}
-                      </span>
-                      <Button
-                        type="text"
-                        size="small"
-                        icon={<PlusOutlined />}
-                        className="flex items-center justify-center !h-8 !w-8"
-                        onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) + 1)}
-                        disabled={(roomQuantities[room.id] || 1) >= room?.roomQty || isSelected(room.id)}
-                      />
-                    </div>
-                  </div>
+<div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mt-auto">
+  {/* Counter Controls */}
+  <div className="flex justify-between lg:justify-start lg:gap-6 w-full lg:w-auto">
+    {/* Quantity */}
+    <div className="flex flex-col flex-1 lg:flex-none">
+      <Text strong className="text-xs lg:text-sm mb-1 lg:mb-2 text-gray-700 text-center lg:text-left">
+        Rooms
+      </Text>
+      <div className="flex items-center border rounded-lg bg-gray-50 mx-auto lg:mx-0">
+        <Button
+          type="text"
+          size="small"
+          icon={<MinusOutlined />}
+          className="flex items-center justify-center !h-7 lg:!h-8 !w-7 lg:!w-8"
+          onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) - 1)}
+          disabled={(roomQuantities[room.id] || 1) <= 1 || isSelected(room.id)}
+        />
+        <span className="w-8 lg:w-12 text-center font-semibold text-gray-800 text-sm lg:text-base">
+          {roomQuantities[room.id] || 1}
+        </span>
+        <Button
+          type="text"
+          size="small"
+          icon={<PlusOutlined />}
+          className="flex items-center justify-center !h-7 lg:!h-8 !w-7 lg:!w-8"
+          onClick={() => handleQuantityChange(room.id, (roomQuantities[room.id] || 1) + 1)}
+          disabled={(roomQuantities[room.id] || 1) >= room?.roomQty || isSelected(room.id)}
+        />
+      </div>
+    </div>
 
-                  {/* Adults */}
-                  <div className="flex flex-col">
-                    <Text strong className="text-sm mb-2 text-gray-700">
-                      Adults
-                    </Text>
-                    <div className="flex items-center border rounded-lg bg-gray-50">
-                      <Button
-                        type="text"
-                        size="small"
-                        icon={<MinusOutlined />}
-                        className="flex items-center justify-center !h-8 !w-8"
-                        onClick={() => {
-                          const current = adultCounts[room.id] ?? 0;
-                          handleAdultCountChange(room.id, current - 1);
-                        }}
-                        disabled={(adultCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
-                      />
-                      <span className="w-12 text-center font-semibold text-gray-800">
-                        {adultCounts[room.id] ?? 0}
-                      </span>
-                      <Button
-                        type="text"
-                        size="small"
-                        icon={<PlusOutlined />}
-                        className="flex items-center justify-center !h-8 !w-8"
-                        onClick={() => {
-                          const current = adultCounts[room.id] ?? 0;
-                          handleAdultCountChange(room.id, current + 1);
-                        }}
-                        disabled={(room?.capacity + room?.child) * room?.roomQty <= (adultCounts[room.id] + childCounts[room.id]) || isSelected(room.id)}
-                      />
-                    </div>
-                  </div>
+    {/* Adults */}
+    <div className="flex flex-col flex-1 lg:flex-none">
+      <Text strong className="text-xs lg:text-sm mb-1 lg:mb-2 text-gray-700 text-center lg:text-left">
+        Adults
+      </Text>
+      <div className="flex items-center border rounded-lg bg-gray-50 mx-auto lg:mx-0">
+        <Button
+          type="text"
+          size="small"
+          icon={<MinusOutlined />}
+          className="flex items-center justify-center !h-7 lg:!h-8 !w-7 lg:!w-8"
+          onClick={() => {
+            const current = adultCounts[room.id] ?? 0;
+            handleAdultCountChange(room.id, current - 1);
+          }}
+          disabled={(adultCounts[room.id] ?? 0) <= 1 || isSelected(room.id)}
+        />
+        <span className="w-8 lg:w-12 text-center font-semibold text-gray-800 text-sm lg:text-base">
+          {adultCounts[room.id] ?? 0}
+        </span>
+        <Button
+          type="text"
+          size="small"
+          icon={<PlusOutlined />}
+          className="flex items-center justify-center !h-7 lg:!h-8 !w-7 lg:!w-8"
+          onClick={() => {
+            const current = adultCounts[room.id] ?? 0;
+            handleAdultCountChange(room.id, current + 1);
+          }}
+          disabled={(room?.capacity + room?.child) * room?.roomQty <= (adultCounts[room.id] + childCounts[room.id]) || isSelected(room.id)}
+        />
+      </div>
+    </div>
 
-                  {/* Children */}
-                  <div className="flex flex-col">
-                    <Text strong className="text-sm mb-2 text-gray-700">
-                      Children
-                    </Text>
-                    <div className="flex items-center border rounded-lg bg-gray-50">
-                      <Button
-                        type="text"
-                        size="small"
-                        icon={<MinusOutlined />}
-                        className="flex items-center justify-center !h-8 !w-8"
-                        onClick={() => {
-                          const current = childCounts[room.id] ?? 0;
-                          handleChildCountChange(room.id, current - 1);
-                        }}
-                        disabled={(childCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
-                      />
-                      <span className="w-12 text-center font-semibold text-gray-800">
-                        {childCounts[room.id] ?? 0}
-                      </span>
-                      <Button
-                        type="text"
-                        size="small"
-                        icon={<PlusOutlined />}
-                        className="flex items-center justify-center !h-8 !w-8"
-                        onClick={() => {
-                          const current = childCounts[room.id] ?? 0;
-                          handleChildCountChange(room.id, current + 1);
-                        }}
-                        disabled={(room?.capacity + room?.child) * room?.roomQty <= (adultCounts[room.id] + childCounts[room.id]) || isSelected(room.id)}
-                      />
-                    </div>
-                  </div>
-                </div>
+    {/* Children */}
+    <div className="flex flex-col flex-1 lg:flex-none">
+      <Text strong className="text-xs lg:text-sm mb-1 lg:mb-2 text-gray-700 text-center lg:text-left">
+        Children
+      </Text>
+      <div className="flex items-center border rounded-lg bg-gray-50 mx-auto lg:mx-0">
+        <Button
+          type="text"
+          size="small"
+          icon={<MinusOutlined />}
+          className="flex items-center justify-center !h-7 lg:!h-8 !w-7 lg:!w-8"
+          onClick={() => {
+            const current = childCounts[room.id] ?? 0;
+            handleChildCountChange(room.id, current - 1);
+          }}
+          disabled={(childCounts[room.id] ?? 0) <= 0 || isSelected(room.id)}
+        />
+        <span className="w-8 lg:w-12 text-center font-semibold text-gray-800 text-sm lg:text-base">
+          {childCounts[room.id] ?? 0}
+        </span>
+        <Button
+          type="text"
+          size="small"
+          icon={<PlusOutlined />}
+          className="flex items-center justify-center !h-7 lg:!h-8 !w-7 lg:!w-8"
+          onClick={() => {
+            const current = childCounts[room.id] ?? 0;
+            handleChildCountChange(room.id, current + 1);
+          }}
+          disabled={(room?.capacity + room?.child) * room?.roomQty <= (adultCounts[room.id] + childCounts[room.id]) || isSelected(room.id)}
+        />
+      </div>
+    </div>
+  </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <Button
-                    onClick={() => openRoomDetails(room)}
-                    type="default"
-                    icon={<EyeOutlined />}
-                    className="flex items-center gap-2 px-6 h-10 border-gray-300"
-                  >
-                    View Details
-                  </Button>
-                  <Button
-                    onClick={() => handleRoomToggle(room)}
-                    disabled={!room.isAvailable}
-                    type={isSelected(room.id) ? "default" : "primary"}
-                    icon={isSelected(room.id) ? <CloseOutlined /> : <CheckOutlined />}
-                    className={`flex items-center gap-2 px-6 h-10 ${
-                      isSelected(room.id) 
-                        ? "border-red-300 text-red-600 hover:text-red-700" 
-                        : "bg-blue-600 hover:bg-blue-700"
-                    }`}
-                  >
-                    {isSelected(room.id) ? "Deselect" : "Select Room"}
-                  </Button>
-                </div>
-              </div>
+  {/* Action Buttons */}
+  <div className="flex flex-col sm:flex-row gap-2 lg:gap-3 w-full lg:w-auto">
+    <Button
+      onClick={() => openRoomDetails(room)}
+      type="default"
+      icon={<EyeOutlined />}
+      className="flex items-center justify-center gap-2 px-4 lg:px-6 h-9 lg:h-10 border-gray-300 text-xs lg:text-sm flex-1"
+      size="small"
+    >
+      <span className="hidden sm:inline">View Details</span>
+      <span className="sm:hidden">Details</span>
+    </Button>
+    <Button
+      onClick={() => handleRoomToggle(room)}
+      disabled={!room.isAvailable}
+      type={isSelected(room.id) ? "default" : "primary"}
+      icon={isSelected(room.id) ? <CloseOutlined /> : <CheckOutlined />}
+      className={`flex items-center justify-center gap-2 px-4 lg:px-6 h-9 lg:h-10 text-xs lg:text-sm flex-1 ${
+        isSelected(room.id) 
+          ? "border-red-300 text-red-600 hover:text-red-700" 
+          : "bg-blue-600 hover:bg-blue-700"
+      }`}
+      size="small"
+    >
+      <span className="hidden sm:inline">
+        {isSelected(room.id) ? "Deselect" : "Select Room"}
+      </span>
+      <span className="sm:hidden">
+        {isSelected(room.id) ? "Remove" : "Select"}
+      </span>
+    </Button>
+  </div>
+</div>
             </div>
           </div>
         </Card>
