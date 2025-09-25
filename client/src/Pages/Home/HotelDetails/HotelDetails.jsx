@@ -279,6 +279,20 @@ const HotelDetails = () => {
           </div>
         </div>
 
+          <div className="mb-4">
+                <Card className="mb-4">
+
+                <Title level={4} style={{ margin: 0 }}>
+                  Hotel Description
+                </Title>
+                <Text strong className="text-lg text-gray-400">
+                   {hotel?.description}
+                </Text>
+                </Card>
+              </div>
+
+
+
         {/* Amenities Drawer */}
 
         <SliderAminities amenities={hotel?.amenities || []} />
