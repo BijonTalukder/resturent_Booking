@@ -10,7 +10,7 @@ import { useGetHotelsBySearchQuery } from "../../../redux/Feature/Admin/hotel/ho
 const AllHotel = () => {
   const { searchQuery, divisionId, cityId } = useOutletContext();
   const [showSkeleton, setShowSkeleton] = useState(true);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState('grid'); 
   const { data, error, isLoading, isFetching } = useGetHotelsBySearchQuery({
     name: searchQuery,
     divisionId,

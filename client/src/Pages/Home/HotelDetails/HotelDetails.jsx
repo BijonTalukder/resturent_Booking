@@ -940,6 +940,18 @@ const HotelDetails = () => {
                 />
               )}
 
+              {/* <div className="mb-4">
+                <Card className="mb-4">
+
+                <Title level={4} style={{ margin: 0 }}>
+                  Room Details
+                </Title>
+                <Text strong className="text-xl text-blue-500">
+               
+                </Text>
+                </Card>
+              </div> */}
+
               <div className="flex justify-between items-center mb-4">
                 <Title level={4} style={{ margin: 0 }}>
                   Price Details
