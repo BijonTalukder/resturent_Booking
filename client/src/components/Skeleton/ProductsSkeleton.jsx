@@ -1,8 +1,9 @@
 import { Skeleton } from 'primereact/skeleton';
 
 const ProductsSkeleton = ({ hotelData, viewMode = 'grid' }) => {
+  console.log(hotelData)
   // Default skeleton items if no hotelData provided
-  const skeletonItems = hotelData 
+  const skeletonItems = Array.from({ length: hotelData?.length });
 
   return (
     <>
