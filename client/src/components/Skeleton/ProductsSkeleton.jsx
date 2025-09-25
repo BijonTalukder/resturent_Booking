@@ -2,7 +2,7 @@ import { Skeleton } from 'primereact/skeleton';
 
 const ProductsSkeleton = ({ hotelData, viewMode = 'grid' }) => {
   // Default skeleton items if no hotelData provided
-  const skeletonItems = hotelData || Array(6).fill({});
+  const skeletonItems = hotelData 
 
   return (
     <>
@@ -11,7 +11,7 @@ const ProductsSkeleton = ({ hotelData, viewMode = 'grid' }) => {
         {viewMode === 'grid' ? (
           // Grid View Skeleton
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {skeletonItems.map((_, index) => (
+            {skeletonItems?.map((_, index) => (
               <div key={index} className="border-round border-1 surface-border p-4 surface-card">
                 <div className="mb-3">
                   <Skeleton width="100%" height="270px" className="mb-3" />
@@ -29,7 +29,7 @@ const ProductsSkeleton = ({ hotelData, viewMode = 'grid' }) => {
         ) : (
           // List View Skeleton
           <div className="space-y-4">
-            {skeletonItems.map((_, index) => (
+            {skeletonItems?.map((_, index) => (
               <div key={index} className="flex flex-row h-48 border-round border-1 surface-border surface-card overflow-hidden">
                 {/* Image Skeleton */}
                 <div className="w-1/3 h-full">
@@ -61,7 +61,7 @@ const ProductsSkeleton = ({ hotelData, viewMode = 'grid' }) => {
 
       {/* Mobile View - Always grid mode (2 columns) */}
       <div className="grid grid-cols-2 gap-3 md:hidden">
-        {skeletonItems.map((_, index) => (
+        {skeletonItems?.map((_, index) => (
           <div key={index} className="border border-gray-200 rounded-lg overflow-hidden bg-white">
             {/* Image placeholder */}
             <Skeleton 
