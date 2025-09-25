@@ -35,7 +35,7 @@ const RoomImageGallery = ({ rooms }) => {
               alt={image.alt}
               // width={150}
               // height={100}
-              className="!w-[130px] !h-[80px] md:!w-full md:!h-full object-cover cursor-pointer"
+              className="!w-[130px] !h-[80px] md:!w-full md:!h-[250px] object-cover cursor-pointer"
               // preview={{ mask: null }}
             />
 
@@ -51,7 +51,7 @@ const RoomImageGallery = ({ rooms }) => {
               alt={image.alt}
               // width={100}
               // height={50}
-              className="!w-[130px] !h-[80px] md:!w-full md:!h-full object-cover cursor-pointer"
+              className="!w-[130px] !h-[80px] md:!w-full md:!h-[250px] object-cover cursor-pointer"
               // preview={{ mask: null }}
             />
           ))}
