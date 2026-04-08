@@ -12,13 +12,10 @@ import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import { IoArrowBack } from "react-icons/io5";
 import image from "../../assets/icon.png";
 import Adjustment from "../Adjustment/Adjustment";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Division from "../../Pages/Division/Division";
 import { useGetUserNotificationsQuery } from "../../redux/Feature/Admin/notification/notificationApi";
-import {
-  BellIcon,
-  BellIcon as BellIconOutline,
-} from "@heroicons/react/24/outline"; 
+import { BellIcon } from "@heroicons/react/24/outline";
 
 const Header = ({ onSearch, onFilterChange }) => {
   const dispatch = useAppDispatch();
@@ -39,28 +36,29 @@ const Header = ({ onSearch, onFilterChange }) => {
   const [divisionId, setDivisionId] = useState("");
   const [cityId, setCityId] = useState("");
   const [unreadCount, setUnreadCount] = useState(0);
-  const {
-    data: notifications
-  } = useGetUserNotificationsQuery(user?.id);
-  
+  const [scrolled, setScrolled] = useState(false);
+
+  const { data: notifications } = useGetUserNotificationsQuery(user?.id);
+
   useEffect(() => {
     if (notifications) {
       setUnreadCount(notifications?.data?.filter((n) => !n.isRead).length);
     }
   }, [notifications]);
 
-  // Load recent searches from localStorage on component mount
   useEffect(() => {
     const savedSearches = localStorage.getItem("recentSearches");
-    if (savedSearches) {
-      setRecentSearches(JSON.parse(savedSearches));
-    }
+    if (savedSearches) setRecentSearches(JSON.parse(savedSearches));
   }, []);
 
-  // Save searches to localStorage
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const saveSearch = (query) => {
     if (!query.trim()) return;
-
     const updatedSearches = [
       query,
       ...recentSearches.filter((s) => s !== query),
@@ -80,7 +78,7 @@ const Header = ({ onSearch, onFilterChange }) => {
     setSearchQuery(value);
   };
 
-   const handleMobileSearchChange = (e) => {
+  const handleMobileSearchChange = (e) => {
     const value = e.target.value;
     onSearch(value);
     setSearchQuery(value);
@@ -90,7 +88,7 @@ const Header = ({ onSearch, onFilterChange }) => {
     if (searchQuery.trim()) {
       saveSearch(searchQuery);
       onSearch(searchQuery);
-      setIsSearchOverlay(false)
+      setIsSearchOverlay(false);
     }
   };
 
@@ -102,184 +100,250 @@ const Header = ({ onSearch, onFilterChange }) => {
 
   const getActiveClass = (path) =>
     location.pathname === path
-      ? "!text-white !font-bold"
-      : "text-[#ecf0f1] hover:text-white transition-all duration-300";
+      ? "text-white font-semibold"
+      : "text-blue-100 hover:text-white transition-colors duration-200";
+
+  const autoCompleteOptions = recentSearches.map((search) => ({
+    value: search,
+    label: (
+      <div className="flex items-center gap-2 py-0.5">
+        <IoSearch className="text-gray-400" size={13} />
+        <span className="text-sm text-gray-700">{search}</span>
+      </div>
+    ),
+  }));
+
+  const hiddenPaths = [
+    "/cancel", "/success", "/checkout",
+    "/login", "/register",
+  ];
+  const shouldHide =
+    isNotificationPage ||
+    isAdminLogin ||
+    isDetails ||
+    isDivision ||
+    isDistrict ||
+    isArea ||
+    hiddenPaths.includes(location.pathname);
 
   const userMenu = (
-    <Menu>
-      <Menu.Item
-        key="booking-history"
-        className={getActiveClass(
-          token && user?.role === "user" ? "/user/user-booking" : ""
-        )}
-        onClick={() =>
-          navigate(token && user?.role === "user" ? "/user/user-booking" : "")
-        }
-      >
-        {token && user?.role === "user" ? "Booking History" : ""}
-      </Menu.Item>
-
-      <Menu.Item
-        key="profile"
-        className={getActiveClass(
-          token && user?.role === "user" ? "/user/user-profile" : ""
-        )}
-        onClick={() =>
-          navigate(token && user?.role === "user" ? "/user/user-profile" : "")
-        }
-      >
-        {token && user?.role === "user" ? "Edit Profile" : ""}
-      </Menu.Item>
-
+    <Menu className="!rounded-xl !shadow-xl !border-0 !overflow-hidden !min-w-[180px] !mt-2">
+      {token && user?.role === "user" && (
+        <>
+          <Menu.Item
+            key="booking-history"
+            className="!px-4 !py-2.5 !text-sm hover:!bg-blue-50"
+            onClick={() => navigate("/user/user-booking")}
+          >
+            <span className="flex items-center gap-2">
+              <span>🗓</span> Booking History
+            </span>
+          </Menu.Item>
+          <Menu.Item
+            key="profile"
+            className="!px-4 !py-2.5 !text-sm hover:!bg-blue-50"
+            onClick={() => navigate("/user/user-profile")}
+          >
+            <span className="flex items-center gap-2">
+              <span>👤</span> Edit Profile
+            </span>
+          </Menu.Item>
+          <div className="mx-3 my-1 border-t border-gray-100" />
+        </>
+      )}
       <Menu.Item
         key="logout"
-        className="text-red-400 font-bold"
+        className="!px-4 !py-2.5 !text-sm !text-red-500 hover:!bg-red-50"
         onClick={handleLogout}
       >
-        Sign Out
+        <span className="flex items-center gap-2 font-medium">
+          <span>→</span> Sign Out
+        </span>
       </Menu.Item>
     </Menu>
   );
 
-  // Prepare autocomplete options from recent searches
-  const autoCompleteOptions = recentSearches.map(search => ({
-    value: search,
-    label: (
-      <div key={search} className="flex items-center">
-        <IoSearch className="text-gray-400 mr-2" size={14} />
-        <span>{search}</span>
-      </div>
-    )
-  }));
-
   return (
     <>
-      <div
-        className={`py-3 lg:py-1 px-4 lg:px-5 mb-3 bg-[#3498db] shadow-sm border-b border-gray-200 ${
-          isNotificationPage ||
-          isAdminLogin ||
-          isDetails ||
-          isDivision ||
-          isDistrict ||
-          isArea ||
-          location?.pathname === "/login" ||
-          location?.pathname === "/register"
-            ? "hidden"
-            : ""
-        }`}
+      <header
+        className={`sticky top-0 z-40 transition-all duration-300 ${shouldHide ? "hidden" : ""
+          } ${scrolled
+            ? "bg-[#2980b9] shadow-lg shadow-blue-900/20"
+            : "bg-[#3498db]"
+          }`}
       >
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-          {/* Left Side - Logo/User */}
-          <div className="flex justify-between items-center gap-x-1">
-            <Link to={"/"}>
-              <div className="">
-                <img src={image} className="w-20 h-20  object-contain" alt="" />
+        {/* ─── Desktop Header ─── */}
+        <div className="hidden lg:block border-b border-white/10">
+          <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between gap-6">
+
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 shrink-0">
+              <img src={image} className="w-10 h-10 object-contain" alt="logo" />
+              <div className="leading-tight">
+                <p className="text-white font-bold text-base tracking-tight">StayBD</p>
+                <p className="text-blue-200 text-[10px] tracking-wide uppercase">Find your stay</p>
               </div>
             </Link>
-            <div className="lg:hidden">
-              <p className="text-[12px] font-bold text-white">
-                {user?.name || "Hello Guest"}
-              </p>
-              <p className="text-[10px] text-white">Where are you going?</p>
-            </div>
-          </div>
 
-          {/* Center - Search Bar with AutoComplete */}
-          <div className="flex-1 mx-4 hidden lg:block">
-            <div className="relative w-full max-w-md mx-auto flex items-center gap-2">
-              <AutoComplete
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onSelect={(value) => {
-                  setSearchQuery(value);
-                  onSearch(value);
-                }}
-                options={autoCompleteOptions}
-                placeholder="Search hotels..."
-                className="w-full"
-                filterOption={(inputValue, option) =>
-                  option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                }
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSearchSubmit();
+            {/* Search */}
+            <div className="flex-1 max-w-xl">
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-1.5 focus-within:bg-white/20 focus-within:border-white/40 transition-all duration-200">
+                <IoSearch className="text-blue-200 shrink-0" size={16} />
+                <AutoComplete
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onSelect={(value) => {
+                    setSearchQuery(value);
+                    onSearch(value);
+                  }}
+                  options={autoCompleteOptions}
+                  filterOption={(inputValue, option) =>
+                    option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                   }
-                }}
-                allowClear
-                prefix={<IoSearch className="text-gray-400" />}
-/>
+                  className="flex-1 hotel-search-autocomplete"
+                  allowClear
+                  style={{ width: "100%" }}
+                >
+                  <input
+                    placeholder="Search hotels, cities, divisions…"
+                    className="w-full bg-transparent text-white placeholder-blue-200 text-sm outline-none"
+                    onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
+                  />
+                </AutoComplete>
+              </div>
+            </div>
+
+            {/* Right actions */}
+            <div className="flex items-center gap-3 shrink-0">
+              {/* Filter button */}
               <button
                 onClick={() => setVisibleRight(true)}
-                className="p-2 bg-gray-100 rounded-full"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-medium transition-all duration-200"
               >
-                <HiOutlineAdjustmentsHorizontal
-                  className="text-gray-600"
-                  size={15}
-                />
+                <HiOutlineAdjustmentsHorizontal size={16} />
+                <span>Filter</span>
               </button>
+
+              {/* Notification */}
+              <Link to="/notification">
+                <div className="relative p-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-200 cursor-pointer">
+                  <BellIcon className="w-5 h-5 text-white" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
+                </div>
+              </Link>
+
+              {/* Divider */}
+              <div className="w-px h-6 bg-white/20" />
+
+              {/* Auth */}
+              {token ? (
+                <Dropdown overlay={userMenu} trigger={["click"]} placement="bottomRight">
+                  <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white text-blue-600 hover:bg-blue-50 font-semibold text-sm transition-all duration-200 shadow-sm">
+                    <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center font-bold">
+                      {user?.name?.[0]?.toUpperCase() || "U"}
+                    </div>
+                    <span>{user?.name?.split(" ")[0]}</span>
+                    <IoChevronDownCircleOutline size={15} />
+                  </button>
+                </Dropdown>
+              ) : (
+                <div className="flex items-center gap-2 text-sm">
+                  <Link
+                    to="/login"
+                    className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium transition-all duration-200"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="px-4 py-1.5 rounded-lg bg-white text-blue-600 hover:bg-blue-50 font-semibold transition-all duration-200 shadow-sm"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Right Side - Auth/Links */}
-          <div className="flex items-center gap-4">
-            <div className="hidden lg:block mt-2">
-             <Link to={"/notification"}>
-               <Badge
-                count={unreadCount}
-                overflowCount={9}
-                className="cursor-pointer"
-              >
-                <BellIcon className="text-xl w-6 h-6 text-white" />
-              </Badge>
-             </Link>
-            </div>
-            {token ? (
-              <div className="flex items-center gap-2">
-                <div className="items-center gap-2 hidden lg:flex">
-                  <Dropdown overlay={userMenu} trigger={["click"]}>
-                    <Button className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-secondary">
-                      {user?.name}
-                      <IoChevronDownCircleOutline className="h-4 w-4 transition-transform" />
-                    </Button>
-                  </Dropdown>
+        {/* ─── Mobile Header ─── */}
+        <div className="lg:hidden px-4 py-2.5">
+          <div className="flex items-center justify-between mb-2.5">
+            <Link to="/" className="flex items-center gap-2">
+              <img src={image} className="w-10 h-10 object-contain" alt="logo" />
+              <div>
+                <p className="text-white text-xs font-bold leading-none">
+                  {user?.name || "Hello, Guest"}
+                </p>
+                <p className="text-blue-200 text-[10px] mt-0.5">Where are you going?</p>
+              </div>
+            </Link>
+
+            <div className="flex items-center gap-2">
+              <Link to="/notification">
+                <div className="relative p-1.5 rounded-lg bg-white/10">
+                  <BellIcon className="w-5 h-5 text-white" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
                 </div>
+              </Link>
+
+              {token ? (
                 <Button
                   onClick={handleLogout}
-                  className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-red-500 bg-white hover:bg-gray-100 transition-all duration-300 text-[12px] md:text-base lg:hidden"
+                  size="small"
+                  className="!text-red-500 !bg-white !border-0 !rounded-lg !text-xs !font-semibold"
                 >
                   Log out
                 </Button>
-              </div>
-            ) : (
-              <div className="text-[#ecf0f1] flex items-center gap-2">
-                <div className="flex gap-1 text-[12px] md:text-base">
-                  <Link to="/login" className={getActiveClass("/login")}>
-                    <span className="">Login</span>
-                  </Link>{" "}
-                  /
-                  <Link to="/register" className={getActiveClass("/register")}>
-                    <span className="">Register</span>
+              ) : (
+                <div className="flex gap-1.5 text-xs">
+                  <Link
+                    to="/login"
+                    className="px-3 py-1 rounded-lg bg-white/10 text-white border border-white/20"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="px-3 py-1 rounded-lg bg-white text-blue-600 font-semibold"
+                  >
+                    Register
                   </Link>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+          </div>
+
+          {/* Mobile search bar */}
+          <div
+            className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 shadow-sm cursor-text"
+            onClick={() => setIsSearchOverlay(true)}
+          >
+            <IoSearch className="text-gray-400 shrink-0" size={16} />
+            <span className="text-gray-400 text-sm flex-1 select-none">
+              {searchQuery || "Search hotels…"}
+            </span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setVisibleRight(true);
+              }}
+              className="p-1 rounded-md bg-blue-50"
+            >
+              <HiOutlineAdjustmentsHorizontal className="text-blue-500" size={16} />
+            </button>
           </div>
         </div>
 
-        {/* Mobile Search Bar */}
-        <div className="mt-2 lg:hidden">
-          <div className="relative w-full">
-            <Input
-              placeholder="Search hotels..."
-              value={searchQuery}
-              onFocus={() => setIsSearchOverlay(true)}
-              prefix={<IoSearch className="text-gray-400" />}
-              className="rounded-full"
-            />
-          </div>
-        </div>
-
-        {/* Mobile Filter Panel */}
+        {/* Filter Drawer */}
         <Adjustment
           visibleRight={visibleRight}
           setVisibleRight={setVisibleRight}
@@ -289,86 +353,73 @@ const Header = ({ onSearch, onFilterChange }) => {
           setSelectedCity={setCityId}
           onApplyFilters={handleApplyFilters}
         />
-      </div>
+      </header>
 
-      {/* Mobile Search Overlay - Keeps existing functionality */}
+      {/* ─── Mobile Search Overlay ─── */}
       {isSearchOverlay && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col h-full lg:hidden">
-          {/* Search Header */}
+        <div className="fixed inset-0 z-50 bg-white flex flex-col lg:hidden">
           <div className="sticky top-0 bg-white p-4 border-b shadow-sm z-10">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsSearchOverlay(false)}
-                className="text-gray-600"
+                className="p-2 rounded-full bg-gray-100 text-gray-600"
               >
-                <IoArrowBack size={24} />
+                <IoArrowBack size={20} />
               </button>
               <Input
                 autoFocus
-                placeholder="Search hotels..."
+                placeholder="Search hotels…"
                 value={searchQuery}
                 onChange={handleMobileSearchChange}
                 onPressEnter={handleSearchSubmit}
                 prefix={<IoSearch className="text-gray-400" />}
-                className="rounded-full w-full"
+                className="rounded-xl w-full"
                 suffix={
                   searchQuery ? (
                     <button
-                      onClick={() => {
-                        setSearchQuery("");
-                        onSearch("");
-                      }}
-                      className="text-gray-400"
+                      onClick={() => { setSearchQuery(""); onSearch(""); }}
+                      className="text-gray-400 hover:text-gray-600 text-xs"
                     >
-                      ✖
+                      ✕
                     </button>
                   ) : null
                 }
               />
               <button
                 onClick={() => setVisibleRight(true)}
-                className="p-2 bg-gray-100 rounded-full"
+                className="p-2 bg-blue-50 rounded-xl shrink-0"
               >
-                <HiOutlineAdjustmentsHorizontal
-                  className="text-gray-600"
-                  size={20}
-                />
+                <HiOutlineAdjustmentsHorizontal className="text-blue-500" size={20} />
               </button>
             </div>
           </div>
 
-          {/* Search Content */}
           <div className="flex-1 overflow-y-auto">
-            {/* Recent Searches */}
             {recentSearches.length > 0 && (
               <div className="p-4 border-b">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">
-                    Recent Searches
-                  </h3>
-                </div>
-                <div className="space-y-2">
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                  Recent Searches
+                </h3>
+                <div className="space-y-1">
                   {recentSearches.map((search, index) => (
                     <div
                       key={index}
-                      className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                      className="flex items-center p-2.5 hover:bg-gray-50 rounded-xl cursor-pointer"
                       onClick={() => {
                         setSearchQuery(search);
                         onSearch(search);
                         setIsSearchOverlay(false);
                       }}
                     >
-                      <IoSearch className="text-gray-400 mr-2" />
-                      <span>{search}</span>
+                      <IoSearch className="text-gray-400 mr-3" size={14} />
+                      <span className="text-sm text-gray-700">{search}</span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
-
-            {/* Popular Divisions */}
             <div className="p-4">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                 Browse by Division
               </h3>
               <Division onDivisionClick={() => setIsSearchOverlay(false)} />
@@ -376,6 +427,26 @@ const Header = ({ onSearch, onFilterChange }) => {
           </div>
         </div>
       )}
+
+      {/* Inline styles for AutoComplete override */}
+      <style>{`
+        .hotel-search-autocomplete .ant-select-selector {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
+        .hotel-search-autocomplete input {
+          color: white !important;
+        }
+        .hotel-search-autocomplete input::placeholder {
+          color: rgba(219, 234, 254, 0.8) !important;
+        }
+        .hotel-search-autocomplete .ant-select-clear {
+          color: rgba(255,255,255,0.6) !important;
+          background: transparent !important;
+        }
+      `}</style>
     </>
   );
 };
