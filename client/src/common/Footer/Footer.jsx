@@ -41,7 +41,7 @@ const Footer = () => {
             <img src={image} className="w-10 h-10 object-contain" alt="logo" />
             <div>
               <p className="text-white font-extrabold text-lg leading-none tracking-tight group-hover:text-blue-400 transition-colors">
-                StayBD
+                BEHB
               </p>
               <p className="text-blue-400 text-xs mt-0.5 tracking-widest uppercase">
                 Find your perfect stay
@@ -166,11 +166,11 @@ const Footer = () => {
             </li>
             <li>
               <a
-                href="mailto:support@staybd.com"
+                href="mailto:support@BEHB.com"
                 className="flex items-center gap-3 text-sm text-gray-400 hover:text-blue-400 transition-colors duration-200"
               >
                 <IoMailOutline className="text-blue-400 shrink-0" size={16} />
-                support@staybd.com
+                support@BEHB.com
               </a>
             </li>
             <li>
@@ -208,7 +208,7 @@ const Footer = () => {
       <div className="border-t border-white/5">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
           <p className="text-xs text-gray-500">
-            © {new Date().getFullYear()} StayBD. All rights reserved. Made with ❤️ in Bangladesh.
+            © {new Date().getFullYear()} BEHB. All rights reserved. Made with ❤️ in Bangladesh.
           </p>
           <div className="flex items-center gap-5 text-xs text-gray-500">
             <Link to="/privacy-policy" className="hover:text-gray-300 transition-colors">

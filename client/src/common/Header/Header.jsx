@@ -180,7 +180,7 @@ const Header = ({ onSearch, onFilterChange }) => {
             <Link to="/" className="flex items-center gap-2 shrink-0">
               <img src={image} className="w-10 h-10 object-contain" alt="logo" />
               <div className="leading-tight">
-                <p className="text-white font-bold text-base tracking-tight">StayBD</p>
+                <p className="text-white font-bold text-base tracking-tight">BEHB</p>
                 <p className="text-blue-200 text-[10px] tracking-wide uppercase">Find your stay</p>
               </div>
             </Link>
