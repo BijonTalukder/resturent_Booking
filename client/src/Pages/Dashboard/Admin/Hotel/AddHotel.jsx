@@ -111,18 +111,18 @@ const AddHotel = () => {
         image: imageUrl || "https://example.com/hotel-image.jpg",
         divisionId: formData?.divisionId,
         cityId: formData?.cityId,
-        areaId: (selectedAreas).toString(), 
+        areaId: selectedAreas ? String(selectedAreas) : "",
         amenities: formData?.amenities || [],
         ownerId: user?.id,
-        isActive: formData?.isActive || true
+        isActive: formData?.isActive ?? true
       };
-      console.log(hotelData )
 
       await createHotel(hotelData).unwrap();
 
     } catch (error) {
       console.error('Error handling form submission:', error);
-      message.error('Error handling form submission. Please try again.');
+      const errMsg = error?.data?.message || error?.message || 'Something went wrong. Please try again.';
+      message.error(errMsg);
     }
   };
 
