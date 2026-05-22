@@ -34,7 +34,7 @@ const AdminProtectedRoute = ({ children }) => {
   if (isLoading || isFetching || loading) {
     return <LoadingPage></LoadingPage>;
   }
-  const loggedInUser = data?.data?.find((u) => u.email === user.email);
+  const loggedInUser = data?.data?.find((u) => u.phone === user.phone);
   // console.log(loggedInUser)
   if (!loggedInUser || loggedInUser.role !== "admin") {
     dispatch(logout());
