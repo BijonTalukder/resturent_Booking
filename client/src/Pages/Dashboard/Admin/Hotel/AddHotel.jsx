@@ -118,7 +118,7 @@ const AddHotel = () => {
       };
       console.log(hotelData )
 
-      // createHotel(hotelData);
+      await createHotel(hotelData).unwrap();
 
     } catch (error) {
       console.error('Error handling form submission:', error);
