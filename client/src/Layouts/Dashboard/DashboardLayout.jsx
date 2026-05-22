@@ -6,8 +6,8 @@ import Navbar from "./Navbar";
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
-    <div className="flex">
-      <div className="hidden  lg:block">
+    <div className="flex bg-[#eef0f4]">
+      <div className="hidden lg:block">
         <DashboardSidebarTwo></DashboardSidebarTwo>
       </div>
 
@@ -35,7 +35,7 @@ const DashboardLayout = () => {
               setIsSidebarOpen(false);
             }
           }}
-          className=" py-12 bg-[#F3F5F7] px-5 w-full"
+          className="py-12 px-5 w-full"
         >
           <Outlet></Outlet>
         </div>

@@ -1,6 +1,7 @@
 import { MdNotificationImportant } from "react-icons/md";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { TfiLayoutSlider } from "react-icons/tfi";
+import { IoLogoWhatsapp } from "react-icons/io";
 import DashboardStatistics from "../Pages/Dashboard/Admin/DashboardStatistics/DashboardStatistics";
 import { AiFillBoxPlot } from "react-icons/ai";
 import Sliders from "../Pages/Dashboard/Admin/Slider/Sliders";
@@ -18,6 +19,7 @@ import Bookings from "../Pages/Dashboard/Admin/Bookings/Bookings";
 import AddNotification from "../Pages/Dashboard/Admin/AddNotification/AddNotification";
 import Area from "../Pages/Dashboard/Admin/Area/Area";
 import EditSlider from "../Pages/Dashboard/Admin/Slider/EditSlider";
+import InboxSettings from "../Pages/Dashboard/Admin/Inbox/InboxSettings";
 
 
 export const adminRoutes = [
@@ -92,6 +94,13 @@ export const adminRoutes = [
     element: <AddNotification/>,
     icon: <MdNotificationImportant  size={20}/>,
     permissionName: "view notification",
+  },
+  {
+    path: "inbox",
+    label: "Inbox",
+    element: <InboxSettings/>,
+    icon: <IoLogoWhatsapp size={20}/>,
+    permissionName: "view inbox",
   },
   {
     path: "users/add-user",

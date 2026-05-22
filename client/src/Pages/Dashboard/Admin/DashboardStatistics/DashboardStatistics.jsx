@@ -3,11 +3,8 @@ import { Card, Row, Col, Spin } from "antd";
 import { useGetBookingsQuery } from "../../../../redux/Feature/Admin/booking/bookingApi";
 
 const DashboardStatistics = () => {
-  // Fetch booking data
   const { data: bookings, error, isLoading: bookingsIsLoading } = useGetBookingsQuery();
-  // console.log(bookings);
 
-  // Calculate booking status counts
   const getBookingStatusCounts = (bookings) => {
     const statusCounts = {
       pending: 0,
@@ -38,7 +35,6 @@ const DashboardStatistics = () => {
 
   const statusCounts = getBookingStatusCounts(bookings);
 
-  // Loading state
   if (bookingsIsLoading) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
@@ -47,32 +43,28 @@ const DashboardStatistics = () => {
     );
   }
 
-  // Error state
   if (error) {
-    return <div>{"Error loading bookings" || error.message}</div>;
+    return <div className="text-red-500">Error loading bookings</div>;
   }
 
   return (
     <div style={{ padding: "24px" }}>
-      <h1 className="text-center font-bold text-2xl mb-10">Booking Statistics Overview</h1>
+      <h1 className="text-center font-bold text-2xl mb-10 text-[#373b43]">Booking Statistics Overview</h1>
       <Row gutter={[16, 16]}>
-        {/* Pending Bookings Card */}
         <Col xs={24} sm={12} md={8} lg={8}>
-          <Card title="Pending Bookings" bordered={false}>
+          <Card title="Pending Bookings" className="!shadow-neu-sm">
             <h2 className="text-center font-bold text-xl" style={{ color: "#faad14" }}>{statusCounts.pending}</h2>
           </Card>
         </Col>
 
-        {/* Confirmed Bookings Card */}
         <Col xs={24} sm={12} md={8} lg={8}>
-          <Card title="Confirmed Bookings" bordered={false}>
+          <Card title="Confirmed Bookings" className="!shadow-neu-sm">
             <h2 className="text-center font-bold text-xl" style={{ color: "#52c41a" }}>{statusCounts.confirmed}</h2>
           </Card>
         </Col>
 
-        {/* Cancelled Bookings Card */}
         <Col xs={24} sm={12} md={8} lg={8}>
-          <Card title="Cancelled Bookings" bordered={false}>
+          <Card title="Cancelled Bookings" className="!shadow-neu-sm">
             <h2 className="text-center font-bold text-xl" style={{ color: "#f5222d" }}>{statusCounts.cancelled}</h2>
           </Card>
         </Col>

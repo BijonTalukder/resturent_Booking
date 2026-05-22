@@ -1,6 +1,6 @@
-import { Menu, Transition , MenuButton , MenuItems, MenuItem  } from "@headlessui/react";
+import { Menu, Transition, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { Fragment } from "react";
-import { NavLink , useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   IoLogIn,
   IoLogInOutline,
@@ -14,7 +14,7 @@ import { toast } from "sonner";
 const Dropdown = () => {
   const user = useAppSelector(useCurrentUser);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logout());
     toast.success("You are successfully logged out.")
@@ -23,13 +23,17 @@ const Dropdown = () => {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <MenuButton className="inline-flex w-full justify-center rounded-md  px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-          <div className="flex justify-center  items-center gap-x-3">
-            <img
-              className="w-8 h-8 rounded-full"
-              src={`https://ui-avatars.com/api/?name=${user?.name?.charAt(0) || "A"}`}
-              alt="user photo"
-            />
+        <MenuButton className="inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+          <div className="flex justify-center items-center gap-x-3">
+            <div className="rounded-full" style={{
+              boxShadow: "2px 2px 4px rgba(0,0,0,0.3), -2px -2px 4px rgba(255,255,255,0.05)",
+            }}>
+              <img
+                className="w-8 h-8 rounded-full"
+                src={`https://ui-avatars.com/api/?name=${user?.name?.charAt(0) || "A"}&background=FD3D57&color=fff`}
+                alt="user photo"
+              />
+            </div>
           </div>
         </MenuButton>
       </div>
@@ -43,83 +47,45 @@ const Dropdown = () => {
         leaveTo="transform opacity-0 scale-95"
       >
         <MenuItems
-          className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none
-                z-10"
+          className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-2xl shadow-neu-sm bg-[#eef0f4] ring-0 focus:outline-none z-10"
         >
-          <div className="px-1 py-1 ">
-
+          <div className="px-1 py-1">
             <MenuItem>
               {({ active }) => (
-              <NavLink 
-              style={({ isActive, isTransitioning }) => {
-                return {
-                  fontWeight: isActive ? "bold" : "",
-                  color: isActive ? "red" : "black",
-                  viewTransitionName: isTransitioning ? "slide" : "",
-                };
-              }}
-              
-              to={`/admin/profile`}>
-              <button
-                  className={ `group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                >
-                  {active ? (
-                    <IoPersonSharp className="mx-2  text-green" />
-                  ) : (
-                    <IoPersonOutline className="mx-2 text-green" />
-                  )}
-                  Profile
-                </button>
-              </NavLink>
+                <NavLink to={`/admin/profile`}>
+                  <button
+                    className={`group flex w-full items-center rounded-xl px-2 py-2 text-sm ${
+                      active ? "neu-inset-sm text-[#373b43]" : "text-[#6b7588]"
+                    }`}
+                  >
+                    {active ? (
+                      <IoPersonSharp className="mx-2 text-primary" />
+                    ) : (
+                      <IoPersonOutline className="mx-2" />
+                    )}
+                    Profile
+                  </button>
+                </NavLink>
               )}
             </MenuItem>
 
-            {/* <Menu.Item>
-              {({ active }) => (
-                   <NavLink
-                   style={({ isActive, isTransitioning }) => {
-                    return {
-                      fontWeight: isActive ? "bold" : "",
-                      color: isActive ? "red" : "black",
-                      viewTransitionName: isTransitioning ? "slide" : "",
-                    };
-                  }}
-                   
-                   to={`/admin/changePassword`}>
-                   <button
-                       className={` group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                     >
-                       {active ? (
-                         <IoPersonSharp className="mx-2  text-green" />
-                       ) : (
-                         <IoPersonOutline className="mx-2 text-green" />
-                       )}
-                      Change Password
-                     </button>
-                   </NavLink>
-              )}
-            </Menu.Item> */}
-
-
-
-
-            <Menu.Item>
+            <MenuItem>
               {({ active }) => (
                 <button
                   onClick={() => handleLogout()}
                   className={`${
-                    active ? "text-green" : "text-gray-900"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    active ? "neu-inset-sm text-red-500" : "text-[#6b7588]"
+                  } group flex w-full items-center rounded-xl px-2 py-2 text-sm`}
                 >
                   {active ? (
-                    <IoLogIn className="mx-2  text-green" />
+                    <IoLogIn className="mx-2 text-red-500" />
                   ) : (
-                    <IoLogInOutline className="mx-2 text-green" />
+                    <IoLogInOutline className="mx-2" />
                   )}
                   Logout
                 </button>
               )}
-            </Menu.Item>
+            </MenuItem>
           </div>
         </MenuItems>
       </Transition>

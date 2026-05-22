@@ -5,17 +5,16 @@ import ZFormTwo from "../../../components/Form/ZFormTwo";
 import ZEmail from "../../../components/Form/ZEmail";
 import ZPhone from "../../../components/Form/ZPhone";
 import { FaGreaterThan, FaHome } from "react-icons/fa";
-// import img from "../../../assets/banner/contact-banner.jpg";
 import { useAppSelector } from "../../../redux/Hook/Hook";
 import { useCurrentToken, useCurrentUser } from "../../../redux/Feature/auth/authSlice";
-import { Modal } from "antd"; // Import Ant Design Modal
+import { Modal } from "antd";
 import { useRegisterMutation } from "../../../redux/Feature/auth/authApi";
 
 const Register = () => {
   const navigate = useNavigate();
   const user = useAppSelector(useCurrentUser);
   const token = useAppSelector(useCurrentToken);
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [showModal, setShowModal] = useState(false);
 
   const [
     register,
@@ -42,21 +41,19 @@ const Register = () => {
 
   useEffect(() => {
     if (lIsSuccess) {
-      setShowModal(true); // Show modal on successful registration
+      setShowModal(true);
     }
   }, [lIsSuccess]);
 
   const handleCloseModal = () => {
-    setShowModal(false); // Close the modal
-    // navigate("/login");
+    setShowModal(false);
   };
 
   return (
     <>
-   
-      <div className="min-h-screen  pb-6 flex flex-col justify-center sm:py-12 mb-10">
+      <div className="min-h-screen bg-[#eef0f4] pb-6 flex flex-col justify-center sm:py-12 mb-10">
         <div className="relative py-3 sm:w-[40%] sm:mx-auto">
-          <div className="relative px-4 py-10 bg-gray-50 md:m-0 md:rounded-none m-2 rounded-md shadow-lg sm:rounded-3xl">
+          <div className="neu-card px-4 py-8 sm:rounded-3xl">
             <div className="max-w-md mx-auto text-center">
               <ZFormTwo
                 isLoading={lIsloading}
@@ -69,11 +66,11 @@ const Register = () => {
                 buttonName={"Register"}
               >
                 <div>
-                  <h1 className="text-2xl mt-2 text-center font-bold">
+                  <h1 className="text-2xl mt-2 text-center font-bold text-[#373b43]">
                     Create an account
                   </h1>
                 </div>
-                <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                <div className="py-8 text-base leading-6 space-y-5 text-gray-700 sm:text-lg sm:leading-7">
                   <div className="relative">
                     <ZInputTwo
                       name="name"
@@ -84,10 +81,10 @@ const Register = () => {
                       placeholder={"Enter your Full Name"}
                     />
                   </div>
-                  <div className="relative mb-8">
+                  <div className="relative">
                     <ZEmail label={"Email"} name={"email"} />
                   </div>
-                  <div className="relative mb-8">
+                  <div className="relative">
                     <ZPhone label={"Phone"} name={"phone"} />
                   </div>
                   <div className="relative">
@@ -104,11 +101,11 @@ const Register = () => {
               </ZFormTwo>
             </div>
 
-            <div className="flex items-center justify-center mt-5">
-              <p className="text-sm text-gray-500">
+            <div className="flex items-center justify-center mt-4">
+              <p className="text-sm text-[#6b7588]">
                 Already have an account?
                 <Link to={"/login"}>
-                  <span className="underline text-blue-500">Sign in</span>
+                  <span className="text-primary font-semibold ml-1 hover:underline">Sign in</span>
                 </Link>
               </p>
             </div>
@@ -116,33 +113,32 @@ const Register = () => {
         </div>
       </div>
 
-      {/* Ant Design Modal for successful registration */}
       <Modal
-      className=""
- 
-  centered
-  open={showModal} // Control visibility
-  onOk={handleCloseModal} // Handle OK button click
-  onCancel={handleCloseModal} // Handle Cancel button click
-  okButtonProps={{
-    style: {
-      backgroundColor: "#52c41a", // Green color for the button
-      borderColor: "#52c41a", // Green border color
-      color: "#fff", // White text color
-    },
-  }}
-  cancelButtonProps={{ style: { display: "none" } }} // Hide Cancel button
->
-<h1 className="mt-10 text-blue-500 text-xl text-center font-bold mb-5">Registration Successful!</h1>
-  <p style={{ 
-    fontSize: "16px", 
-    color: "#333", 
-    textAlign: "center", 
-    marginBottom: "30px" 
-  }}>
-    A verification link has been sent to your email. Please check your email to verify your account and login.
-  </p>
-</Modal>
+        centered
+        open={showModal}
+        onOk={handleCloseModal}
+        onCancel={handleCloseModal}
+        okButtonProps={{
+          style: {
+            backgroundColor: "#FD3D57",
+            borderColor: "#FD3D57",
+            color: "#fff",
+            borderRadius: "12px",
+          },
+        }}
+        cancelButtonProps={{ style: { display: "none" } }}
+        className="!rounded-2xl"
+      >
+        <h1 className="mt-10 text-primary text-xl text-center font-bold mb-5">Registration Successful!</h1>
+        <p style={{ 
+          fontSize: "16px", 
+          color: "#6b7588", 
+          textAlign: "center", 
+          marginBottom: "30px" 
+        }}>
+          A verification link has been sent to your email. Please check your email to verify your account and login.
+        </p>
+      </Modal>
     </>
   );
 };

@@ -8,7 +8,7 @@ const Navbar = ({
 }) => {
   return (
     <>
-      <div className="border-gray-200 px-4 lg:px-6 py-1 bg-[#121c34]">
+      <div className="px-4 lg:px-6 py-1" style={{ background: "#121c34", boxShadow: "3px 3px 6px rgba(0,0,0,0.3), -3px -3px 6px rgba(255,255,255,0.03)" }}>
         <div className="flex justify-between items-center lg:order-2 sticky z-40 top-0">
           <div>
             {isSidebarOpen === false && (
@@ -20,7 +20,7 @@ const Navbar = ({
               </button>
             )}
 
-            <p className="text-[#E0E0E0] hidden lg:block">Hotel Universe</p>
+            <p className="text-[#E0E0E0] hidden lg:block font-medium">Hotel Universe</p>
           </div>
           {/* profile */}
           <div>

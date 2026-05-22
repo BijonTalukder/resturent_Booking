@@ -15,17 +15,20 @@ function App() {
       setIsLoading(false);
     }, 500);
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, []);
 
-  // If loading, show the loading page
   if (isLoading) {
-    return <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <img src={image} alt="Loading..." className="w-[150px] h-[120px] mx-auto mt-10" />
-    </div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-[#eef0f4]">
+        <div className="neu-card p-8 flex flex-col items-center">
+          <img src={image} alt="Loading..." className="w-[150px] h-[120px] mx-auto" />
+          <div className="loader mt-6"></div>
+        </div>
+      </div>
+    );
   }
 
-  // Otherwise, render the main app
   return (
     <>
       <RouterProvider router={routes} />

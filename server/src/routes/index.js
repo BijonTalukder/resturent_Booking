@@ -23,6 +23,8 @@ const divisionService = new DivisionService();
 const divisionController = new DivisionController(divisionService);
 const AreaService = require('../services/Area/AreaService');
 const AreaController = require('../controllers/areaController');
+const SettingService = require('../services/Setting/SettingService');
+const SettingController = require('../controllers/settingController');
 
 const router = express.Router();
 
@@ -46,6 +48,8 @@ const districtService = new DistrictService();
 const districtController = new DistrictController(districtService); 
 const areaService = new AreaService();
 const areaController = new AreaController(areaService)
+const settingService = new SettingService(prisma);
+const settingController = new SettingController(settingService)
 //-------------------User Routes-----------------------
 router.post("/user/register",async(req,res,next)=>{
     userController.createUser(req,res,next)
@@ -234,5 +238,16 @@ router.get("/area/:id", areaController.getAreaById.bind(areaController));
 router.put("/area/:id", areaController.updateArea.bind(areaController));
 router.delete("/area/:id", areaController.deleteArea.bind(areaController));
 router.get("/area/by-district/:id",areaController.areaByDistrict.bind(areaController));
+
+//-------------------Setting Routes-----------------------
+router.post("/setting/upsert", (req, res, next) => {
+    settingController.upsertSetting(req, res, next)
+})
+router.get("/setting/:key", (req, res, next) => {
+    settingController.getSetting(req, res, next)
+})
+router.get("/setting", (req, res, next) => {
+    settingController.getAllSettings(req, res, next)
+})
 
 module.exports = router;

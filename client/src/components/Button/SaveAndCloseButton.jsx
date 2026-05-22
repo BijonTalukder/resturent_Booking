@@ -1,19 +1,16 @@
-import React, { useContext } from "react";
-
+import React from "react";
 
 const SaveAndCloseButton = ({ title, isLoading, closeModal }) => {
-
-
   return (
-    <div className="flex items-center gap-x-3 justify-end">
+    <div className="flex items-center gap-x-3 justify-end mt-4">
       {closeModal && (
         <button
           disabled={isLoading}
           onClick={() => closeModal()}
           type="button"
-          className="bg-gray-200 disabled:cursor-not-allowed text-center text-gray-600 w-full lg:w-[200px] h-[45px] rounded-md"
+          className="neu-btn w-full lg:w-[200px] h-[45px] text-[#6b7588] text-sm font-medium"
         >
-        Close
+          Close
         </button>
       )}
       <button
@@ -23,11 +20,9 @@ const SaveAndCloseButton = ({ title, isLoading, closeModal }) => {
           title === "Login"
             ? "lg:w-[88px] h-[35px]"
             : "w-full lg:w-[200px] h-[45px]"
-        } bg-[#24354C] disabled:bg-[#4f5a67] disabled:cursor-not-allowed text-center text-white rounded-md`}
+        } neu-btn-primary text-sm font-medium disabled:opacity-60`}
       >
-        {isLoading
-         ? "Processing..."
-          : title}
+        {isLoading ? "Processing..." : title}
       </button>
     </div>
   );

@@ -49,6 +49,8 @@ const AddRoom = ({ hotelId }) => {
         roomNumber: formData?.roomNumber,
         type: formData?.type,
         price: parseFloat(formData?.price),
+        discount: formData?.discount ? parseFloat(formData?.discount) : null,
+        discountType: formData?.discountType || "percentage",
         capacity: parseInt(formData?.capacity),
         child: parseInt(formData?.child),
         roomQty: parseInt(formData?.roomQty),
@@ -126,6 +128,24 @@ const AddRoom = ({ hotelId }) => {
             placeholder="Enter room price"
             required={1}
             reset
+          />
+
+          <ZInputTwo
+            name="discount"
+            type="number"
+            label="Discount"
+            placeholder="Enter discount (optional)"
+            reset
+          />
+
+          <ZSelect
+            name="discountType"
+            label="Discount Type"
+            options={[
+              { label: "Percentage (%)", value: "percentage" },
+              { label: "Flat (Tk)", value: "flat" },
+            ]}
+            placeholder="Select discount type"
           />
 
           <ZInputTwo

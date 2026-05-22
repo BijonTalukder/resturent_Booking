@@ -5,7 +5,6 @@ import { useGetAreasByDistrictQuery } from "../../redux/Feature/User/place/place
 
 const Area = () => {
   const { districtId } = useParams();
-  // console.log(districtId)
   const [areas, setAreas] = useState([]);
   const { data: areasData, isLoading, isError } = useGetAreasByDistrictQuery(districtId);
 
@@ -16,47 +15,38 @@ const Area = () => {
   }, [areasData]);
 
   if (areasData?.data?.length === 0) return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div>No areas found</div>
+    <div className="flex justify-center items-center min-h-screen bg-[#eef0f4]">
+      <div className="neu-sm p-4 text-[#6b7588]">No areas found</div>
     </div>
   );
 
-
   if (isLoading) return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div>Loading areas...</div>
+    <div className="flex justify-center items-center min-h-screen bg-[#eef0f4]">
+      <div className="neu-sm p-4 text-[#6b7588]">Loading areas...</div>
     </div>
   );
 
   if (isError) return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div>Error loading areas</div>
+    <div className="flex justify-center items-center min-h-screen bg-[#eef0f4]">
+      <div className="neu-sm p-4 text-red-500">Error loading areas</div>
     </div>
   );
 
   return (
-    <>
-      {/* <Link to={`/districts/${districtId}`}> 
-        <LeftCircleFilled className="ms-2 mt-2 text-2xl" />
-      </Link> */}
-      <div className="w-full max-w-md mx-auto bg-white min-h-screen p-4 space-y-6">
-        <div className="space-y-2">
-          <h3 className="text-md font-medium">Select Area</h3>
-          <ul className="space-y-2">
-            {areas.map((area, idx) => (
-             <Link to={`/hotel/${area.id}`} key={idx}>
-              <li
-                key={idx}
-                className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200 mb-4"
-              >
-                {area.name}
-              </li>
+    <div className="min-h-screen bg-[#eef0f4] p-4">
+      <div className="w-full max-w-md mx-auto">
+        <h3 className="text-lg font-bold text-center text-[#373b43] mb-4">Select Area</h3>
+        <div className="space-y-3">
+          {areas.map((area, idx) => (
+            <Link to={`/hotel/${area.id}`} key={idx}>
+              <div className="neu-card px-4 py-4 text-center cursor-pointer hover:shadow-neu-sm transition-all">
+                <span className="text-[#484f5c] font-medium">{area.name}</span>
+              </div>
             </Link>
-            ))}
-          </ul>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

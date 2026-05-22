@@ -217,8 +217,16 @@ const HotelDetails = () => {
     recalculateRoomCapacity(roomId, currentAdults, newChildCount);
   };
 
+  const getEffectivePrice = (room) => {
+    if (!room.discount) return room.price;
+    if (room.discountType === "flat") {
+      return Math.max(0, room.price - room.discount);
+    }
+    return Math.round(room.price - (room.price * room.discount) / 100);
+  };
+
   const totalPrice = selectedRooms.reduce(
-    (sum, room) => sum + room.price * nights * room.quantity,
+    (sum, room) => sum + getEffectivePrice(room) * nights * room.quantity,
     0
   );
 
@@ -247,21 +255,21 @@ const HotelDetails = () => {
 
   return (
     <>
-      <div className="pb-24">
+      <div className="pb-24 bg-[#eef0f4]">
         {/* Top Bar - Fixed */}
-        <div className="sticky top-0 z-20 bg-white p-4 shadow-sm flex justify-between items-center">
+        <div className="sticky top-0 z-20 bg-[#eef0f4] p-4 shadow-neu-sm flex justify-between items-center">
           <Link to="/">
             <Button
               type="text"
               icon={<LeftCircleFilled />}
-              className="flex items-center"
+              className="flex items-center !text-[#6b7588]"
             >
               <span className="ml-1">Back</span>
             </Button>
           </Link>
           <div className="flex gap-2">
-            <Button type="text" icon={<HeartOutlined />} />
-            <Button type="text" icon={<ShareAltOutlined />} />
+            <Button type="text" icon={<HeartOutlined />} className="!text-[#6b7588]" />
+            <Button type="text" icon={<ShareAltOutlined />} className="!text-[#6b7588]" />
           </div>
         </div>
 
@@ -270,102 +278,101 @@ const HotelDetails = () => {
 
         {/* Hotel Name & Location */}
         <div className="px-4 py-3">
-          <Title level={3} style={{ margin: "0 0 4px 0" }}>
-            {hotel?.name}
-          </Title>
-          <div className="flex items-center text-gray-600 mt-2">
-            <EnvironmentOutlined />
-            <Text className="ml-1">{hotel?.location}</Text>
+          <div className="neu-card p-4">
+            <Title level={3} style={{ margin: "0 0 4px 0", color: "#373b43" }}>
+              {hotel?.name}
+            </Title>
+            <div className="flex items-center text-[#6b7588] mt-2">
+              <EnvironmentOutlined className="text-primary" />
+              <Text className="ml-1 text-[#6b7588]">{hotel?.location}</Text>
+            </div>
           </div>
         </div>
 
-          <div className="mb-4">
-                <Card className="mb-4">
-
-                <Title level={4} style={{ margin: 0 }}>
-                  Hotel Description
-                </Title>
-                <Text strong className="text-lg text-gray-400">
-                   {hotel?.description}
-                </Text>
-                </Card>
-              </div>
-
-
+        <div className="px-4 mb-4">
+          <div className="neu-card p-4">
+            <Title level={4} style={{ margin: 0, color: "#373b43" }}>
+              Hotel Description
+            </Title>
+            <Text className="text-base text-[#6b7588] mt-2 block">
+              {hotel?.description}
+            </Text>
+          </div>
+        </div>
 
         {/* Amenities Drawer */}
+        <div className="px-4">
+          <SliderAminities amenities={hotel?.amenities || []} />
+        </div>
 
-        <SliderAminities amenities={hotel?.amenities || []} />
-
-        <div className="mt-4">
-          <Title level={5}>Need Help?</Title>
-          <div className="flex gap-3 mb-4">
-            <a
-              href="https://wa.me/123456789"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1"
-            >
-              <Button
-                type="primary"
-                icon={<WhatsAppOutlined />}
-                className="bg-green-500 hover:bg-green-600"
-                block
+        <div className="px-4 mt-4">
+          <div className="neu-card p-4">
+            <Title level={5} className="!text-[#373b43]">Need Help?</Title>
+            <div className="flex gap-3">
+              <a
+                href="https://wa.me/123456789"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1"
               >
-                WhatsApp
-              </Button>
-            </a>
-            <a
-              href="http://m.me/hotelname"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1"
-            >
-              <Button
-                type="primary"
-                icon={<MessageOutlined />}
-                className="bg-blue-500 hover:bg-blue-600"
-                block
+                <Button
+                  type="primary"
+                  icon={<WhatsAppOutlined />}
+                  className="!bg-[#25D366] !border-0 !shadow-neu-sm !rounded-xl"
+                  block
+                >
+                  WhatsApp
+                </Button>
+              </a>
+              <a
+                href="http://m.me/hotelname"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1"
               >
-                Messenger
-              </Button>
-            </a>
+                <Button
+                  type="primary"
+                  icon={<MessageOutlined />}
+                  className="!bg-[#0084FF] !border-0 !shadow-neu-sm !rounded-xl"
+                  block
+                >
+                  Messenger
+                </Button>
+              </a>
+            </div>
           </div>
         </div>
 
         {/* Date Selection */}
-        <Card
-          className="mx-4 mb-4 shadow-sm"
-          onClick={() => setDatePickerVisible(true)}
-        >
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="flex items-center mb-1">
-                <CalendarOutlined className="mr-2 text-blue-600" />
-                <Text strong>Your Stay</Text>
+        <div className="px-4 mt-4">
+          <div
+            className="neu-card p-4 cursor-pointer"
+            onClick={() => setDatePickerVisible(true)}
+          >
+            <div className="flex justify-between items-center">
+              <div>
+                <div className="flex items-center mb-1">
+                  <CalendarOutlined className="mr-2 text-primary" />
+                  <Text strong className="!text-[#373b43]">Your Stay</Text>
+                </div>
+                <Text className="!text-[#6b7588]">
+                  {formatDate(checkInDate)} - {formatDate(checkOutDate)}
+                </Text>
+                <div className="mt-1">
+                  <span className="inline-block px-3 py-1 text-xs font-medium rounded-xl bg-[#FD3D57] text-white">
+                    {nights} {nights === 1 ? "night" : "nights"}
+                  </span>
+                </div>
               </div>
-              <Text>
-                {formatDate(checkInDate)} - {formatDate(checkOutDate)}
-              </Text>
-              <div className="mt-1">
-                <Tag color="blue">
-                  {nights} {nights === 1 ? "night" : "nights"}
-                </Tag>
-              </div>
+              <button className="neu-btn-primary px-4 py-1.5 text-sm rounded-xl">
+                Change
+              </button>
             </div>
-            <Button
-              className="text-white"
-              type="primary"
-              shape="round"
-              size="small"
-            >
-              Change
-            </Button>
           </div>
-        </Card>
+        </div>
 
         {/* Navigation Tabs */}
-        <div className="sticky top-16 z-10 bg-white">
+        <div className="sticky top-16 z-10 bg-[#eef0f4] shadow-neu-xs mx-4 my-4 rounded-xl">
           <Tabs
             activeKey={activeTab}
             onChange={setActiveTab}
@@ -379,561 +386,548 @@ const HotelDetails = () => {
         </div>
 
         {/* Content based on active tab */}
-<div className="mt-5 flex flex-col lg:flex-row gap-4">
-  <div className="w-full lg:w-[65%]"> {/* Fixed width class */}
-    {activeTab === "rooms" && (
-      <div className="">
-        <List
-          grid={{
-            xs: 1,
-            sm: 1,
-            md: 1,
-            lg: 1,
-            xl: 1,
-            xxl: 1,
-          }}
-          dataSource={rooms}
-          renderItem={(room) => (
-            <List.Item className="!h-full">
-              <Card
-                className={`w-full h-full transition-all duration-300 ${
-                  isSelected(room.id)
-                    ? "border-2 border-blue-500 shadow-lg shadow-blue-100"
-                    : "border border-gray-200 hover:shadow-md hover:border-gray-300"
-                }`}
-                bodyStyle={{ padding: "20px" }}
-                hoverable
-              >
-                <div className="flex flex-col lg:flex-row gap-4"> {/* Increased gap */}
-                  {/* Room Image */}
-                  <div className="flex-shrink-0 relative w-full lg:w-64">
-                    <img
-                      alt={room.type}
-                      src={
-                        room.images?.[0] ||
-                        "https://via.placeholder.com/300x200"
-                      }
-                      className="w-full h-48 lg:h-[240px] object-cover rounded-xl shadow-md"
-                    />
-                    {isSelected(room.id) && (
-                      <div className="absolute top-3 right-3">
-                        <Badge
-                          count={
-                            <CheckCircleFilled
-                              style={{
-                                fontSize: "24px",
-                                color: "#1890ff",
-                              }}
-                            />
-                          }
-                        />
-                      </div>
-                    )}
-                    {!room.isAvailable && (
-                      <div className="absolute inset-0 bg-gray-800 bg-opacity-60 rounded-xl flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">
-                          Not Available
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Room Content */}
-                  <div className="flex-1 flex flex-col">
-                    {/* Header Section */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-2"> {/* Improved responsive layout */}
-                      <div className="flex-1 min-w-0">
-                        <Title
-                          level={4}
-                          style={{ margin: 0, color: "#1f2937" }}
-                          className="flex items-center gap-2 truncate" /* Added truncate */
-                        >
-                          {room.type}
-                          {room.isAvailable && (
-                            <Tag color="green" className="text-xs whitespace-nowrap">
-                              Available
-                            </Tag>
-                          )}
-                        </Title>
-                        <Text
-                          type="secondary"
-                          className="flex items-center gap-1 mt-1 text-sm"
-                        >
-                          <UserOutlined />
-                          Capacity: {room.capacity} adults, {room.child} children
-                        </Text>
-                      </div>
-                      <div className="text-right sm:text-left">
-                        <Text strong className="text-2xl text-blue-600 whitespace-nowrap">
-                          {room.price} Tk
-                        </Text>
-                        <div className="text-xs text-gray-500 mt-1">
-                          <span className="font-medium">
-                            Available:{" "}
-                          </span>
-                          <span className="font-bold">
-                            {room?.roomQty} rooms
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Amenities */}
-                    <div className="mb-4">
-                      <Text strong className="text-gray-700 mb-2 block text-sm">
-                        Amenities:
-                      </Text>
-                      <div className="flex flex-wrap gap-2">
-                        {room.amenities
-                          ?.slice(0, 4)
-                          .map((amenity, index) => (
-                            <Tag
-                              key={index}
-                              color="blue"
-                              className="text-xs px-2 py-1 rounded-full border-0 whitespace-nowrap" /* Reduced padding */
-                            >
-                              {amenity}
-                            </Tag>
-                          ))}
-                        {room.amenities?.length > 4 && (
-                          <Tag
-                            color="default"
-                            className="text-xs px-2 py-1 rounded-full"
-                          >
-                            +{room.amenities.length - 4} more
-                          </Tag>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Controls Section */}
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mt-auto">
-                      {/* Counter Controls */}
-                      <div className="flex justify-between lg:justify-start lg:gap-4 w-full lg:w-auto">
-
-                        {/* Quantity */}
-                        <div className="flex flex-col flex-1 lg:flex-none">
-                          <Text
-                            strong
-                            className="text-xs mb-1 text-gray-700 text-center lg:text-left"
-                          >
-                            Rooms
-                          </Text>
-                          <div className="flex items-center border rounded-lg bg-gray-50 mx-auto lg:mx-0">
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<MinusOutlined />}
-                              className="flex items-center justify-center !h-7 !w-7"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  room.id,
-                                  (roomQuantities[room.id] || 1) - 1
-                                )
-                              }
-                              disabled={
-                                (roomQuantities[room.id] || 1) <= 1 ||
-                                isSelected(room.id)
-                              }
-                            />
-                            <span className="w-8 text-center font-semibold text-gray-800 text-sm">
-                              {roomQuantities[room.id] || 1}
-                            </span>
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<PlusOutlined />}
-                              className="flex items-center justify-center !h-7 !w-7"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  room.id,
-                                  (roomQuantities[room.id] || 1) + 1
-                                )
-                              }
-                              disabled={
-                                (roomQuantities[room.id] || 1) >=
-                                  room?.roomQty || isSelected(room.id)
-                              }
-                            />
-                          </div>
-                        </div>
-
-                        {/* Adults */}
-                        <div className="flex flex-col flex-1 lg:flex-none">
-                          <Text
-                            strong
-                            className="text-xs mb-1 text-gray-700 text-center lg:text-left"
-                          >
-                            Adults
-                          </Text>
-                          <div className="flex items-center border rounded-lg bg-gray-50 mx-auto lg:mx-0">
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<MinusOutlined />}
-                              className="flex items-center justify-center !h-7 !w-7"
-                              onClick={() => {
-                                const current =
-                                  adultCounts[room.id] ?? 0;
-                                handleAdultCountChange(
-                                  room.id,
-                                  current - 1
-                                );
-                              }}
-                              disabled={
-                                (adultCounts[room.id] ?? 0) <= 1 ||
-                                isSelected(room.id)
-                              }
-                            />
-                            <span className="w-8 text-center font-semibold text-gray-800 text-sm">
-                              {adultCounts[room.id] ?? 0}
-                            </span>
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<PlusOutlined />}
-                              className="flex items-center justify-center !h-7 !w-7"
-                              onClick={() => {
-                                const current =
-                                  adultCounts[room.id] ?? 0;
-                                handleAdultCountChange(
-                                  room.id,
-                                  current + 1
-                                );
-                              }}
-                              disabled={
-                                (room?.capacity + room?.child) *
-                                  room?.roomQty <=
-                                  adultCounts[room.id] +
-                                    childCounts[room.id] ||
-                                isSelected(room.id)
-                              }
-                            />
-                          </div>
-                        </div>
-
-                        {/* Children */}
-                        <div className="flex flex-col flex-1 lg:flex-none">
-                          <Text
-                            strong
-                            className="text-xs mb-1 text-gray-700 text-center lg:text-left"
-                          >
-                            Children
-                          </Text>
-                          <div className="flex items-center border rounded-lg bg-gray-50 mx-auto lg:mx-0">
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<MinusOutlined />}
-                              className="flex items-center justify-center !h-7 !w-7"
-                              onClick={() => {
-                                const current =
-                                  childCounts[room.id] ?? 0;
-                                handleChildCountChange(
-                                  room.id,
-                                  current - 1
-                                );
-                              }}
-                              disabled={
-                                (childCounts[room.id] ?? 0) <= 0 ||
-                                isSelected(room.id)
-                              }
-                            />
-                            <span className="w-8 text-center font-semibold text-gray-800 text-sm">
-                              {childCounts[room.id] ?? 0}
-                            </span>
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<PlusOutlined />}
-                              className="flex items-center justify-center !h-7 !w-7"
-                              onClick={() => {
-                                const current =
-                                  childCounts[room.id] ?? 0;
-                                handleChildCountChange(
-                                  room.id,
-                                  current + 1
-                                );
-                              }}
-                              disabled={
-                                (room?.capacity + room?.child) *
-                                  room?.roomQty <=
-                                  adultCounts[room.id] +
-                                    childCounts[room.id] ||
-                                isSelected(room.id)
-                              }
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-    
-                    </div>
-                                      {/* Action Buttons */}
-                      <div className="flex flex-col  sm:flex-row gap-3 w-full lg:w-[50%] mt-5 ml-auto flex-wrap">
-                        <Button
-                          onClick={() => openRoomDetails(room)}
-                          type="default"
-                          icon={<EyeOutlined />}
-                          className="flex items-center py-2 lg:py-0 justify-center gap-1 px-3 h-9 border-gray-300 text-xs flex-1"
-                          size="small"
-                        >
-                          <span className="hidden sm:inline">
-                            View Details
-                          </span>
-                          <span className="sm:hidden">
-                            Details
-                          </span>
-                        </Button>
-                        <Button
-                          onClick={() => handleRoomToggle(room)}
-                          disabled={
-                            !room.isAvailable ||
-                            checkingAvailability[room.id]
-                          }
-                          loading={checkingAvailability[room.id]}
-                          type={
-                            isSelected(room.id) ? "default" : "primary"
-                          }
-                          icon={
-                            isSelected(room.id) ? (
-                              <CloseOutlined />
-                            ) : checkingAvailability[room.id] ? null : (
-                              <CheckOutlined />
-                            )
-                          }
-                          className={`flex items-center justify-center gap-1 py-2 lg:py-0 px-3 h-9 text-xs flex-1 ${
-                            isSelected(room.id)
-                              ? "border-red-300 text-red-600 hover:text-red-700"
-                              : "bg-blue-600 hover:bg-blue-700"
+        <div className="mt-5 flex flex-col lg:flex-row gap-4 px-4">
+          <div className="w-full lg:w-[65%]">
+            {activeTab === "rooms" && (
+              <div className="">
+                <List
+                  grid={{
+                    xs: 1,
+                    sm: 1,
+                    md: 1,
+                    lg: 1,
+                    xl: 1,
+                    xxl: 1,
+                  }}
+                  dataSource={rooms}
+                  renderItem={(room) => (
+                    <List.Item className="!h-full !border-0">
+                      <div
+                        className={`w-full h-full transition-all duration-300 neu-card p-5 ${isSelected(room.id)
+                          ? "ring-2 ring-primary shadow-neu-colored"
+                          : ""
                           }`}
-                          size="small"
-                        >
-                          {checkingAvailability[room.id] ? (
-                            "Checking..."
-                          ) : (
-                            <>
-                              <span className="hidden sm:inline">
-                                {isSelected(room.id)
-                                  ? "Deselect"
-                                  : "Select Room"}
-                              </span>
-                              <span className="sm:hidden">
-                                {isSelected(room.id)
-                                  ? "Remove"
-                                  : "Select"}
-                              </span>
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                  </div>
-                </div>
-              </Card>
-            </List.Item>
-          )}
-        />
-      </div>
-    )}
-
-    {/* Map section remains the same */}
-    {activeTab === "map" && (
-      <div className="mb-4">
-        <Title level={4} style={{ marginBottom: "12px" }}>
-          Location
-        </Title>
-        {hotel?.latitude && hotel?.longitude ? (
-          <Card className="mb-4 shadow-sm">
-            <iframe
-              title="Hotel Location"
-              width="100%"
-              height="300"
-              frameBorder="0"
-              style={{ borderRadius: "8px" }}
-              src={`https://www.google.com/maps?q=${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
-              allowFullScreen
-            />
-            <div className="mt-3">
-              <Text strong>Address:</Text>
-              <Paragraph className="mb-0 mt-1">
-                {hotel.location}
-              </Paragraph>
-            </div>
-          </Card>
-        ) : (
-          <Text>Location information not available</Text>
-        )}
-      </div>
-    )}
-  </div>
-
-  <div className="w-full lg:w-[35%]"> 
-    {/* Booking summary remains the same */}
-    {selectedRooms.length > 0 ? (
-<Affix offsetBottom={-310}>
-                  <div className="bg-gradient-to-br from-white to-blue-50 shadow-lg border border-gray-100 px-2 py-2 lg:p-6 rounded-xl w-full">
-                    <div className="text-center mb-6">
-                      <h1 className="text-base lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        Booking Summary
-                      </h1>
-                      <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-2 rounded-full"></div>
-                    </div>
-
-                    <div className="space-y-4 mb-6">
-                      {/* Total Price */}
-                      <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100">
-                        <span className="text-gray-600 font-medium">
-                          Total Amount
-                        </span>
-                        <span className="text-base lg:text-2xl font-bold text-blue-600">
-                          {totalPrice} Tk/-
-                        </span>
-                      </div>
-
-                      {/* Stay Duration */}
-                      <div className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-                        <CalendarOutlined className="text-blue-500" />
-                        <span className="text-gray-700 font-medium">
-                          {nights} {nights === 1 ? "Night" : "Nights"} Stay
-                        </span>
-                      </div>
-
-                      {/* Room Breakdown */}
-                      <div className="bg-white rounded-lg border border-gray-100 p-4">
-                        <h3 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                          <HomeOutlined className="text-green-500" />
-                          Selected Rooms
-                        </h3>
-                        <div className="space-y-2">
-                          {selectedRooms.map((room) => (
-                            <div
-                              key={room.id}
-                              className="flex justify-between items-center py-2 border-b border-gray-50 last:border-b-0"
-                            >
-                              <div>
-                                <span className="font-medium text-gray-800">
-                                  {room.type}
-                                </span>
-                                <span className="text-xs text-gray-500 ml-2">
-                                  ({room.adults} adults, {room.children} children)
+                      >
+                        <div className="flex flex-col lg:flex-row gap-4">
+                          {/* Room Image */}
+                          <div className="flex-shrink-0 relative w-full lg:w-64">
+                            <div className="neu-sm p-1 rounded-xl">
+                              <img
+                                alt={room.type}
+                                src={
+                                  room.images?.[0] ||
+                                  "https://via.placeholder.com/300x200"
+                                }
+                                className="w-full h-48 lg:h-[240px] object-cover rounded-[10px]"
+                              />
+                            </div>
+                            {isSelected(room.id) && (
+                              <div className="absolute top-3 right-3">
+                                <Badge
+                                  count={
+                                    <CheckCircleFilled
+                                      style={{
+                                        fontSize: "24px",
+                                        color: "#FD3D57",
+                                      }}
+                                    />
+                                  }
+                                />
+                              </div>
+                            )}
+                            {!room.isAvailable && (
+                              <div className="absolute inset-0 bg-[#373b43] bg-opacity-70 rounded-xl flex items-center justify-center">
+                                <span className="text-white font-bold text-lg">
+                                  Not Available
                                 </span>
                               </div>
-                              <span className="bg-blue-100 text-blue-700 px-2 lg:px-2 py-1 rounded-full text-sm font-semibold">
-                                {room.quantity}{" "}
-                                {room.quantity === 1 ? "room" : "rooms"}
-                              </span>
+                            )}
+                          </div>
+
+                          {/* Room Content */}
+                          <div className="flex-1 flex flex-col">
+                            {/* Header Section */}
+                            <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-2">
+                              <div className="flex-1 min-w-0">
+                                <Title
+                                  level={4}
+                                  style={{ margin: 0, color: "#373b43" }}
+                                  className="flex items-center gap-2 truncate"
+                                >
+                                  {room.type}
+                                  {room.isAvailable && (
+                                    <span className="neu-xs px-2 py-0.5 text-xs text-green-600 font-medium">
+                                      Available
+                                    </span>
+                                  )}
+                                </Title>
+                                <Text
+                                  className="!text-[#6b7588] flex items-center gap-1 mt-1 text-sm"
+                                >
+                                  <UserOutlined />
+                                  Capacity: {room.capacity} adults, {room.child} children
+                                </Text>
+                              </div>
+                              <div className="text-right sm:text-left">
+                                {room.discount ? (
+                                  <div className="flex items-center gap-2 justify-end">
+                                    <Text delete className="text-lg !text-[#6b7588] whitespace-nowrap">
+                                      {room.price} Tk
+                                    </Text>
+                                    <Text strong className="text-2xl !text-primary whitespace-nowrap">
+                                      {getEffectivePrice(room)} Tk
+                                    </Text>
+                                    <span className="neu-xs px-1.5 py-0.5 text-xs text-red-500 font-medium">
+                                      {room.discountType === "flat" ? `-${room.discount}Tk` : `-${room.discount}%`}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <Text strong className="text-2xl !text-primary whitespace-nowrap">
+                                    {room.price} Tk
+                                  </Text>
+                                )}
+                                <div className="text-xs text-[#6b7588] mt-1">
+                                  <span className="font-medium">
+                                    Available:{" "}
+                                  </span>
+                                  <span className="font-bold">
+                                    {room?.roomQty} rooms
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                          ))}
+
+                            {/* Amenities */}
+                            <div className="mb-4">
+                              <Text strong className="!text-[#484f5c] mb-2 block text-sm">
+                                Amenities:
+                              </Text>
+                              <div className="flex flex-wrap gap-2">
+                                {room.amenities
+                                  ?.slice(0, 4)
+                                  .map((amenity, index) => (
+                                    <span
+                                      key={index}
+                                      className="neu-xs px-3 py-1 text-xs text-[#6b7588]"
+                                    >
+                                      {amenity}
+                                    </span>
+                                  ))}
+                                {room.amenities?.length > 4 && (
+                                  <span className="neu-xs px-3 py-1 text-xs text-[#6b7588]">
+                                    +{room.amenities.length - 4} more
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Controls Section */}
+                            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mt-auto">
+                              {/* Counter Controls */}
+                              <div className="flex justify-between lg:justify-start lg:gap-4 w-full lg:w-auto">
+
+                                {/* Quantity */}
+                                <div className="flex flex-col flex-1 lg:flex-none">
+                                  <Text
+                                    strong
+                                    className="text-xs mb-1 !text-[#484f5c] text-center lg:text-left"
+                                  >
+                                    Rooms
+                                  </Text>
+                                  <div className="neu-inset-sm flex items-center rounded-xl gap-0 p-1">
+                                    <button
+                                      className="neu-btn w-7 h-7 flex items-center justify-center !rounded-lg !p-0 text-[#6b7588] text-sm"
+                                      onClick={() =>
+                                        handleQuantityChange(
+                                          room.id,
+                                          (roomQuantities[room.id] || 1) - 1
+                                        )
+                                      }
+                                      disabled={
+                                        (roomQuantities[room.id] || 1) <= 1 ||
+                                        isSelected(room.id)
+                                      }
+                                    >
+                                      <MinusOutlined />
+                                    </button>
+                                    <span className="w-8 text-center font-semibold text-[#373b43] text-sm">
+                                      {roomQuantities[room.id] || 1}
+                                    </span>
+                                    <button
+                                      className="neu-btn w-7 h-7 flex items-center justify-center !rounded-lg !p-0 text-[#6b7588] text-sm"
+                                      onClick={() =>
+                                        handleQuantityChange(
+                                          room.id,
+                                          (roomQuantities[room.id] || 1) + 1
+                                        )
+                                      }
+                                      disabled={
+                                        (roomQuantities[room.id] || 1) >=
+                                        room?.roomQty || isSelected(room.id)
+                                      }
+                                    >
+                                      <PlusOutlined />
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Adults */}
+                                <div className="flex flex-col flex-1 lg:flex-none">
+                                  <Text
+                                    strong
+                                    className="text-xs mb-1 !text-[#484f5c] text-center lg:text-left"
+                                  >
+                                    Adults
+                                  </Text>
+                                  <div className="neu-inset-sm flex items-center rounded-xl gap-0 p-1">
+                                    <button
+                                      className="neu-btn w-7 h-7 flex items-center justify-center !rounded-lg !p-0 text-[#6b7588] text-sm"
+                                      onClick={() => {
+                                        const current =
+                                          adultCounts[room.id] ?? 0;
+                                        handleAdultCountChange(
+                                          room.id,
+                                          current - 1
+                                        );
+                                      }}
+                                      disabled={
+                                        (adultCounts[room.id] ?? 0) <= 1 ||
+                                        isSelected(room.id)
+                                      }
+                                    >
+                                      <MinusOutlined />
+                                    </button>
+                                    <span className="w-8 text-center font-semibold text-[#373b43] text-sm">
+                                      {adultCounts[room.id] ?? 0}
+                                    </span>
+                                    <button
+                                      className="neu-btn w-7 h-7 flex items-center justify-center !rounded-lg !p-0 text-[#6b7588] text-sm"
+                                      onClick={() => {
+                                        const current =
+                                          adultCounts[room.id] ?? 0;
+                                        handleAdultCountChange(
+                                          room.id,
+                                          current + 1
+                                        );
+                                      }}
+                                      disabled={
+                                        (room?.capacity + room?.child) *
+                                        room?.roomQty <=
+                                        adultCounts[room.id] +
+                                        childCounts[room.id] ||
+                                        isSelected(room.id)
+                                      }
+                                    >
+                                      <PlusOutlined />
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Children */}
+                                <div className="flex flex-col flex-1 lg:flex-none">
+                                  <Text
+                                    strong
+                                    className="text-xs mb-1 !text-[#484f5c] text-center lg:text-left"
+                                  >
+                                    Children
+                                  </Text>
+                                  <div className="neu-inset-sm flex items-center rounded-xl gap-0 p-1">
+                                    <button
+                                      className="neu-btn w-7 h-7 flex items-center justify-center !rounded-lg !p-0 text-[#6b7588] text-sm"
+                                      onClick={() => {
+                                        const current =
+                                          childCounts[room.id] ?? 0;
+                                        handleChildCountChange(
+                                          room.id,
+                                          current - 1
+                                        );
+                                      }}
+                                      disabled={
+                                        (childCounts[room.id] ?? 0) <= 0 ||
+                                        isSelected(room.id)
+                                      }
+                                    >
+                                      <MinusOutlined />
+                                    </button>
+                                    <span className="w-8 text-center font-semibold text-[#373b43] text-sm">
+                                      {childCounts[room.id] ?? 0}
+                                    </span>
+                                    <button
+                                      className="neu-btn w-7 h-7 flex items-center justify-center !rounded-lg !p-0 text-[#6b7588] text-sm"
+                                      onClick={() => {
+                                        const current =
+                                          childCounts[room.id] ?? 0;
+                                        handleChildCountChange(
+                                          room.id,
+                                          current + 1
+                                        );
+                                      }}
+                                      disabled={
+                                        (room?.capacity + room?.child) *
+                                        room?.roomQty <=
+                                        adultCounts[room.id] +
+                                        childCounts[room.id] ||
+                                        isSelected(room.id)
+                                      }
+                                    >
+                                      <PlusOutlined />
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                            </div>
+                            {/* Action Buttons */}
+                            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-[50%] mt-5 ml-auto flex-wrap">
+                              <button
+                                onClick={() => openRoomDetails(room)}
+                                className="neu-btn flex-1 flex items-center justify-center gap-1 p-3 h-9 text-xs text-[#6b7588]"
+                              >
+                                <EyeOutlined className="text-sm" />
+                                <span className="hidden sm:inline">
+                                  View Details
+                                </span>
+                                <span className="sm:hidden">
+                                  Details
+                                </span>
+                              </button>
+                              <button
+                                onClick={() => handleRoomToggle(room)}
+                                disabled={
+                                  !room.isAvailable ||
+                                  checkingAvailability[room.id]
+                                }
+                                className={`flex-1 flex items-center justify-center gap-1 p-3 h-9 text-xs font-medium transition-all duration-200 rounded-xl ${isSelected(room.id)
+                                  ? "neu-btn text-red-500"
+                                  : "neu-btn-primary"
+                                  }`}
+                              >
+                                {checkingAvailability[room.id] ? (
+                                  "Checking..."
+                                ) : (
+                                  <>
+                                    <span className="hidden sm:inline">
+                                      {isSelected(room.id)
+                                        ? "Deselect"
+                                        : "Select Room"}
+                                    </span>
+                                    <span className="sm:hidden">
+                                      {isSelected(room.id)
+                                        ? "Remove"
+                                        : "Select"}
+                                    </span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
+                    </List.Item>
+                  )}
+                />
+              </div>
+            )}
+
+            {activeTab === "map" && (
+              <div className="mb-4">
+                <div className="neu-card p-4">
+                  <Title level={4} style={{ marginBottom: "12px", color: "#373b43" }}>
+                    Location
+                  </Title>
+                  {hotel?.latitude && hotel?.longitude ? (
+                    <div>
+                      <div className="neu-inset-sm p-1 rounded-xl overflow-hidden">
+                        <iframe
+                          title="Hotel Location"
+                          width="100%"
+                          height="300"
+                          frameBorder="0"
+                          style={{ borderRadius: "10px" }}
+                          src={`https://www.google.com/maps?q=${hotel.latitude},${hotel.longitude}&hl=en&output=embed`}
+                          allowFullScreen
+                        />
+                      </div>
+                      <div className="mt-3">
+                        <Text strong className="!text-[#484f5c]">Address:</Text>
+                        <Paragraph className="mb-0 mt-1 !text-[#6b7588]">
+                          {hotel.location}
+                        </Paragraph>
+                      </div>
+                    </div>
+                  ) : (
+                    <Text className="!text-[#6b7588]">Location information not available</Text>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="w-full lg:w-[35%]">
+            {selectedRooms.length > 0 ? (
+              <Affix offsetBottom={-310}>
+                <div className="neu-card p-4 lg:p-6 w-full">
+                  <div className="text-center mb-6">
+                    <h1 className="text-base lg:text-2xl font-bold text-[#373b43]">
+                      Booking Summary
+                    </h1>
+                    <div className="w-16 h-1 bg-primary mx-auto mt-2 rounded-full"></div>
+                  </div>
+
+                  <div className="space-y-4 mb-6">
+                    {/* Total Price */}
+                    <div className="neu-sm p-3 flex justify-between items-center">
+                      <span className="text-[#6b7588] font-medium">
+                        Total Amount
+                      </span>
+                      <span className="text-base lg:text-2xl font-bold text-primary">
+                        {totalPrice} Tk/-
+                      </span>
                     </div>
 
-                    {/* Checkout Button */}
-                    <Button
-                      type="primary"
-                      size="large"
-                      onClick={handleCheckout}
-                      className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-none shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
-                      icon={<ShoppingCartOutlined />}
-                    >
-                      <span className="text-white font-semibold text-lg">
-                        Proceed to Checkout
+                    {/* Stay Duration */}
+                    <div className="neu-xs p-3 flex items-center justify-center gap-2">
+                      <CalendarOutlined className="text-primary" />
+                      <span className="text-[#484f5c] font-medium">
+                        {nights} {nights === 1 ? "Night" : "Nights"} Stay
                       </span>
-                    </Button>
+                    </div>
 
-                    {/* Additional Info */}
-                    <div className="mt-4 text-center">
-                      <Text
-                        type="secondary"
-                        className="text-xs flex items-center justify-center gap-1"
-                      >
-                        <SafetyCertificateOutlined className="text-green-500" />
-                        Secure booking • Free cancellation • Best price guaranteed
-                      </Text>
+                    {/* Room Breakdown */}
+                    <div className="neu-inset-sm p-4">
+                      <h3 className="font-semibold text-[#484f5c] mb-3 flex items-center gap-2">
+                        <HomeOutlined className="text-primary" />
+                        Selected Rooms
+                      </h3>
+                      <div className="space-y-2">
+                        {selectedRooms.map((room) => (
+                          <div
+                            key={room.id}
+                            className="flex justify-between items-center py-2 border-b border-[#d1d5db] last:border-b-0"
+                          >
+                            <div>
+                              <span className="font-medium text-[#373b43]">
+                                {room.type}
+                              </span>
+                              <span className="text-xs text-[#6b7588] ml-2">
+                                ({room.adults} adults, {room.children} children)
+                              </span>
+                            </div>
+                            <span className="neu-xs px-3 py-1 text-sm font-semibold text-primary">
+                              {room.quantity}{" "}
+                              {room.quantity === 1 ? "room" : "rooms"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </Affix>
-    ) : (
-      <div className="bg-white shadow-md border-t p-3 flex flex-col justify-center items-center w-full gap-2 rounded-lg">
-        <Text className="text-gray-500 font-bold text-lg">
-          No rooms selected
-        </Text>
-      </div>
-    )}
-  </div>
-</div>
+
+                  {/* Checkout Button */}
+                  <button
+                    onClick={handleCheckout}
+                    className="neu-btn-primary w-full h-14 text-white font-semibold text-lg flex items-center justify-center gap-2 transition-all duration-200 hover:scale-[1.02]"
+                  >
+                    <ShoppingCartOutlined />
+                    <span>Proceed to Checkout</span>
+                  </button>
+
+                  {/* Additional Info */}
+                  <div className="mt-4 text-center">
+                    <Text
+                      className="!text-[#6b7588] text-xs flex items-center justify-center gap-1"
+                    >
+                      <SafetyCertificateOutlined className="text-green-500" />
+                      Secure booking • Free cancellation • Best price guaranteed
+                    </Text>
+                  </div>
+                </div>
+              </Affix>
+            ) : (
+              <div className="neu-card p-6 flex flex-col justify-center items-center w-full gap-2">
+                <Text className="!text-[#6b7588] font-bold text-lg">
+                  No rooms selected
+                </Text>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Date Picker Drawer */}
         <Drawer
-          title="Select Stay Dates"
+          title={<span style={{ color: "#373b43", fontWeight: 600 }}>Select Stay Dates</span>}
           placement="bottom"
           height={400}
           onClose={() => setDatePickerVisible(false)}
           open={datePickerVisible}
-          bodyStyle={{ padding: "16px" }}
+          bodyStyle={{ padding: "16px", background: "#eef0f4" }}
+          style={{ background: "#eef0f4" }}
         >
           <div className="px-2">
             <Space direction="vertical" size="large" className="w-full">
               <div>
-                <Text strong className="block mb-2">
+                <Text strong className="block mb-2 !text-[#484f5c]">
                   Check-in:
                 </Text>
-                <DatePicker
-                  selected={checkInDate}
-                  onChange={(date) => handleDateChange(date, true)}
-                  minDate={startOfDay(new Date())}
-                  dateFormat="MMM d, yyyy"
-                  className="w-full p-3 border rounded-lg"
-                  placeholderText="Select check-in date"
-                />
+                <div className="neu-inset-sm rounded-xl overflow-hidden">
+                  <DatePicker
+                    selected={checkInDate}
+                    onChange={(date) => handleDateChange(date, true)}
+                    minDate={startOfDay(new Date())}
+                    dateFormat="MMM d, yyyy"
+                    className="w-full p-3 !border-0 !bg-transparent"
+                    placeholderText="Select check-in date"
+                  />
+                </div>
               </div>
               <div>
-                <Text strong className="block mb-2">
+                <Text strong className="block mb-2 !text-[#484f5c]">
                   Check-out:
                 </Text>
-                <DatePicker
-                  selected={checkOutDate}
-                  onChange={(date) => handleDateChange(date, false)}
-                  minDate={addDays(checkInDate, 1)}
-                  dateFormat="MMM d, yyyy"
-                  className="w-full p-3 border rounded-lg"
-                  placeholderText="Select check-out date"
-                />
+                <div className="neu-inset-sm rounded-xl overflow-hidden">
+                  <DatePicker
+                    selected={checkOutDate}
+                    onChange={(date) => handleDateChange(date, false)}
+                    minDate={addDays(checkInDate, 1)}
+                    dateFormat="MMM d, yyyy"
+                    className="w-full p-3 !border-0 !bg-transparent"
+                    placeholderText="Select check-out date"
+                  />
+                </div>
               </div>
               <div className="text-center mt-2">
-                <Tag color="blue" style={{ padding: "4px 8px" }}>
+                <span className="neu-xs px-4 py-1.5 text-sm text-primary font-medium">
                   <BellOutlined className="mr-1" />
                   {nights} {nights === 1 ? "night" : "nights"} stay
-                </Tag>
+                </span>
               </div>
-              <Button
-                type="primary"
-                block
-                size="large"
+              <button
                 onClick={() => setDatePickerVisible(false)}
-                className="h-12 mt-2"
+                className="neu-btn-primary w-full h-12 text-white font-semibold text-base rounded-xl"
               >
                 Confirm Dates
-              </Button>
+              </button>
             </Space>
           </div>
         </Drawer>
 
         {/* Room Details Drawer */}
         <Drawer
-          title={currentRoom?.type || "Room Details"}
+          title={<span style={{ color: "#373b43", fontWeight: 600 }}>{currentRoom?.type || "Room Details"}</span>}
           placement="bottom"
           height="80%"
           onClose={() => setRoomDetailsVisible(false)}
           open={roomDetailsVisible && currentRoom}
-          bodyStyle={{ padding: "16px" }}
+          bodyStyle={{ padding: "16px", background: "#eef0f4" }}
+          style={{ background: "#eef0f4" }}
         >
           {currentRoom && (
             <div>
               {currentRoom.images && currentRoom.images.length > 0 ? (
                 <div className="mb-4">
-                  <div className="relative">
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-8 gap-2 overflow-x-auto ">
+                  <div className="neu-sm p-1 rounded-xl overflow-hidden">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-8 gap-2 overflow-x-auto">
                       {currentRoom.images.map((image, index) => (
                         <div key={index} className="relative">
                           <img
@@ -941,7 +935,7 @@ const HotelDetails = () => {
                             alt={`${currentRoom.type} - Image ${index + 1}`}
                             className="w-64 h-48 object-cover rounded-lg flex-shrink-0"
                           />
-                          <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                          <div className="absolute bottom-2 right-2 bg-[#373b43] bg-opacity-70 text-white px-2 py-1 rounded text-xs">
                             {index + 1}/{currentRoom.images.length}
                           </div>
                         </div>
@@ -950,116 +944,125 @@ const HotelDetails = () => {
                   </div>
                 </div>
               ) : (
-                <img
-                  src="https://via.placeholder.com/300x200"
-                  alt={currentRoom.type}
-                  className="w-full h-48 object-cover rounded-lg mb-4"
-                />
+                <div className="neu-sm p-1 rounded-xl mb-4">
+                  <img
+                    src="https://via.placeholder.com/300x200"
+                    alt={currentRoom.type}
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                </div>
               )}
 
-              <div className="flex justify-between items-center mb-4">
-                <Title level={4} style={{ margin: 0 }}>
+              <div className="neu-card p-4 flex justify-between items-center mb-4">
+                <Title level={4} style={{ margin: 0, color: "#373b43" }}>
                   Price Details
                 </Title>
-                <Text strong className="text-xl text-blue-500">
-                  {currentRoom.price} Tk/night
-                </Text>
+                {currentRoom.discount ? (
+                  <div className="text-right">
+                    <Text delete className="text-base !text-[#6b7588] block">
+                      {currentRoom.price} Tk/night
+                    </Text>
+                    <Text strong className="text-xl !text-primary">
+                      {getEffectivePrice(currentRoom)} Tk/night
+                    </Text>
+                    <span className="neu-xs ml-2 px-1.5 py-0.5 text-xs text-red-500 font-medium">
+                      {currentRoom.discountType === "flat" ? `-${currentRoom.discount}Tk` : `-${currentRoom.discount}%`}
+                    </span>
+                  </div>
+                ) : (
+                  <Text strong className="text-xl !text-primary">
+                    {currentRoom.price} Tk/night
+                  </Text>
+                )}
               </div>
 
               <div className="mb-4">
-                <Card className="mb-4">
+                <div className="neu-card p-4 mb-4">
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <Text type="secondary">Room Type</Text>
-                      <div className="font-medium">{currentRoom.type}</div>
+                      <Text className="!text-[#6b7588]">Room Type</Text>
+                      <div className="font-medium text-[#373b43]">{currentRoom.type}</div>
                     </div>
                     <div>
-                      <Text type="secondary">Capacity</Text>
-                      <div className="font-medium">
+                      <Text className="!text-[#6b7588]">Capacity</Text>
+                      <div className="font-medium text-[#373b43]">
                         {currentRoom.capacity} Adults, {currentRoom.child}{" "}
                         Children
                       </div>
                     </div>
                   </div>
-                </Card>
+                </div>
 
                 {/* Contact Options */}
-                <Title level={5}>Need Help?</Title>
-                <div className="flex gap-3 mb-4">
-                  <a
-                    href="https://wa.me/123456789"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1"
-                  >
-                    <Button
-                      type="primary"
-                      icon={<WhatsAppOutlined />}
-                      className="bg-green-500 hover:bg-green-600"
-                      block
+                <div className="neu-card p-4 mb-4">
+                  <Title level={5} className="!text-[#373b43]">Need Help?</Title>
+                  <div className="flex gap-3">
+                    <a
+                      href="https://wa.me/123456789"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1"
                     >
-                      WhatsApp
-                    </Button>
-                  </a>
-                  <a
-                    href="http://m.me/hotelname"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1"
-                  >
-                    <Button
-                      type="primary"
-                      icon={<MessageOutlined />}
-                      className="bg-blue-500 hover:bg-blue-600"
-                      block
+                      <button className="w-full py-2.5 rounded-xl font-medium text-white text-sm bg-[#25D366] shadow-neu-sm">
+                        <WhatsAppOutlined className="mr-1" />
+                        WhatsApp
+                      </button>
+                    </a>
+                    <a
+                      href="http://m.me/hotelname"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1"
                     >
-                      Messenger
-                    </Button>
-                  </a>
+                      <button className="w-full py-2.5 rounded-xl font-medium text-white text-sm bg-[#0084FF] shadow-neu-sm">
+                        <MessageOutlined className="mr-1" />
+                        Messenger
+                      </button>
+                    </a>
+                  </div>
                 </div>
 
                 {currentRoom.amenities && currentRoom.amenities.length > 0 && (
-                  <>
-                    <Title level={5}>Room Amenities</Title>
-                    <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="neu-card p-4 mb-4">
+                    <Title level={5} className="!text-[#373b43]">Room Amenities</Title>
+                    <div className="flex flex-wrap gap-2">
                       {currentRoom.amenities.map((amenity, index) => (
-                        <Tag key={index} color="blue">
+                        <span key={index} className="neu-xs px-3 py-1 text-xs text-[#6b7588]">
                           {amenity}
-                        </Tag>
+                        </span>
                       ))}
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {currentRoom.description && (
-                  <>
-                    <Title level={5}>Description</Title>
-                    <Paragraph>{currentRoom.description}</Paragraph>
-                  </>
+                  <div className="neu-card p-4 mb-4">
+                    <Title level={5} className="!text-[#373b43]">Description</Title>
+                    <Paragraph className="!text-[#6b7588]">{currentRoom.description}</Paragraph>
+                  </div>
                 )}
 
                 <div className="mt-6">
-                  <Button
-                    type={isSelected(currentRoom.id) ? "default" : "primary"}
+                  <button
                     onClick={() => {
                       handleRoomToggle(currentRoom);
                       setRoomDetailsVisible(false);
                     }}
-                    loading={checkingAvailability[currentRoom.id]}
                     disabled={
                       !currentRoom.isAvailable ||
                       checkingAvailability[currentRoom.id]
                     }
-                    block
-                    size="large"
-                    className="h-12 !bg-white"
+                    className={`w-full h-12 rounded-xl font-semibold text-base transition-all duration-200 ${isSelected(currentRoom.id)
+                      ? "neu-btn text-red-500"
+                      : "neu-btn-primary"
+                      }`}
                   >
                     {checkingAvailability[currentRoom.id]
                       ? "Checking Availability..."
                       : isSelected(currentRoom.id)
-                      ? "Deselect Room"
-                      : "Select This Room"}
-                  </Button>
+                        ? "Deselect Room"
+                        : "Select This Room"}
+                  </button>
                 </div>
               </div>
             </div>

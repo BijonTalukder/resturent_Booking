@@ -91,6 +91,8 @@ const EditRoom = () => {
         roomNumber: formData?.roomNumber,
         type: formData?.type,
         price: parseFloat(formData?.price),
+        discount: formData?.discount ? parseFloat(formData?.discount) : null,
+        discountType: formData?.discountType || "percentage",
         capacity: parseInt(formData?.capacity),
         roomQty: parseInt(formData?.roomQty),
         child: parseInt(formData?.child),
@@ -180,6 +182,23 @@ const EditRoom = () => {
             label="Price (per night)"
             placeholder="Enter room price"
             required={1}
+          />
+
+          <ZInputTwo
+            name="discount"
+            type="number"
+            label="Discount"
+            placeholder="Enter discount (optional)"
+          />
+
+          <ZSelect
+            name="discountType"
+            label="Discount Type"
+            options={[
+              { label: "Percentage (%)", value: "percentage" },
+              { label: "Flat (Tk)", value: "flat" },
+            ]}
+            placeholder="Select discount type"
           />
 
           <ZInputTwo

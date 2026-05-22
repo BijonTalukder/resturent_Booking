@@ -38,6 +38,7 @@ const baseApi = createApi({
     "division",
     "district",
     "area",
+    "setting",
   ],
 });
 

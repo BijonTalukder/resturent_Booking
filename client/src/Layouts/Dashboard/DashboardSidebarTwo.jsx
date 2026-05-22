@@ -17,8 +17,6 @@ const DashboardSidebarTwo = ({ className, setIsSidebarOpen }) => {
   const sidebarData = sidebarGenerator(adminRoutes);
 
   const location = useLocation();
-  // console.log(location);
-  // console.log(sidebarData);
 
   useEffect(() => {
     if (localStorage.getItem("dropDown")) {
@@ -31,14 +29,18 @@ const DashboardSidebarTwo = ({ className, setIsSidebarOpen }) => {
 
   return (
     <div
-      className={`w-[250px] z-10 bg-[#121c34] duration-300 ${className} h-screen thin-scrollbar overflow-y-scroll text-[13px] text-[#E0E0E0]`}
+      className={`w-[250px] z-10 duration-300 ${className} h-screen thin-scrollbar overflow-y-scroll text-[13px]`}
+      style={{
+        background: "#121c34",
+        boxShadow: "5px 0 10px rgba(0,0,0,0.3), -2px 0 5px rgba(255,255,255,0.02)",
+      }}
     >
       <div className="pt-12">
         <div className="flex justify-end">
           {setIsSidebarOpen && (
             <button
               onClick={() => setIsSidebarOpen((prev) => !prev)}
-              className="lg:hidden mb-3"
+              className="lg:hidden mb-3 text-white"
             >
               <IoIosArrowDropleftCircle size={35} />
             </button>
@@ -51,7 +53,7 @@ const DashboardSidebarTwo = ({ className, setIsSidebarOpen }) => {
                 {/* dropdown header */}
                 <div
                   onClick={() => handleOpen(item.key)}
-                  className="px-4 cursor-pointer py-3 flex items-center justify-between mr-4 mb-1"
+                  className="px-4 cursor-pointer py-3 flex items-center justify-between mr-4 mb-1 text-[#E0E0E0] hover:text-white transition-colors"
                 >
                   {/* text */}
                   <div className="flex items-center gap-x-2">
@@ -87,9 +89,9 @@ const DashboardSidebarTwo = ({ className, setIsSidebarOpen }) => {
                             })
                           );
                         }}
-                        className={`pl-7 py-2 mr-4 mb-1 hover:pl-7 hover:py-2 hover:mr-4 hover:mb-1 hover:bg-[#323F5D] hover:rounded-r-full hover:ml-2 duration-500 ${
+                        className={`pl-7 py-2 mr-4 mb-1 text-[#c0c4cc] hover:text-white duration-300 ${
                           location.pathname === `/admin/${subItem.key}`
-                            ? "bg-[#323F5D] rounded-full"
+                            ? "text-white font-medium"
                             : ""
                         }`}
                       >
@@ -108,9 +110,9 @@ const DashboardSidebarTwo = ({ className, setIsSidebarOpen }) => {
                     setOpen("");
                     localStorage.removeItem("dropDown");
                   }}
-                  className={`px-4 py-3 hover:px-4 hover:py-3 hover:rounded-r-full hover:bg-[#323F5D] hover:mr-4 hover:mb-1 mr-4 mb-1 ${
+                  className={`px-4 py-3 mr-4 mb-1 text-[#E0E0E0] hover:text-white transition-colors ${
                     location.pathname === `/admin/${item.key}`
-                      ? "bg-[#1b3a9a] rounded-full"
+                      ? "text-white font-medium"
                       : ""
                   }`}
                 >

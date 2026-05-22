@@ -11,55 +11,42 @@ import {
   FundProjectionScreenOutlined,
   LockOutlined,
   BorderOutlined,
-  // SnowflakeOutlined
 } from '@ant-design/icons';
 import { FaSwimmingPool, FaWineGlassAlt } from "react-icons/fa";
 import { TbAirConditioning } from "react-icons/tb";
 
-
-// Amenity icons mapping
 const amenityIcons = {
-  'Free WiFi': <WifiOutlined className="text-blue-500" />,
-  'Parking': <CarOutlined className="text-blue-500" />,
-  'Restaurant': <CoffeeOutlined className="text-blue-500" />,
-  'TV': <FundProjectionScreenOutlined className="text-blue-500" />,
-  'Security': <SafetyOutlined className="text-blue-500" />,
-  'Gym': <FireOutlined className="text-blue-500" />,
-  'Spa': <MedicineBoxOutlined className="text-blue-500" />,
-  'Swimming Pool': <FaSwimmingPool className="text-blue-500 text-[22px] lg:text-3xl" />,
-  'AC': <TbAirConditioning className="text-blue-500" />,
-  'Air Conditioning': <TbAirConditioning className="text-blue-500" />,
-  'Mini Bar': <FaWineGlassAlt className="text-blue-500" />,
-  'Safe': <LockOutlined className="text-blue-500" />,
-  'Balcony': <BorderOutlined className="text-blue-500" />
+  'Free WiFi': <WifiOutlined className="text-primary" />,
+  'Parking': <CarOutlined className="text-primary" />,
+  'Restaurant': <CoffeeOutlined className="text-primary" />,
+  'TV': <FundProjectionScreenOutlined className="text-primary" />,
+  'Security': <SafetyOutlined className="text-primary" />,
+  'Gym': <FireOutlined className="text-primary" />,
+  'Spa': <MedicineBoxOutlined className="text-primary" />,
+  'Swimming Pool': <FaSwimmingPool className="text-primary text-[22px] lg:text-3xl" />,
+  'AC': <TbAirConditioning className="text-primary" />,
+  'Air Conditioning': <TbAirConditioning className="text-primary" />,
+  'Mini Bar': <FaWineGlassAlt className="text-primary" />,
+  'Safe': <LockOutlined className="text-primary" />,
+  'Balcony': <BorderOutlined className="text-primary" />
 };
 
-
-const SliderAminities = ({ amenities = [] , hideText= false}) => {
+const SliderAminities = ({ amenities = [], hideText = false }) => {
   return (
-    <div className={`amenities-slider-container grid grid-cols-5 lg:grid-cols-6 gap-8 
+    <div className={`neu-card p-4 grid grid-cols-5 lg:grid-cols-6 gap-4
     ${hideText ? '!grid-cols-6' : ''}`}>
-      {/* <Swiper
-        slidesPerView={'auto'}
-        spaceBetween={30}
-        initialSlide={0}
-        className="amenities-swiper"
-      > */}
-        {amenities.map((amenity, index) => (
-          //<SwiperSlide key={index} className="amenity-slide">
-            <div key={index} className="flex flex-col items-center gap-1 p-2 justify-center">
-              <div className="text-sm lg:text-2xl">
-                {amenityIcons[amenity] || <span className="text-blue-500">•</span>}
-              </div>             
-              {!hideText && (
-            <div className="text-[8px] lg:text-lg text-gray-600 whitespace-nowrap">
+      {amenities.map((amenity, index) => (
+        <div key={index} className="flex flex-col items-center gap-1 p-2 justify-center">
+          <div className="text-sm lg:text-2xl">
+            {amenityIcons[amenity] || <span className="text-primary">•</span>}
+          </div>
+          {!hideText && (
+            <div className="text-[8px] lg:text-sm text-[#6b7588] whitespace-nowrap font-medium">
               {amenity}
             </div>
           )}
-            </div>
-          //</SwiperSlide>
-        ))}
-      {/* </Swiper> */}
+        </div>
+      ))}
     </div>
   );
 };

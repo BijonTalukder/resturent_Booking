@@ -1,71 +1,39 @@
-
 import React, { useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Success = () => {
-  // const location = useLocation();
-  // const navigate = useNavigate();
-  // const queryParams = new URLSearchParams(location.search);
-  // const sessionId = queryParams.get("sessionId");
-  // const transactionId = queryParams.get("transactionId");
-  // console.log(sessionId)
-  // useEffect(() => {
-  //   const verifyPayment = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:5000/api/v1/success?sessionId=${sessionId}&transactionId=${transactionId}`
-  //       );
-  //       if (response.data.success) {
-  //         // Payment verified, show success message
-  //         console.log("Payment successful!");
-  //       } else {
-  //         // Payment failed, redirect to cancel page
-  //         navigate("/cancel");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error verifying payment:", error);
-  //       navigate("/cancel");
-  //     }
-  //   };
-
-  //   if (sessionId && transactionId) {
-  //     verifyPayment();
-  //   } else {
-  //     navigate("/cancel");
-  //   }
-  // }, [sessionId, transactionId, navigate]);
-
-
   return (
-    <div>
-      <section className="bg-gray-900 text-white -mb-8">
-  <div className=" px-4 py-32 lg:flex lg:h-[100vh] lg:items-center">
-    <div className="mx-auto max-w-5xl text-center">
-      <h1
-        className="bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl"
-      >
-       Thank you for your boooking! Your booking is being processed and will be assessed within 1-2 hours.
-
-
-      </h1>
-
-      <p className="mx-auto mt-4 max-w-xl sm:text-xl/relaxed">
-        Please check your booking confirmation in your given email.
-      </p>
-
-      <div className="mt-8 flex flex-wrap justify-center gap-4">
-        <Link to={`/`}
-          className="block w-full rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
-         
+    <div className="min-h-screen bg-[#eef0f4] flex items-center justify-center p-4">
+      <div className="neu-card max-w-2xl w-full p-8 lg:p-12 text-center">
+        <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6"
+          style={{
+            boxShadow: "inset 3px 3px 6px rgba(163,177,198,0.3), inset -3px -3px 6px rgba(255,255,255,0.5)"
+          }}
         >
-         Continue Booking more..
+          <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+
+        <h1 className="text-2xl lg:text-3xl font-bold text-[#373b43] mb-4">
+          Thank you for your booking!
+        </h1>
+        <p className="text-[#6b7588] text-lg mb-2">
+          Your booking is being processed and will be assessed within 1-2 hours.
+        </p>
+        <p className="text-[#6b7588] mb-8">
+          Please check your booking confirmation in your given email.
+        </p>
+
+        <Link
+          to="/"
+          className="neu-btn-primary inline-block px-8 py-3 text-sm font-medium"
+        >
+          Continue Booking
         </Link>
       </div>
-    </div>
-  </div>
-</section>
     </div>
   )
 }

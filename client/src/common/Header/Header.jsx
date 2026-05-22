@@ -17,8 +17,7 @@ import Division from "../../Pages/Division/Division";
 import { useGetUserNotificationsQuery } from "../../redux/Feature/Admin/notification/notificationApi";
 import {
   BellIcon,
-  BellIcon as BellIconOutline,
-} from "@heroicons/react/24/outline"; 
+} from "@heroicons/react/24/outline";
 
 const Header = ({ onSearch, onFilterChange }) => {
   const dispatch = useAppDispatch();
@@ -42,14 +41,13 @@ const Header = ({ onSearch, onFilterChange }) => {
   const {
     data: notifications
   } = useGetUserNotificationsQuery(user?.id);
-  
+
   useEffect(() => {
     if (notifications) {
       setUnreadCount(notifications?.data?.filter((n) => !n.isRead).length);
     }
   }, [notifications]);
 
-  // Load recent searches from localStorage on component mount
   useEffect(() => {
     const savedSearches = localStorage.getItem("recentSearches");
     if (savedSearches) {
@@ -57,7 +55,6 @@ const Header = ({ onSearch, onFilterChange }) => {
     }
   }, []);
 
-  // Save searches to localStorage
   const saveSearch = (query) => {
     if (!query.trim()) return;
 
@@ -100,40 +97,34 @@ const Header = ({ onSearch, onFilterChange }) => {
     onFilterChange(division, city);
   };
 
-  const getActiveClass = (path) =>
-    location.pathname === path
-      ? "!text-white !font-bold"
-      : "text-[#ecf0f1] hover:text-white transition-all duration-300";
-
   const userMenu = (
-    <Menu>
+    <Menu
+      className="!rounded-2xl !p-2 !shadow-neu-sm"
+      style={{ background: "#eef0f4" }}
+    >
       <Menu.Item
         key="booking-history"
-        className={getActiveClass(
-          token && user?.role === "user" ? "/user/user-booking" : ""
-        )}
         onClick={() =>
           navigate(token && user?.role === "user" ? "/user/user-booking" : "")
         }
+        className="!rounded-xl !m-1 hover:!bg-white/80"
       >
         {token && user?.role === "user" ? "Booking History" : ""}
       </Menu.Item>
 
       <Menu.Item
         key="profile"
-        className={getActiveClass(
-          token && user?.role === "user" ? "/user/user-profile" : ""
-        )}
         onClick={() =>
           navigate(token && user?.role === "user" ? "/user/user-profile" : "")
         }
+        className="!rounded-xl !m-1 hover:!bg-white/80"
       >
         {token && user?.role === "user" ? "Edit Profile" : ""}
       </Menu.Item>
 
       <Menu.Item
         key="logout"
-        className="text-red-400 font-bold"
+        className="!rounded-xl !m-1 !text-red-500 !font-bold hover:!bg-white/80"
         onClick={handleLogout}
       >
         Sign Out
@@ -141,7 +132,6 @@ const Header = ({ onSearch, onFilterChange }) => {
     </Menu>
   );
 
-  // Prepare autocomplete options from recent searches
   const autoCompleteOptions = recentSearches.map(search => ({
     value: search,
     label: (
@@ -155,7 +145,7 @@ const Header = ({ onSearch, onFilterChange }) => {
   return (
     <>
       <div
-        className={`py-3 lg:py-1 px-4 lg:px-5 mb-3 bg-[#3498db] shadow-sm border-b border-gray-200 ${
+        className={`py-3 lg:py-1 px-4 lg:px-5 mb-3 bg-[#eef0f4] shadow-neu-sm ${
           isNotificationPage ||
           isAdminLogin ||
           isDetails ||
@@ -169,67 +159,69 @@ const Header = ({ onSearch, onFilterChange }) => {
         }`}
       >
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-          {/* Left Side - Logo/User */}
           <div className="flex justify-between items-center gap-x-1">
             <Link to={"/"}>
-              <div className="">
-                <img src={image} className="w-20 h-20  object-contain" alt="" />
+              <div className="neu-circle w-20 h-20 flex items-center justify-center">
+                <img src={image} className="w-16 h-16 object-contain" alt="" />
               </div>
             </Link>
-            <div className="lg:hidden">
-              <p className="text-[12px] font-bold text-white">
+            <div className="lg:hidden ml-2">
+              <p className="text-[12px] font-bold text-[#373b43]">
                 {user?.name || "Hello Guest"}
               </p>
-              <p className="text-[10px] text-white">Where are you going?</p>
+              <p className="text-[10px] text-[#6b7588]">Where are you going?</p>
             </div>
           </div>
 
-          {/* Center - Search Bar with AutoComplete */}
           <div className="flex-1 mx-4 hidden lg:block">
             <div className="relative w-full max-w-md mx-auto flex items-center gap-2">
-              <AutoComplete
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onSelect={(value) => {
-                  setSearchQuery(value);
-                  onSearch(value);
-                }}
-                options={autoCompleteOptions}
-                placeholder="Search hotels..."
-                className="w-full"
-                filterOption={(inputValue, option) =>
-                  option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                }
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSearchSubmit();
+              <div className="w-full neu-inset-sm !rounded-full overflow-hidden">
+                <AutoComplete
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onSelect={(value) => {
+                    setSearchQuery(value);
+                    onSearch(value);
+                  }}
+                  options={autoCompleteOptions}
+                  placeholder="Search hotels..."
+                  className="w-full"
+                  style={{ background: "transparent" }}
+                  filterOption={(inputValue, option) =>
+                    option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                   }
-                }}
-                allowClear
-                prefix={<IoSearch className="text-gray-400" />}
-/>
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearchSubmit();
+                    }
+                  }}
+                  allowClear
+                  prefix={<IoSearch className="text-[#6b7588]" />}
+                />
+              </div>
               <button
                 onClick={() => setVisibleRight(true)}
-                className="p-2 bg-gray-100 rounded-full"
+                className="neu-btn w-10 h-10 flex items-center justify-center"
               >
                 <HiOutlineAdjustmentsHorizontal
-                  className="text-gray-600"
-                  size={15}
+                  className="text-[#6b7588]"
+                  size={18}
                 />
               </button>
             </div>
           </div>
 
-          {/* Right Side - Auth/Links */}
           <div className="flex items-center gap-4">
-            <div className="hidden lg:block mt-2">
+            <div className="hidden lg:block">
              <Link to={"/notification"}>
                <Badge
                 count={unreadCount}
                 overflowCount={9}
                 className="cursor-pointer"
               >
-                <BellIcon className="text-xl w-6 h-6 text-white" />
+                <div className="neu-circle w-10 h-10 flex items-center justify-center">
+                  <BellIcon className="w-5 h-5 text-[#6b7588]" />
+                </div>
               </Badge>
              </Link>
             </div>
@@ -237,7 +229,7 @@ const Header = ({ onSearch, onFilterChange }) => {
               <div className="flex items-center gap-2">
                 <div className="items-center gap-2 hidden lg:flex">
                   <Dropdown overlay={userMenu} trigger={["click"]}>
-                    <Button className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-secondary">
+                    <Button className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto !border-0 !shadow-neu-sm !bg-[#eef0f4] !text-[#373b43]">
                       {user?.name}
                       <IoChevronDownCircleOutline className="h-4 w-4 transition-transform" />
                     </Button>
@@ -245,41 +237,44 @@ const Header = ({ onSearch, onFilterChange }) => {
                 </div>
                 <Button
                   onClick={handleLogout}
-                  className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto text-red-500 bg-white hover:bg-gray-100 transition-all duration-300 text-[12px] md:text-base lg:hidden"
+                  className="flex items-center gap-1 rounded-full py-2 pr-2 pl-2 lg:ml-auto !border-0 !shadow-neu-sm !bg-[#eef0f4] !text-red-500 transition-all duration-300 text-[12px] md:text-base lg:hidden"
                 >
                   Log out
                 </Button>
               </div>
             ) : (
-              <div className="text-[#ecf0f1] flex items-center gap-2">
-                <div className="flex gap-1 text-[12px] md:text-base">
-                  <Link to="/login" className={getActiveClass("/login")}>
-                    <span className="">Login</span>
-                  </Link>{" "}
-                  /
-                  <Link to="/register" className={getActiveClass("/register")}>
-                    <span className="">Register</span>
-                  </Link>
-                </div>
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="neu-btn-primary px-4 py-2 text-sm font-medium hover:opacity-90"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="neu-btn px-4 py-2 text-sm font-medium !text-[#373b43]"
+                >
+                  Register
+                </Link>
               </div>
             )}
           </div>
         </div>
 
-        {/* Mobile Search Bar */}
         <div className="mt-2 lg:hidden">
           <div className="relative w-full">
-            <Input
-              placeholder="Search hotels..."
-              value={searchQuery}
-              onFocus={() => setIsSearchOverlay(true)}
-              prefix={<IoSearch className="text-gray-400" />}
-              className="rounded-full"
-            />
+            <div className="neu-inset-sm !rounded-full overflow-hidden">
+              <Input
+                placeholder="Search hotels..."
+                value={searchQuery}
+                onFocus={() => setIsSearchOverlay(true)}
+                prefix={<IoSearch className="text-[#6b7588]" />}
+                className="!border-0 !bg-transparent"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Mobile Filter Panel */}
         <Adjustment
           visibleRight={visibleRight}
           setVisibleRight={setVisibleRight}
@@ -291,59 +286,57 @@ const Header = ({ onSearch, onFilterChange }) => {
         />
       </div>
 
-      {/* Mobile Search Overlay - Keeps existing functionality */}
       {isSearchOverlay && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col h-full lg:hidden">
-          {/* Search Header */}
-          <div className="sticky top-0 bg-white p-4 border-b shadow-sm z-10">
+        <div className="fixed inset-0 z-50 flex flex-col h-full lg:hidden bg-[#eef0f4]">
+          <div className="sticky top-0 bg-[#eef0f4] p-4 shadow-neu-sm z-10">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsSearchOverlay(false)}
-                className="text-gray-600"
+                className="neu-btn w-10 h-10 flex items-center justify-center"
               >
-                <IoArrowBack size={24} />
+                <IoArrowBack size={20} className="text-[#6b7588]" />
               </button>
-              <Input
-                autoFocus
-                placeholder="Search hotels..."
-                value={searchQuery}
-                onChange={handleMobileSearchChange}
-                onPressEnter={handleSearchSubmit}
-                prefix={<IoSearch className="text-gray-400" />}
-                className="rounded-full w-full"
-                suffix={
-                  searchQuery ? (
-                    <button
-                      onClick={() => {
-                        setSearchQuery("");
-                        onSearch("");
-                      }}
-                      className="text-gray-400"
-                    >
-                      ✖
-                    </button>
-                  ) : null
-                }
-              />
+              <div className="flex-1 neu-inset-sm !rounded-full overflow-hidden">
+                <Input
+                  autoFocus
+                  placeholder="Search hotels..."
+                  value={searchQuery}
+                  onChange={handleMobileSearchChange}
+                  onPressEnter={handleSearchSubmit}
+                  prefix={<IoSearch className="text-[#6b7588]" />}
+                  className="!border-0 !bg-transparent"
+                  suffix={
+                    searchQuery ? (
+                      <button
+                        onClick={() => {
+                          setSearchQuery("");
+                          onSearch("");
+                        }}
+                        className="text-[#6b7588]"
+                      >
+                        ✖
+                      </button>
+                    ) : null
+                  }
+                />
+              </div>
               <button
                 onClick={() => setVisibleRight(true)}
-                className="p-2 bg-gray-100 rounded-full"
+                className="neu-btn w-10 h-10 flex items-center justify-center"
               >
                 <HiOutlineAdjustmentsHorizontal
-                  className="text-gray-600"
+                  className="text-[#6b7588]"
                   size={20}
                 />
               </button>
             </div>
           </div>
 
-          {/* Search Content */}
-          <div className="flex-1 overflow-y-auto">
-            {/* Recent Searches */}
+          <div className="flex-1 overflow-y-auto p-4">
             {recentSearches.length > 0 && (
-              <div className="p-4 border-b">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-sm font-medium text-[#6b7588]">
                     Recent Searches
                   </h3>
                 </div>
@@ -351,24 +344,23 @@ const Header = ({ onSearch, onFilterChange }) => {
                   {recentSearches.map((search, index) => (
                     <div
                       key={index}
-                      className="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
+                      className="neu-sm flex items-center p-3 cursor-pointer"
                       onClick={() => {
                         setSearchQuery(search);
                         onSearch(search);
                         setIsSearchOverlay(false);
                       }}
                     >
-                      <IoSearch className="text-gray-400 mr-2" />
-                      <span>{search}</span>
+                      <IoSearch className="text-[#6b7588] mr-2" />
+                      <span className="text-[#484f5c]">{search}</span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Popular Divisions */}
-            <div className="p-4">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">
+            <div>
+              <h3 className="text-sm font-medium text-[#6b7588] mb-2">
                 Browse by Division
               </h3>
               <Division onDivisionClick={() => setIsSearchOverlay(false)} />

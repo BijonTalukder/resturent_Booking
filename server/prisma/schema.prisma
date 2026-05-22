@@ -61,6 +61,8 @@ model Room {
   roomNumber  String
   type        String
   price       Float
+  discount     Float?
+  discountType String? @default("percentage")
   capacity    Int
   child       Int
   roomQty     Int
@@ -83,6 +85,7 @@ model Booking {
   checkIn       DateTime
   checkOut      DateTime
   totalPrice    Float
+  nidImage      String?
   status        String        @default("pending") // pending, confirmed, cancelled
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -189,4 +192,12 @@ model Area {
   divisionId  String?  @db.ObjectId
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Setting {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -20,44 +20,39 @@ const BannerSlider = () => {
   }, [isFetching , sliderIsLoading]);
   
 
-
   if (error) {
     return <div>Error loading sliders: {error.message}</div>;
   }
 
-  // Ensure data?.data is an array before mapping
   const sliders = data?.data.filter((item) => item?.isActive === true) || [];
 
-  // Format the sliders data for react-image-gallery
   const galleryImages = sliders.map((slider) => ({
     original: slider.imageUrl,
-    thumbnail: slider.imageUrl, // Optional: Add thumbnails if needed
+    thumbnail: slider.imageUrl,
     originalAlt: slider.title || "Banner",
     thumbnailAlt: slider.title || "Banner Thumbnail",
   }));
 
   return (
-    <div className="mb-[30px]">
-     <SectionTitle title="Offer available on hotels" />
-          {
-            sliderIsLoading || showSkeleton ? 
+    <div className="mb-[30px] px-4">
+      <SectionTitle title="Offer available on hotels" />
+      {
+        sliderIsLoading || showSkeleton ? 
           <Skeleton />
-          :
-          <>
-      <ImageGallery
-        // className="w-full !h-[300px] md:!h-[400px] lg:!h-[500px]"
-        items={galleryImages}
-        autoPlay={true}
-        slideInterval={8000}
-        showThumbnails={false} 
-        showFullscreenButton={false} 
-        showPlayButton={false} 
-        showNav={true} 
-        infinite={true} 
-        lazyLoad={true} 
-
-      />
-        </>
+        :
+          <div className="neu-card overflow-hidden p-2">
+            <ImageGallery
+              items={galleryImages}
+              autoPlay={true}
+              slideInterval={8000}
+              showThumbnails={false} 
+              showFullscreenButton={false} 
+              showPlayButton={false} 
+              showNav={true} 
+              infinite={true} 
+              lazyLoad={true} 
+            />
+          </div>
       }
     </div>
   );

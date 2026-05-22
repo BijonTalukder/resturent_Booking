@@ -3,52 +3,49 @@ import { LeftCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useGetDivisionsQuery } from "../../redux/Feature/User/place/placeApi";
 
-const Division = ({onDivisionClick}) => {
+const Division = ({ onDivisionClick }) => {
   const [divisions, setDivisions] = useState([]);
   const { data: divisionsData, isLoading, isError } = useGetDivisionsQuery();
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (divisionsData) {
-      setDivisions(divisionsData.data); // Assuming the API returns { data: [...] }
+      setDivisions(divisionsData.data);
     }
   }, [divisionsData]);
 
   if (isLoading) return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div>Loading divisions...</div>
+    <div className="flex justify-center items-center min-h-screen bg-[#eef0f4]">
+      <div className="neu-sm p-4 text-[#6b7588]">Loading divisions...</div>
     </div>
   );
 
   if (isError) return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div>Error loading divisions</div>
+    <div className="flex justify-center items-center min-h-screen bg-[#eef0f4]">
+      <div className="neu-sm p-4 text-red-500">Error loading divisions</div>
     </div>
   );
 
   return (
-    <>
-      <div className="w-full max-w-md mx-auto bg-white min-h-screen p-4 space-y-6 mb-16">
-        <div className="space-y-2">
-          <h3 className="text-md text-center font-bold mb-3">Select Division</h3>
-          <ul className="space-y-2">
-            {divisions.map((division, idx) => (
-              <li
-                key={idx}
-                 onClick={() => {
-                  navigate(`/district/${division?.serialId}`);
-                  onDivisionClick && onDivisionClick();
-                }}
-               
-                className="bg-blue-100 px-4 py-3 rounded shadow text-center cursor-pointer hover:bg-blue-200 mb-3"
-              >
-                {division.name}
-              </li>
-            ))}
-          </ul>
+    <div className="min-h-screen bg-[#eef0f4] p-4">
+      <div className="w-full max-w-md mx-auto space-y-4">
+        <h3 className="text-lg font-bold text-center text-[#373b43] mb-4">Select Division</h3>
+        <div className="space-y-3">
+          {divisions.map((division, idx) => (
+            <div
+              key={idx}
+              onClick={() => {
+                navigate(`/district/${division?.serialId}`);
+                onDivisionClick && onDivisionClick();
+              }}
+              className="neu-card px-4 py-4 text-center cursor-pointer hover:shadow-neu-sm transition-all"
+            >
+              <span className="text-[#484f5c] font-medium">{division.name}</span>
+            </div>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -32,6 +32,8 @@ const Room = ({hotelId}) => {
     roomNumber: room?.roomNumber,
     type: room?.type,
     price: room?.price,
+    discount: room?.discount,
+    discountType: room?.discountType,
     capacity: room?.capacity,
     child: room?.child,
     roomQty: room?.roomQty,
@@ -97,6 +99,14 @@ const Room = ({hotelId}) => {
       dataIndex: "price",
       key: "price",
       render: (price) => `${price} Tk/-`,
+    },
+    {
+      title: "Discount",
+      dataIndex: "discount",
+      key: "discount",
+      render: (discount, record) => discount ? (
+        record.discountType === "flat" ? `${discount} Tk` : `${discount}%`
+      ) : '—',
     },
     {
       title: "Adult",

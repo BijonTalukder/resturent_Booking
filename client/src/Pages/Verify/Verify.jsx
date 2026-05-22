@@ -3,43 +3,39 @@ import { useParams } from "react-router-dom";
 import { useVerifyEmailMutation } from "../../redux/Feature/auth/authApi";
 
 const Verify = () => {
-  // Extract the token from the URL
   const { token } = useParams();
-
-  // Use the verifyEmail mutation
   const [verifyEmail, { isLoading, isError, isSuccess, data, error }] = useVerifyEmailMutation();
 
-  // Call the API when the component mounts
   useEffect(() => {
     if (token) {
-      verifyEmail(token); // Pass the token to the mutation
+      verifyEmail(token);
     }
   }, [token, verifyEmail]);
 
-  // Display loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-700">Verifying your email... Please wait.</p>
+      <div className="flex items-center justify-center min-h-screen bg-[#eef0f4]">
+        <div className="neu-card p-8 text-center max-w-md">
+          <div className="neu-circle w-16 h-16 mx-auto flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+          <p className="mt-4 text-[#6b7588]">Verifying your email... Please wait.</p>
         </div>
       </div>
     );
   }
 
-  // Display error state
   if (isError) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Email Verification Failed</h2>
-          <p className="text-gray-700">
+      <div className="flex items-center justify-center min-h-screen bg-[#eef0f4]">
+        <div className="neu-card p-8 text-center max-w-md">
+          <h2 className="text-2xl font-bold text-primary mb-4">Email Verification Failed</h2>
+          <p className="text-[#6b7588] mb-6">
             {error?.data?.message || "There was an issue verifying your email. Please try again or contact support."}
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-6 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            className="neu-btn-primary px-6 py-2 text-sm font-medium"
           >
             Retry
           </button>
@@ -48,16 +44,23 @@ const Verify = () => {
     );
   }
 
-  // Display success state
   if (isSuccess && data?.success) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center">
+      <div className="flex items-center justify-center min-h-screen bg-[#eef0f4]">
+        <div className="neu-card p-8 text-center max-w-md">
+          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4"
+            style={{
+              boxShadow: "inset 3px 3px 6px rgba(163,177,198,0.3), inset -3px -3px 6px rgba(255,255,255,0.5)"
+            }}
+          >
+            <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
           <h2 className="text-2xl font-bold text-green-600 mb-7">Email Verified Successfully!</h2>
-          {/* <p className="text-gray-700 mb-5">{data.message}</p> */}
           <a
             href="/login"
-            className="mt-6 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            className="neu-btn-primary px-6 py-2 text-sm font-medium inline-block"
           >
             Go to Login
           </a>
@@ -66,17 +69,16 @@ const Verify = () => {
     );
   }
 
-  // Default state (if no token is found or verification fails)
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md text-center">
+    <div className="flex items-center justify-center min-h-screen bg-[#eef0f4]">
+      <div className="neu-card p-8 text-center max-w-md">
         <h2 className="text-2xl font-bold text-yellow-600 mb-4">Invalid Verification Link</h2>
-        <p className="text-gray-700">
+        <p className="text-[#6b7588] mb-6">
           No verification token found. Please check your email for the correct link.
         </p>
         <a
           href="/"
-          className="mt-6 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+          className="neu-btn-primary px-6 py-2 text-sm font-medium inline-block"
         >
           Go to Home
         </a>

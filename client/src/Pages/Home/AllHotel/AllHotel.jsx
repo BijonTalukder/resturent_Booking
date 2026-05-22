@@ -10,7 +10,7 @@ import { useGetHotelsBySearchQuery } from "../../../redux/Feature/Admin/hotel/ho
 const AllHotel = () => {
   const { searchQuery, divisionId, cityId } = useOutletContext();
   const [showSkeleton, setShowSkeleton] = useState(true);
-  const [viewMode, setViewMode] = useState('grid'); 
+  const [viewMode, setViewMode] = useState('grid');
   const { data, error, isLoading, isFetching } = useGetHotelsBySearchQuery({
     name: searchQuery,
     divisionId,
@@ -29,28 +29,28 @@ const AllHotel = () => {
     (searchQuery.trim() !== "" || cityId || divisionId);
 
   return (
-    <div className="pb-[80px]">
+    <div className="pb-[80px] px-4">
       <SectionTitle title="Check our all hotels" />
       
       {/* View Mode Toggle */}
-      <div className="hidden md:flex justify-end mb-4 mr-4">
-        <div className="flex bg-white rounded-lg border border-gray-200 p-1">
+      <div className="hidden md:flex justify-end mb-6 mr-4">
+        <div className="neu-sm flex p-1.5">
           <button
             onClick={() => setViewMode('grid')}
-            className={`p-2 rounded-md transition-colors ${
-              viewMode === 'grid' 
-                ? 'bg-blue-500 text-white' 
-                : 'text-gray-500 hover:text-gray-700'
+            className={`p-2.5 rounded-xl transition-all duration-200 ${
+              viewMode === 'grid'
+                ? 'shadow-neu-inset-sm bg-[#eef0f4] text-primary'
+                : 'text-[#6b7588] hover:text-[#373b43]'
             }`}
           >
             <FaTh className="text-sm" />
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`p-2 rounded-md transition-colors ${
-              viewMode === 'list' 
-                ? 'bg-blue-500 text-white' 
-                : 'text-gray-500 hover:text-gray-700'
+            className={`p-2.5 rounded-xl transition-all duration-200 ${
+              viewMode === 'list'
+                ? 'shadow-neu-inset-sm bg-[#eef0f4] text-primary'
+                : 'text-[#6b7588] hover:text-[#373b43]'
             }`}
           >
             <FaList className="text-sm" />
@@ -63,31 +63,33 @@ const AllHotel = () => {
 
       {/* Show "No hotels found" message */}
       {noHotelsFound && (
-        <div className="text-center text-[13px] md:text-xl font-bold text-red-500">
-          No hotel found for the given criteria.
+        <div className="neu-sm max-w-md mx-auto p-6 text-center">
+          <p className="text-[13px] md:text-xl font-bold text-primary">
+            No hotel found for the given criteria.
+          </p>
         </div>
       )}
       
       {/* Hotels Container */}
       <div className={`${
-        viewMode === 'grid' 
-          ? 'lg:max-w-[98%] grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto' 
-          : ' mx-auto space-y-4'
+        viewMode === 'grid'
+          ? 'lg:max-w-[98%] grid grid-cols-2 lg:grid-cols-3 gap-4 mx-auto'
+          : 'mx-auto space-y-4'
       }`}>
         {!isLoading && !showSkeleton && data?.data?.map((hotel, index) => (
-          <Link 
-            to={`/hotel-details/${hotel?.id}`} 
+          <Link
+            to={`/hotel-details/${hotel?.id}`}
             key={index}
             className={`block ${
-              viewMode === 'list' 
-                ? 'flex flex-row h-48' 
+              viewMode === 'list'
+                ? 'flex flex-row h-48'
                 : 'flex flex-col'
-            } rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white hover:shadow-md transition-shadow`}
+            } neu-card overflow-hidden`}
           >
             {/* Image */}
             <div className={`${
-              viewMode === 'list' 
-                ? 'w-1/3 h-full' 
+              viewMode === 'list'
+                ? 'w-1/3 h-full'
                 : 'h-[110px] md:h-[300px]'
             } relative`}>
               <img
@@ -99,25 +101,25 @@ const AllHotel = () => {
 
             {/* Content */}
             <div className={`${
-              viewMode === 'list' 
-                ? 'w-2/3 p-4 flex flex-col justify-between' 
+              viewMode === 'list'
+                ? 'w-2/3 p-4 flex flex-col justify-between'
                 : 'flex-1 px-2 py-1 md:px-4 md:py-4'
             }`}>
               <div className={`${
-                viewMode === 'list' 
-                  ? 'flex flex-col h-full justify-between' 
+                viewMode === 'list'
+                  ? 'flex flex-col h-full justify-between'
                   : 'flex flex-col lg:gap-8'
               }`}>
                 {/* Hotel Info */}
                 <div className={`${
-                  viewMode === 'list' 
-                    ? 'space-y-2' 
+                  viewMode === 'list'
+                    ? 'space-y-2'
                     : 'md:space-y-4 lg:px-3 py-2 md:py-5 lg:py-0'
                 }`}>
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-2">
                     <h2 className={`font-semibold text-[#1A1A1A] ${
-                      viewMode === 'list' 
-                        ? 'text-lg md:text-xl' 
+                      viewMode === 'list'
+                        ? 'text-lg md:text-xl'
                         : 'text-[10px] md:text-2xl'
                     }`}>
                       {hotel.name}
@@ -125,10 +127,10 @@ const AllHotel = () => {
                   </div>
 
                   <div className="flex items-center gap-1 text-[#666666] md:mb-4">
-                    <IoLocationOutline className="text-lg text-blue-500" />
+                    <IoLocationOutline className="text-lg text-primary" />
                     <span className={`${
-                      viewMode === 'list' 
-                        ? 'text-sm' 
+                      viewMode === 'list'
+                        ? 'text-sm'
                         : 'text-[8px] md:text-[14px]'
                     }`}>
                       {hotel.location}
@@ -141,13 +143,13 @@ const AllHotel = () => {
                       {hotel.amenities.slice(0, 4).map((amenity, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600"
+                          className="neu-xs px-3 py-1 text-xs text-[#6b7588]"
                         >
                           {amenity}
                         </span>
                       ))}
                       {hotel.amenities.length > 4 && (
-                        <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600">
+                        <span className="neu-xs px-3 py-1 text-xs text-[#6b7588]">
                           +{hotel.amenities.length - 4} more
                         </span>
                       )}
@@ -157,8 +159,8 @@ const AllHotel = () => {
 
                 {/* Bottom Section */}
                 <div className={`${
-                  viewMode === 'list' 
-                    ? 'flex items-center justify-between mt-auto' 
+                  viewMode === 'list'
+                    ? 'flex items-center justify-between mt-auto'
                     : 'md:min-w-[300px] md:space-y-5'
                 }`}>
                   {/* Amenities - Grid view only */}
@@ -167,16 +169,16 @@ const AllHotel = () => {
                       {hotel.amenities.slice(0, 2).map((tag, i) => (
                         <span
                           key={i}
-                          className={`px-3 py-1 rounded-full text-sm hidden lg:block ${
+                          className={`px-3 py-1 rounded-xl text-sm hidden lg:block shadow-neu-xs ${
                             tag === "Best"
-                              ? "bg-[#B8BBFF40] text-[#5054D9]"
-                              : "bg-[#FFD18140] text-[#F99F1D]"
+                              ? "text-[#5054D9]"
+                              : "text-[#F99F1D]"
                           }`}
                         >
                           {tag}
                         </span>
                       ))}
-                      <span className="px-3 py-1 rounded-full text-sm hidden lg:block bg-[#FFD18140] text-[#F99F1D]">
+                      <span className="px-3 py-1 rounded-xl text-sm hidden lg:block shadow-neu-xs text-[#F99F1D]">
                         + more..
                       </span>
                     </div>
@@ -184,16 +186,34 @@ const AllHotel = () => {
 
                   {/* Price and Button */}
                   {viewMode === 'list' && hotel.rooms && hotel.rooms.length > 0 && (
-                    <div className="text-lg font-bold text-blue-600">
-                      {hotel.rooms[0]?.price} Tk/night
+                    <div className="text-lg font-bold text-primary">
+                      {hotel.rooms[0]?.discount ? (
+                        <span>
+                          <span className="line-through text-sm text-[#6b7588] mr-1">
+                            {hotel.rooms[0].price} Tk
+                          </span>
+                          {(() => {
+                            const r = hotel.rooms[0];
+                            const effective = r.discountType === "flat"
+                              ? Math.max(0, r.price - r.discount)
+                              : Math.round(r.price - (r.price * r.discount) / 100);
+                            return `${effective} Tk/night`;
+                          })()}
+                          <span className="text-xs text-red-500 ml-1">
+                            {hotel.rooms[0].discountType === "flat" ? `-${hotel.rooms[0].discount}Tk` : `-${hotel.rooms[0].discount}%`}
+                          </span>
+                        </span>
+                      ) : (
+                        `${hotel.rooms[0]?.price} Tk/night`
+                      )}
                     </div>
                   )}
                   
                   <div className={`${viewMode === 'list' ? 'w-auto' : 'w-full'}`}>
-                    <button className={`text-[#5054D9] font-medium transition ${
-                      viewMode === 'list' 
-                        ? 'px-4 py-2 rounded-lg border border-[#5054D9] hover:bg-[#5054D9] hover:text-white' 
-                        : 'text-xs lg:text-base py-1 lg:py-3 w-full rounded-lg border border-[#5054D9] px-1 mb-4'
+                    <button className={`font-medium transition-all duration-200 neumorphic-btn ${
+                      viewMode === 'list'
+                        ? 'px-4 py-2 rounded-xl text-primary neu-sm hover:shadow-neu-inset-sm'
+                        : 'text-xs lg:text-base py-1 lg:py-3 w-full rounded-xl px-1 mb-4 text-primary neu-sm hover:shadow-neu-inset-sm'
                     }`}>
                       {viewMode === 'list' ? 'View Details' : 'Choose Room'}
                     </button>

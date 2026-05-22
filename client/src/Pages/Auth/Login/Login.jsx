@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-// import img from "../../../assets/banner/contact-banner.jpg";
 import { FaGreaterThan, FaHome } from 'react-icons/fa';
 import ZFormTwo from '../../../components/Form/ZFormTwo';
 import ZEmail from '../../../components/Form/ZEmail';
@@ -29,8 +28,6 @@ const Login = () => {
       data: loginData,
     },
   ] = useLoginMutation();
-//  console.log(loginData)
-
 
   useEffect(() => {
     if (token && user?.role === "admin") {
@@ -41,7 +38,6 @@ const Login = () => {
     }
   }, []);
 
-
   
   const handleSubmit = async (data) => {
     const { data: loginData } = await login(data);
@@ -50,28 +46,21 @@ const Login = () => {
       dispatch(setUser({ token: loginData.token, user: loginData.user }));
       if (loginData?.user?.role && loginData?.user?.role === "user" && loginData?.user?.role !== "admin") {
         navigate(location?.state?.from || "/");
-      } 
-      // else if (loginData?.user?.role === "admin") {
-      //   localStorage.removeItem("dropDown");
-      //   navigate(location?.state?.from || "/admin/home");
-      // }
+      }
     }
   };
   return (
     <>
+    <section className="relative flex flex-wrap flex-row-reverse lg:items-center min-h-screen bg-[#eef0f4]">
+      <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
+        <div className="mx-auto max-w-lg">
+          <div className="neu-card p-8">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-[#373b43]">Get started today!</h1>
+              <p className="mt-2 text-[#6b7588]">Sign in to your account</p>
+            </div>
 
-    <section className="relative flex flex-wrap flex-row-reverse lg:items-center">
-    <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
-      <div className="mx-auto max-w-lg text-center">
-        <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
-  
-        {/* <p className="mt-4 text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla eaque error neque
-          ipsa culpa autem, at itaque nostrum!
-        </p> */}
-      </div>
-  
-      <ZFormTwo
+            <ZFormTwo
               isLoading={lIsloading}
               error={error}
               isError={lIsError}
@@ -80,11 +69,9 @@ const Login = () => {
               data={loginData}
               buttonName={"Log in"}
             >
- 
-              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                <div className="relative mb-8">
-                <ZPhone label={"Phone"} name={"phone"} />
-
+              <div className="py-4 text-base leading-6 space-y-5 text-gray-700 sm:text-lg sm:leading-7">
+                <div className="relative">
+                  <ZPhone label={"Phone"} name={"phone"} />
                 </div>
                 <div className="relative">
                   <ZInputTwo
@@ -92,31 +79,34 @@ const Login = () => {
                     name="password"
                     type="password"
                     label={"Password"}
-                    // value={"123456"}
                     placeholder={"Enter your password"}
                   />
                 </div>
               </div>
             </ZFormTwo>
-            <div className="flex items-center justify-center mt-5 mb-10">
-              <p className="text-sm text-gray-500">
+            <div className="flex items-center justify-center mt-6">
+              <p className="text-sm text-[#6b7588]">
                 Don't have an account?
                 <Link to={"/register"}>
-                  <span className="underline text-blue-500">Sign up</span>
+                  <span className="text-primary font-semibold ml-1 hover:underline">Sign up</span>
                 </Link>
               </p>
-            </div>     
-    </div>
-  
-    <div className="h-64 w-full sm:h-96 hidden lg:block lg:h-full lg:w-1/2 mt-16 mb-16">
-      <img
-        alt=""
-        src="https://images.unsplash.com/photo-1630450202872-e0829c9d6172?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-        className="h-[580px] w-full object-cover"
-      />
-    </div>
-  </section>
-   </>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="h-64 w-full sm:h-96 hidden lg:block lg:h-full lg:w-1/2 mt-16 mb-16">
+        <div className="neu-card overflow-hidden h-[580px] m-4">
+          <img
+            alt=""
+            src="https://images.unsplash.com/photo-1630450202872-e0829c9d6172?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+            className="h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    </section>
+    </>
   )
 }
 
