@@ -15,7 +15,8 @@ const corsOptions = {
     "http://localhost:5173",
     "http://localhost:5174",
     "https://behb-hotel-booking.vercel.app",
-    "https://behb-hotel-booking.netlify.app"
+    "https://behb-hotel-booking.netlify.app",
+    "https://resturent-booking-nu.vercel.app"
   ],
   credentials: true,
   optionSuccessStatus: 200,
